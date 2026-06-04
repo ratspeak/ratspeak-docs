@@ -1,0 +1,206 @@
+/**
+ * Ratspeak-inspired theme for Docusaurus.
+ * Warm cream backgrounds, burnt orange accent, Outfit typography.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Light mode ── */
+:root {
+  --ifm-color-primary: #D2693B;
+  --ifm-color-primary-dark: #c25a2d;
+  --ifm-color-primary-darker: #b7542a;
+  --ifm-color-primary-darkest: #974623;
+  --ifm-color-primary-light: #d97a50;
+  --ifm-color-primary-lighter: #dc8259;
+  --ifm-color-primary-lightest: #e49b78;
+
+  --ifm-background-color: #FAF7F3;
+  --ifm-background-surface-color: #F3EFEA;
+  --ifm-font-family-base: 'Outfit', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', monospace;
+  --ifm-heading-font-weight: 700;
+  --ifm-font-weight-semibold: 600;
+  --ifm-font-color-base: #2A2522;
+  --ifm-font-color-secondary: #6F675F;
+  --ifm-code-font-size: 95%;
+  --ifm-navbar-background-color: rgba(250, 247, 243, 0.85);
+  --ifm-navbar-shadow: 0 1px 0 0 rgba(210, 105, 59, 0.08);
+  --ifm-footer-background-color: #F3EFEA;
+  --ifm-footer-color: #6F675F;
+  --ifm-menu-color: #2A2522;
+  --ifm-menu-color-active: #D2693B;
+  --ifm-menu-color-background-active: rgba(210, 105, 59, 0.08);
+  --ifm-link-color: #D2693B;
+  --ifm-link-hover-color: #c25a2d;
+  --ifm-toc-border-color: rgba(210, 105, 59, 0.12);
+  --ifm-hr-border-color: rgba(210, 105, 59, 0.10);
+  --ifm-card-background-color: #FFFFFF;
+  --ifm-global-radius: 8px;
+  --docusaurus-highlighted-code-line-bg: rgba(210, 105, 59, 0.1);
+}
+
+/* ── Dark mode ── */
+[data-theme='dark'] {
+  --ifm-color-primary: #E08A5E;
+  --ifm-color-primary-dark: #da7645;
+  --ifm-color-primary-darker: #d76c38;
+  --ifm-color-primary-darkest: #c25520;
+  --ifm-color-primary-light: #e69e77;
+  --ifm-color-primary-lighter: #e8a884;
+  --ifm-color-primary-lightest: #efc0a6;
+
+  --ifm-background-color: #18171a;
+  --ifm-background-surface-color: #1e1d21;
+  --ifm-font-color-base: #e8e4e0;
+  --ifm-font-color-secondary: #a09890;
+  --ifm-navbar-background-color: rgba(24, 23, 26, 0.85);
+  --ifm-footer-background-color: #1e1d21;
+  --ifm-footer-color: #a09890;
+  --ifm-menu-color: #e8e4e0;
+  --ifm-menu-color-active: #E08A5E;
+  --ifm-menu-color-background-active: rgba(224, 138, 94, 0.1);
+  --ifm-toc-border-color: rgba(224, 138, 94, 0.15);
+  --ifm-hr-border-color: rgba(224, 138, 94, 0.12);
+  --ifm-card-background-color: #232228;
+  --docusaurus-highlighted-code-line-bg: rgba(224, 138, 94, 0.15);
+}
+
+/* ── Navbar ── */
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+  box-shadow: none;
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.navbar__link {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.navbar__link:hover {
+  text-decoration: none;
+  color: var(--ifm-color-primary);
+}
+
+/* ── Sidebar ── */
+.menu__link {
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background-color: var(--ifm-menu-color-background-active);
+  font-weight: 600;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: var(--ifm-menu-color-background-active);
+  border-radius: 6px;
+}
+
+/* ── Content area ── */
+.markdown h1:first-child {
+  font-size: 2rem;
+}
+
+.markdown h2 {
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+  padding-bottom: 0.4rem;
+}
+
+article {
+  line-height: 1.75;
+}
+
+/* ── Code blocks ── */
+.prism-code {
+  border-radius: 10px !important;
+  border: 1px solid var(--ifm-toc-border-color);
+}
+
+code {
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 4px;
+  padding: 2px 6px;
+  background-color: var(--ifm-background-surface-color);
+}
+
+/* Don't double-border inside code blocks */
+pre code {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+/* ── Footer ── */
+.footer {
+  border-top: 1px solid var(--ifm-toc-border-color);
+}
+
+.footer__title {
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+.footer__link-item {
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+/* ── Table of Contents ── */
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
+  color: var(--ifm-color-primary);
+}
+
+/* ── Pagination ── */
+.pagination-nav__link {
+  border-color: var(--ifm-toc-border-color);
+  border-radius: 10px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 2px 12px rgba(210, 105, 59, 0.08);
+}
+
+/* ── Scrollbar (webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(210, 105, 59, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(210, 105, 59, 0.35);
+}
+
+/* ── Smooth transitions ── */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+/* Don't animate everything (performance) */
+pre *, code *, .prism-code * {
+  transition: none !important;
+}

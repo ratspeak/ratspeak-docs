@@ -1,0 +1,5 @@
+{
+  "label": "Networking",
+  "position": 4,
+  "description": "Configure LoRa, Bluetooth, serial, IP, and I2P interfaces."
+}
