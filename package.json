@@ -1,7 +1,16 @@
 {
-  "name": "my-docusaurus-site",
+  "name": "ratspeak-docs",
   "version": "0.0.0",
   "private": true,
+  "license": "CC-BY-SA-4.0",
+  "homepage": "https://docs.ratspeak.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratspeak/ratspeak-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ratspeak/ratspeak-docs/issues"
+  },
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
