@@ -14,7 +14,7 @@ Ratspeak is built as a single Tauri v2 app from one Rust codebase. Desktop packa
 
 ## Get the app
 
-Ratspeak v1.0.19 is the current public release, published as a normal GitHub release rather than a prerelease. Download desktop and Android artifacts from [ratspeak.org/download.html](https://ratspeak.org/download.html) or the [Ratspeak GitHub releases page](https://github.com/ratspeak/Ratspeak/releases). Source is AGPL-3.0-or-later at [github.com/ratspeak/Ratspeak](https://github.com/ratspeak/Ratspeak).
+Ratspeak v1.0.20 is the current public release, published as a normal GitHub release rather than a prerelease. Download desktop and Android artifacts from [ratspeak.org/download.html](https://ratspeak.org/download.html) or the [Ratspeak GitHub releases page](https://github.com/ratspeak/Ratspeak/releases). Source is AGPL-3.0-or-later at [github.com/ratspeak/Ratspeak](https://github.com/ratspeak/Ratspeak).
 
 If you'd rather build from source, see [Building from Source](../reference/building-from-source.md). Ratspeak must be checked out next to `rsReticulum`, `rsLXMF`, `lrgp-rs`, and (for the default build, which includes experimental voice calls) `rsLXST` so Cargo can resolve the local development crates.
 

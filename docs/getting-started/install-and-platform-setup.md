@@ -8,7 +8,7 @@ Ratspeak is a single application: no separate daemon, no web server, no Python r
 
 ## Download
 
-Ratspeak v1.0.19 is published as a normal public release. Start at [ratspeak.org/download.html](https://ratspeak.org/download.html), or use the [GitHub releases page](https://github.com/ratspeak/Ratspeak/releases) directly. If you want to inspect or package the code yourself, use [Building from Source](../reference/building-from-source.md).
+Ratspeak v1.0.20 is published as a normal public release. Start at [ratspeak.org/download.html](https://ratspeak.org/download.html), or use the [GitHub releases page](https://github.com/ratspeak/Ratspeak/releases) directly. If you want to inspect or package the code yourself, use [Building from Source](../reference/building-from-source.md).
 
 ## macOS
 

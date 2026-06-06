@@ -25,7 +25,7 @@ The common thread is Reticulum/LXMF, not a central service. Some pieces are netw
 
 | Component | Role | Who needs it | Current status |
 |---|---|---|---|
-| [Ratspeak](../products/ratspeak.md) | Desktop and mobile LXMF client | Normal users | v1.0.19 public release; desktop and Android artifacts are on the download page and GitHub releases |
+| [Ratspeak](../products/ratspeak.md) | Desktop and mobile LXMF client | Normal users | v1.0.20 public release; desktop and Android artifacts are on the download page and GitHub releases |
 | [rsReticulum](../products/rsreticulum.md) | Rust Reticulum stack, daemon, tools | Operators and Rust developers | v0.9.4 public pre-release; pre-1.0, wire-compatible where implemented, with documented gaps |
 | [rsLXMF](../products/rslxmf.md) | Rust LXMF library and `lxmd-rs` propagation daemon | App developers and propagation-node operators | v0.9.2 public pre-release; pre-1.0, targets LXMF interop where implemented |
 | [rsLXST](../products/rslxst.md) | Rust LXST telephony library (Opus voice over Reticulum) | App developers building voice features on Reticulum | Experimental; first public target is Ratspeak voice calls, not full Python LXST parity |
