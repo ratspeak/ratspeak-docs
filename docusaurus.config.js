@@ -5,6 +5,18 @@ const siteUrl = 'https://docs.ratspeak.org';
 const siteDescription =
   'Guides for using Ratspeak, Reticulum, LoRa, hardware devices, deployment, and private mesh networking.';
 const docsImage = 'https://ratspeak.org/assets/seo/og-docs.png';
+const docsSchema = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Docs — Ratspeak',
+  url: siteUrl,
+  description: siteDescription,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Ratspeak',
+    url: 'https://ratspeak.org',
+  },
+});
 const footerLogo = `
   <svg class="ratspeak-footer-logo" viewBox="243 243 282 282" fill="currentColor" aria-hidden="true">
     <path d="M327.97,501.16C314.61,508.03 301.57,514.72 288.56,521.48C283.91,523.91 279.2,524.61 275.05,520.98C271.05,517.49 271.26,512.87 272.63,508.05C275.23,498.93 277.46,489.7 280.08,480.58C281.03,477.27 280.4,475.51 277.14,473.92C255.84,463.53 245.61,446.29 245.66,422.66C245.75,381.16 245.55,339.66 245.75,298.16C245.86,275.62 256.63,259.57 276.93,249.98C283.68,246.79 291.07,246.01 298.4,246C355.74,245.88 413.07,245.83 470.4,245.95C495.22,246.01 516.64,265.69 519.52,290.03C520.6,299.2 520.12,308.32 520.21,317.46C520.37,333.46 520.29,349.46 520.2,365.46C520.17,371.38 518.89,372.03 513.77,369.13C498.9,360.71 498.91,360.71 498.9,343.65C498.88,328.81 498.92,313.98 498.81,299.15C498.66,279.74 486.18,267.28 466.77,267.26C410.94,267.23 355.11,267.23 299.27,267.32C279.54,267.35 267.32,279.36 267.23,299.05C267.05,340.71 267.04,382.38 267.09,424.04C267.11,441.62 277.67,453.85 295.43,456.58C310.83,458.95 307.84,458.98 304.51,471.32C303.3,475.82 302.05,480.31 300.83,484.81C300.35,486.56 299.66,488.32 300.92,490.33C304.48,490.2 307.24,487.87 310.31,486.46C314.99,484.3 319.61,481.95 324.04,479.31C328.78,476.49 333.17,476.59 338.23,478.73C355.38,485.99 373.44,488.84 391.95,487.72C430.98,485.37 461.99,468.13 484.6,436.22C489.79,428.9 493.71,420.74 496.43,412.08C497.17,409.7 496.94,408 494.74,406.52C489.6,403.07 487.33,398.05 487.7,391.96C487.91,388.37 486.58,386.13 483.49,384.24C461.58,370.79 438.6,360.13 412.77,356.87C403.65,355.71 394.49,355.67 385.35,356.73C376.09,357.8 372.64,358.02 369.74,347.74C368.12,341.98 365.71,336.47 362.24,331.47C356.28,322.9 346.68,319.02 337.45,321.63C328.92,324.05 321.83,333.47 321.32,343.14C320.63,356 327.03,371.92 346.66,374.88C350.07,375.39 352.59,376.98 353.16,380.74C353.7,384.21 352.02,386.53 349.33,388.25C347.4,389.48 345.13,389.39 343,389.01C325.7,385.88 313.84,376.01 308.73,359.24C303.68,342.67 306.62,327.49 319.94,315.42C336.41,300.5 361.24,303.86 373.4,322.51C376.14,326.7 378.7,331.06 380.19,335.83C381.41,339.73 383.56,341.03 387.54,340.77C406.5,339.53 425.15,341.26 443.29,347.18C469.21,355.64 492.63,368.82 514.47,384.97C521.5,390.18 521.02,397.62 519.75,405.01C515.1,432.25 501.28,454.4 481.02,472.62C460.48,491.09 436.54,502.92 409.2,507.52C385.77,511.46 362.77,509.7 340.18,502.3C336.39,501.06 332.58,498.31 327.97,501.16z"/>
@@ -38,7 +50,7 @@ const footerMarkup = `
 const config = {
   title: 'Docs — Ratspeak',
   tagline: siteDescription,
-  favicon: 'img/favicon.ico',
+  favicon: 'favicon.ico',
 
   future: {
     v4: true,
@@ -54,6 +66,53 @@ const config = {
   onBrokenLinks: 'throw',
 
   headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        href: '/favicon.ico',
+        sizes: 'any',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        href: '/favicon.svg',
+        type: 'image/svg+xml',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        href: '/favicon-32x32.png',
+        sizes: '32x32',
+        type: 'image/png',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'mask-icon',
+        href: '/favicon.svg',
+        color: '#D2693B',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        href: '/apple-touch-icon.png',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'manifest',
+        href: '/site.webmanifest',
+      },
+    },
     {
       tagName: 'meta',
       attributes: {
@@ -85,6 +144,13 @@ const config = {
     {
       tagName: 'meta',
       attributes: {
+        name: 'msapplication-TileImage',
+        content: '/assets/icons/windows/ratspeak-windows-light-150.png',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
         name: 'color-scheme',
         content: 'light dark',
       },
@@ -92,15 +158,15 @@ const config = {
     {
       tagName: 'meta',
       attributes: {
-        property: 'og:locale',
-        content: 'en_US',
+        property: 'og:site_name',
+        content: 'Ratspeak',
       },
     },
     {
       tagName: 'meta',
       attributes: {
-        property: 'og:site_name',
-        content: 'Ratspeak',
+        property: 'og:type',
+        content: 'website',
       },
     },
     {
@@ -147,11 +213,30 @@ const config = {
           'Ratspeak Docs — Guides for Reticulum, LoRa, hardware, deployment, and private mesh networking.',
       },
     },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:title',
+        content: 'Docs — Ratspeak',
+      },
+    },
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: docsSchema,
+    },
   ],
 
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
+    localeConfigs: {
+      en: {
+        htmlLang: 'en-US',
+      },
+    },
   },
 
   presets: [
@@ -194,6 +279,8 @@ const config = {
         title: 'Ratspeak',
         logo: {
           alt: 'Ratspeak Logo',
+          href: 'https://ratspeak.org/index.html',
+          target: '_self',
           src: 'img/ratspeak-512.png',
           srcDark: 'img/ratspeak-512-dark.png',
         },
@@ -203,7 +290,7 @@ const config = {
             position: 'left',
             value: `
               <nav class="ratspeak-navbar-center" aria-label="Primary navigation">
-                <a href="https://ratspeak.org/">Home</a>
+                <a href="https://ratspeak.org/index.html">Home</a>
                 <a href="https://ratspeak.org/about.html">About</a>
                 <a class="is-active" href="/">Docs</a>
                 <a href="https://ratspeak.org/download.html">Download</a>
