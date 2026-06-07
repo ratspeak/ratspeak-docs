@@ -368,6 +368,40 @@
     padding: 0;
   }
 
+  .navbar-sidebar .ratspeak-mobile-docs-link,
+  .navbar-sidebar .ratspeak-navbar-center a.is-active,
+  .navbar-sidebar__back {
+    display: none;
+  }
+
+  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:first-child {
+    overflow: visible;
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+  }
+
+  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:first-child .ratspeak-navbar-center {
+    pointer-events: auto;
+  }
+
+  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:nth-child(2) {
+    padding-top: 110px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:nth-child(2)::before {
+    color: var(--ratspeak-text-muted);
+    content: 'Documentation';
+    font-size: 12px;
+    font-weight: 700;
+    left: 18px;
+    line-height: 1.2;
+    position: absolute;
+    top: 82px;
+  }
+
   .navbar-sidebar .ratspeak-navbar-center {
     align-items: stretch;
     display: flex;
@@ -377,6 +411,13 @@
     position: static;
     top: auto;
     transform: none;
+  }
+
+  .navbar-sidebar__items--show-secondary .ratspeak-navbar-center {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    transform: translateX(var(--ifm-navbar-sidebar-width));
   }
 
   .navbar-sidebar .ratspeak-navbar-center a,
@@ -391,6 +432,19 @@
     line-height: 1.25;
     padding: 12px 14px;
     text-decoration: none;
+  }
+
+  .navbar-sidebar__items--show-secondary .ratspeak-navbar-center a {
+    align-items: center;
+    background: rgba(42, 37, 34, 0.035);
+    font-size: 14px;
+    justify-content: center;
+    min-height: 40px;
+    padding: 9px 8px;
+  }
+
+  [data-theme='dark'] .navbar-sidebar__items--show-secondary .ratspeak-navbar-center a {
+    background: var(--ifm-background-surface-color);
   }
 
   .navbar-sidebar .ratspeak-navbar-center a::after {
@@ -412,21 +466,6 @@
     color: var(--ratspeak-text-muted);
     font-size: 20px;
     line-height: 1;
-  }
-
-  .navbar-sidebar__back {
-    background: transparent;
-    border-bottom: 1px solid var(--ratspeak-border-subtle);
-    color: var(--ratspeak-text-secondary);
-    font-size: 14px;
-    font-weight: 600;
-    margin: -18px -18px 14px;
-    padding: 16px 18px;
-    width: calc(100% + 36px);
-  }
-
-  .navbar-sidebar__back:hover {
-    color: var(--ratspeak-text-primary);
   }
 
   .navbar-sidebar .theme-doc-sidebar-menu {
