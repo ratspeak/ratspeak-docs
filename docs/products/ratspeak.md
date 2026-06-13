@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Ratspeak is the desktop and mobile client for the [Reticulum](https://reticulum.network/) mesh — a native app for sending end-to-end encrypted messages, placing experimental peer-to-peer voice calls, watching peers come and go, configuring your radio interfaces, and playing the occasional game with someone three hops away.
 
-It's the same app on every platform: macOS, Linux, Windows, iOS, Android. The protocol stack underneath is identical regardless of where you run it, so a Ratspeak user on a laptop, a Ratdeck handheld on LoRa, and someone running Sideband on their phone can all talk to each other.
+It's the same app on every platform: macOS, Linux, Windows, iOS, Android. The protocol stack underneath is identical regardless of where you run it, so a Ratspeak user on a laptop, an rsDeck handheld on LoRa, and someone running Sideband on their phone can all talk to each other.
 
 ## Platforms
 
@@ -67,7 +67,7 @@ If you copy the `.ratspeak/` directory to another machine and launch Ratspeak th
 
 ## Hardware it talks to
 
-Ratspeak speaks to anything that speaks Reticulum. Out of the box that means [Ratdeck](../products/ratdeck.md) and [rsCardputer](../products/rscardputer.md) handhelds on any reachable Reticulum path, [RNode-class boards](../hardware/rnode-and-supported-boards.md) over USB, BLE, or RNode TCP, and other Ratspeak / Sideband / NomadNet / MeshChat clients reachable over TCP, UDP, I2P, or Bluetooth Peer. iOS cannot use USB serial radios, but it can use BLE RNode hardware or an RNode TCP bridge.
+Ratspeak speaks to anything that speaks Reticulum. Out of the box that means [rsDeck](../products/rsdeck.md) and [rsCardputer](../products/rscardputer.md) handhelds on any reachable Reticulum path, [RNode-class boards](../hardware/rnode-and-supported-boards.md) over USB, BLE, or RNode TCP, and other Ratspeak / Sideband / NomadNet / MeshChat clients reachable over TCP, UDP, I2P, or Bluetooth Peer. iOS cannot use USB serial radios, but it can use BLE RNode hardware or an RNode TCP bridge.
 
 ## What it isn't
 

@@ -48,7 +48,7 @@ You have three easy starting points. Pick whichever matches your situation; you 
 
 These are public Ratspeak transport servers. They connect you to the broader Reticulum network so you can hear announces from anyone reachable over the internet. Older configs that use `rns.ratspeak.org:4242` still reach Emerald. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party.
 
-**LoRa device.** If you have an [RNode](../hardware/rnode-and-supported-boards.md), plug it into USB, pair it over BLE, or point Ratspeak at an RNode TCP bridge, then tap **Add LoRa Device** in the Network tab. The modal lists detected serial ports, nearby BLE radios, and a TCP tab for endpoints such as `192.168.1.50:7633`. If no TCP port is supplied, Ratspeak uses `7633`. Pick the preset that matches the devices around you — `medium_fast` is a sensible all-rounder; `long_fast` and `long_moderate` reach further at the cost of speed; `short_turbo` and `short_fast` are higher-throughput at shorter range. Tap **Add Radio**. Ratspeak opens the radio and starts listening. Ratdeck and rsCardputer are standalone handhelds; use their own screens unless you have explicitly enabled a bridge mode such as Ratdeck's BLE bridge.
+**LoRa device.** If you have an [RNode](../hardware/rnode-and-supported-boards.md), plug it into USB, pair it over BLE, or point Ratspeak at an RNode TCP bridge, then tap **Add LoRa Device** in the Network tab. The modal lists detected serial ports, nearby BLE radios, and a TCP tab for endpoints such as `192.168.1.50:7633`. If no TCP port is supplied, Ratspeak uses `7633`. Pick the preset that matches the devices around you — `medium_fast` is a sensible all-rounder; `long_fast` and `long_moderate` reach further at the cost of speed; `short_turbo` and `short_fast` are higher-throughput at shorter range. Tap **Add Radio**. Ratspeak opens the radio and starts listening. rsDeck and rsCardputer are standalone handhelds by default; boot them into RNode mode when you want Ratspeak to drive their radio over BLE or USB.
 
 You can run all three at once. Traffic routes transparently across whatever interfaces are up — a message can travel over LoRa to a transport node, hop over TCP, and land on someone's WiFi.
 
@@ -83,7 +83,7 @@ You have an identity, an interface, and a path toward reachable peers. Once a pe
 - [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md) — attachments, delivery states, Offline Inbox, and managing the address book.
 - [Network & Peers](../using-ratspeak/network-and-peers.md) — adding more interfaces, running as a transport node, and reading peer/network status.
 - [Settings & Identity](../using-ratspeak/settings-and-identity.md) — auto-announce intervals, display name changes, and Offline Inbox mode.
-- [Ratdeck](../products/ratdeck.md) and [rsCardputer](../products/rscardputer.md) — purpose-built Ratspeak hardware for off-grid mesh.
+- [rsDeck](../products/rsdeck.md) and [rsCardputer](../products/rscardputer.md) — purpose-built Ratspeak hardware for off-grid mesh.
 - [Ratkey](../products/ratkey.md) — hardware-backed identity on a YubiKey or Nitrokey.
 
 Welcome to the mesh.

@@ -10,13 +10,13 @@ Both share the same underlying stack: Ratspeak uses the cross-platform `btleplug
 
 ## BLE RNode bridge
 
-The BLE RNode bridge is the wireless equivalent of plugging a radio into a USB port. The phone or laptop is the BLE central; the peripheral is a BLE-equipped RNode or a Ratspeak handheld exposing an RNode-compatible bridge profile, such as Ratdeck when that mode is enabled. rsCardputer exposes an RNode-compatible BLE bridge when booted into RNode mode; Standalone mode remains its own handheld endpoint. KISS frames — the same byte stream that runs over USB serial — are tunneled through a GATT characteristic instead of a UART. The result is point-to-point: one phone, one radio.
+The BLE RNode bridge is the wireless equivalent of plugging a radio into a USB port. The phone or laptop is the BLE central; the peripheral is a BLE-equipped RNode or a Ratspeak handheld booted into RNode mode, such as rsDeck or rsCardputer. Standalone mode remains its own handheld endpoint. KISS frames — the same byte stream that runs over USB serial — are tunneled through a GATT characteristic instead of a UART. The result is point-to-point: one phone, one radio.
 
 The radio still does the radio work. The bridge replaces nothing about LoRa modulation, presets, or regional bands; it only changes how the phone talks to the modem. Throughput, latency, and on-air behavior match a USB-tethered radio of the same model.
 
 ### Pairing an RNode
 
-1. Put the radio into BLE pairing or advertising mode. On RNode firmware with a screen this is usually a long-press of the left button until the OLED shows a 6-digit passkey. Ratdeck advertises its bridge profile when BLE is enabled in settings.
+1. Put the radio into BLE pairing or advertising mode. On RNode firmware with a screen this is usually a long-press of the left button until the OLED shows a 6-digit passkey. On rsDeck and rsCardputer, boot RNode mode first, then use the on-screen pairing control for a new host.
 2. In Ratspeak, open the Network view and tap **Add LoRa Device** then **Bluetooth**. Nearby radios appear within a few seconds.
 3. Select the radio. The OS surfaces the standard pairing prompt; enter the passkey if one is shown on the device.
 4. Set a name, region, and preset. Ratspeak brings the interface up immediately.

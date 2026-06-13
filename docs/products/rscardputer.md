@@ -24,12 +24,12 @@ The supported device is M5Stack's Cardputer Adv: an ESP32-S3 handheld with a
 240 by 135 display, micro keyboard, internal battery, microSD support, and the
 separate Cap LoRa-1262 SX1262 radio module.
 
-## rsCardputer vs Ratdeck
+## rsCardputer vs rsDeck
 
 Both are standalone Reticulum/LXMF handhelds when used in their native messaging
 modes.
 
-- **[Ratdeck](../products/ratdeck.md)** has the larger screen, full keyboard,
+- **[rsDeck](../products/rsdeck.md)** has the larger screen, full keyboard,
   integrated radio, and more memory headroom.
 - **rsCardputer** is smaller and modular, with the LoRa radio supplied by the
   M5Stack cap. It can also reboot into RNode mode when you want the Cardputer to

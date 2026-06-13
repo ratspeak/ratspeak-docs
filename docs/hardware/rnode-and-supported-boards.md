@@ -41,7 +41,7 @@ Before buying or flashing, check the practical kit:
 
 1. **Flash your own** - buy a supported board (see below) and run `rnodeconf --autoinstall` to flash RNode firmware. See [Flashing Firmware](../hardware/flashing-firmware.md).
 2. **Buy pre-made** - purchase from [unsigned.io](https://unsigned.io) or community vendors.
-3. **Use Ratspeak hardware** - [Ratdeck](../products/ratdeck.md) includes an integrated LoRa radio, and [rsCardputer](../products/rscardputer.md) attaches one through the Cap LoRa add-on.
+3. **Use Ratspeak hardware** - [rsDeck](../products/rsdeck.md) includes an integrated LoRa radio, and [rsCardputer](../products/rscardputer.md) attaches one through the Cap LoRa add-on.
 
 ## Connection Methods
 
@@ -79,7 +79,7 @@ RNode firmware runs on 14+ boards across three microcontroller platforms. All ca
 | **T-Beam Supreme** | SX1262 / SX1268 | GPS, large battery holder, best all-around |
 | **T-Beam** | SX1262 / SX1276 / SX1278 | GPS, battery holder, widely available |
 | **T3S3** | SX1262 / SX1276 / SX1278 | Compact, no GPS, good for fixed nodes |
-| **T-Deck** | SX1262 / SX1268 | Display + keyboard (also used by Ratdeck) |
+| **T-Deck** | SX1262 / SX1268 | Display + keyboard (also used by rsDeck) |
 | **LoRa32 v2.1** | SX1276 / SX1278 | Small OLED display, affordable |
 | **LoRa32 v2.0** | SX1276 / SX1278 | Older revision, still supported |
 | **LoRa32 v1.0** | SX1276 / SX1278 | Original model |
@@ -127,7 +127,7 @@ For new purchases, choose boards with **SX1262** - the most modern, power-effici
 | **Budget** | Heltec LoRa32 v3.0 | ~$18-25 | Compact, USB-C, OLED, SX1262 |
 | **Portable** | LilyGO T-Echo | ~$30-40 | nRF52, e-ink display, extremely low power |
 | **Dual-band** | OpenCom XL | Varies | SX1262 + SX1280, run two links with `RNodeMultiInterface` |
-| **Standalone** | [Ratdeck](../products/ratdeck.md) or [rsCardputer](../products/rscardputer.md) | ~$30-70 | Complete mesh communicator with display, keyboard, and LoRa |
+| **Standalone** | [rsDeck](../products/rsdeck.md) or [rsCardputer](../products/rscardputer.md) | ~$30-70 | Complete mesh communicator with display, keyboard, and LoRa |
 
 ## Where to Buy
 

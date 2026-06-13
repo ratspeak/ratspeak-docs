@@ -24,19 +24,18 @@ video link. Don't plan on streaming anything. Plan on sending sentences.
 
 Minimum viable off-grid kit:
 
-- **One handheld per person.** Either a Ratdeck or rsCardputer for standalone LoRa
-  messaging, or a phone/laptop running Ratspeak connected to a separate RNode
+- **One handheld per person.** Either rsDeck or rsCardputer in Standalone mode
+  for LoRa messaging, or a phone/laptop running Ratspeak connected to a separate RNode
   over BLE, USB where the platform allows it, or a local RNode TCP bridge if
   your field kit supplies its own LAN.
-  Ratdeck has BLE bridge support; rsCardputer can be used as a standalone handheld
-  or booted into RNode mode for BLE/USB host use.
+  rsDeck and rsCardputer can both boot RNode mode for BLE/USB host use.
 - **Optional always-on transport node.** A Raspberry Pi + RNode + battery + small
   solar panel, sited high. One transport node can stitch together handhelds that
   can't directly hear each other.
 
 You don't need IP, you don't need Wi-Fi, you don't need a backbone. The only
 exception: if you want to bridge a single laptop into the mesh in the field, a
-Ratdeck can run as a Wi-Fi access point and the laptop joins it. That's local-only,
+rsDeck can run as a Wi-Fi access point and the laptop joins it. That's local-only,
 no upstream internet involved. Treat that AP bridge as experimental and test it
 before the deployment.
 

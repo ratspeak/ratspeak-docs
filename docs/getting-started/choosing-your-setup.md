@@ -13,8 +13,8 @@ Ratspeak is a stack, not a single product. Before installing anything, decide ho
 | Send LXMF messages and browse peers from a regular computer | Ratspeak desktop |
 | Same as above, but route over a TCP backhaul (public internet or your VPS) | Ratspeak desktop + TCP hub |
 | Carry Ratspeak in your pocket | Ratspeak mobile |
-| Add LoRa range to your phone or laptop | Ratspeak + an RNode, or Ratdeck as a BLE bridge where supported |
-| Carry one device that does everything, no phone or laptop required | Ratdeck or rsCardputer (standalone) |
+| Add LoRa range to your phone or laptop | Ratspeak + an RNode, or rsDeck/rsCardputer booted into RNode mode |
+| Carry one device that does everything, no phone or laptop required | rsDeck or rsCardputer (standalone) |
 | Run infrastructure for a community or your own LAN | Self-hosted `rnsd-rs` and optionally `lxmd-rs` |
 
 ## Just the Ratspeak Desktop App
@@ -33,24 +33,24 @@ Same client, but you bring your own backhaul. Point it at a public Ratspeak TCP 
 
 ## Ratspeak Mobile
 
-iOS and Android builds of the same client. The main difference is how you talk to LoRa hardware: iOS does not expose USB to apps, so radios connect over Bluetooth LE or an RNode TCP bridge. Android supports BLE, USB-OTG, and RNode TCP. If you want a phone to drive a LoRa radio, use a BLE-capable RNode, a TCP-backed RNode bridge, or Ratdeck's bridge profile where supported.
+iOS and Android builds of the same client. The main difference is how you talk to LoRa hardware: iOS does not expose USB to apps, so radios connect over Bluetooth LE or an RNode TCP bridge. Android supports BLE, USB-OTG, and RNode TCP. If you want a phone to drive a LoRa radio, use a BLE-capable RNode, a TCP-backed RNode bridge, or rsDeck/rsCardputer booted into RNode mode.
 
 - See: [Install and Platform Setup](../getting-started/install-and-platform-setup.md)
 - See: [Bluetooth Interfaces](../networking/bluetooth-interfaces.md)
 
-## Ratspeak + an RNode or Ratdeck Bridge
+## Ratspeak + an RNode or RNode-Mode Handheld
 
-Add a portable LoRa node to your phone or laptop. The radio carries the long-range link; Ratspeak on your main device handles the long sessions and the screen real estate. A normal RNode connects over USB, USB-OTG on Android, BLE where the firmware supports it, or TCP when the radio's KISS stream is exposed on the local network. Ratdeck can expose a BLE bridge profile when enabled. rsCardputer can boot into RNode mode for BLE or USB host use, or stay in Standalone mode as its own handheld endpoint.
+Add a portable LoRa node to your phone or laptop. The radio carries the long-range link; Ratspeak on your main device handles the long sessions and the screen real estate. A normal RNode connects over USB, USB-OTG on Android, BLE where the firmware supports it, or TCP when the radio's KISS stream is exposed on the local network. rsDeck and rsCardputer can boot into RNode mode for BLE or USB host use, or stay in Standalone mode as their own handheld endpoints.
 
-- See: [Ratdeck](../products/ratdeck.md)
+- See: [rsDeck](../products/rsdeck.md)
 - See: [rsCardputer](../products/rscardputer.md)
 - See: [LoRa Radio Interfaces](../networking/lora-and-rnode.md)
 
-## Just a Ratdeck or rsCardputer
+## Just an rsDeck or rsCardputer
 
-A handheld-only deployment. Both devices run microReticulum and speak LXMF directly — no phone, no laptop, no desktop client involved. The Ratdeck has a 4-inch touchscreen and full QWERTY; the rsCardputer is the smaller Cardputer form factor. Best for backpack carry, field operations, or anyone who wants the mesh to be a single self-contained object.
+A handheld-only deployment. Both devices run microReticulum and speak LXMF directly — no phone, no laptop, no desktop client involved. The rsDeck has a 4-inch touchscreen and full QWERTY; the rsCardputer is the smaller Cardputer form factor. Best for backpack carry, field operations, or anyone who wants the mesh to be a single self-contained object.
 
-- See: [Ratdeck](../products/ratdeck.md)
+- See: [rsDeck](../products/rsdeck.md)
 - See: [rsCardputer](../products/rscardputer.md)
 
 ## Self-Hosted Transport Node
