@@ -46,13 +46,13 @@
 
 /* ── Dark mode ── */
 [data-theme='dark'] {
-  --ifm-color-primary: #E08A5E;
-  --ifm-color-primary-dark: #da7645;
-  --ifm-color-primary-darker: #d76c38;
-  --ifm-color-primary-darkest: #c25520;
-  --ifm-color-primary-light: #e69e77;
-  --ifm-color-primary-lighter: #e8a884;
-  --ifm-color-primary-lightest: #efc0a6;
+  --ifm-color-primary: #D2693B;
+  --ifm-color-primary-dark: #B85829;
+  --ifm-color-primary-darker: #a84d25;
+  --ifm-color-primary-darkest: #8d401f;
+  --ifm-color-primary-light: #d97a50;
+  --ifm-color-primary-lighter: #dc8259;
+  --ifm-color-primary-lightest: #e49b78;
 
   --ifm-background-color: #18171a;
   --ifm-background-surface-color: #1e1d21;
@@ -62,12 +62,12 @@
   --ifm-footer-background-color: #1e1d21;
   --ifm-footer-color: #a09890;
   --ifm-menu-color: #e8e4e0;
-  --ifm-menu-color-active: #E08A5E;
-  --ifm-menu-color-background-active: rgba(224, 138, 94, 0.1);
-  --ifm-toc-border-color: rgba(224, 138, 94, 0.15);
-  --ifm-hr-border-color: rgba(224, 138, 94, 0.12);
+  --ifm-menu-color-active: #D2693B;
+  --ifm-menu-color-background-active: rgba(210, 105, 59, 0.1);
+  --ifm-toc-border-color: rgba(210, 105, 59, 0.15);
+  --ifm-hr-border-color: rgba(210, 105, 59, 0.12);
   --ifm-card-background-color: #232228;
-  --docusaurus-highlighted-code-line-bg: rgba(224, 138, 94, 0.15);
+  --docusaurus-highlighted-code-line-bg: rgba(210, 105, 59, 0.15);
   --ratspeak-text-primary: #f0ece8;
   --ratspeak-text-secondary: #aaa39d;
   --ratspeak-text-muted: #8f8881;

@@ -45,17 +45,17 @@
   --hub-bg-surface: #1e1d21;
   --hub-text: #e8e4e0;
   --hub-text-secondary: #a09890;
-  --hub-accent: #E08A5E;
-  --hub-accent-hover: #da7645;
-  --hub-accent-glow: rgba(224, 138, 94, 0.2);
-  --hub-accent-subtle: rgba(224, 138, 94, 0.08);
+  --hub-accent: #D2693B;
+  --hub-accent-hover: #B85829;
+  --hub-accent-glow: rgba(210, 105, 59, 0.2);
+  --hub-accent-subtle: rgba(210, 105, 59, 0.08);
   --hub-card-bg: #232228;
-  --hub-card-border: rgba(224, 138, 94, 0.1);
+  --hub-card-border: rgba(210, 105, 59, 0.1);
   --hub-card-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.15);
-  --hub-card-shadow-hover: 0 8px 40px rgba(224, 138, 94, 0.1), 0 2px 8px rgba(0,0,0,0.3);
+  --hub-card-shadow-hover: 0 8px 40px rgba(210, 105, 59, 0.1), 0 2px 8px rgba(0,0,0,0.3);
   --hub-navbar-bg: rgba(24, 23, 26, 0.8);
   --hub-footer-bg: #1e1d21;
-  --hub-topo-color: #E08A5E;
+  --hub-topo-color: #D2693B;
   --hub-hero-gradient: linear-gradient(180deg, var(--hub-bg) 0%, var(--hub-bg-surface) 100%);
 }
 
