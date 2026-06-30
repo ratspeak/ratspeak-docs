@@ -1,5 +1,5 @@
 // The mobile navigation drawer is flattened (see custom.css) so that the
-// primary panel (Home/About/Docs/Tutorials/Download) and the secondary panel
+// primary panel (Home/Map/Docs/Tutorials/Download) and the secondary panel
 // (the documentation menu) are shown stacked together rather than as two
 // sliding panels.
 //

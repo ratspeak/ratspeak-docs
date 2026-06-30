@@ -32,14 +32,14 @@ const footerMarkup = `
       <a class="ratspeak-footer-brand" href="https://ratspeak.org/letter.html" aria-label="A letter">
         ${footerLogo}
       </a>
-      <span>Built with <a href="https://reticulum.network" target="_blank" rel="noopener noreferrer">Reticulum</a></span>
+      <span>Built with <a href="/docs/concepts/what-is-reticulum">Reticulum</a></span>
     </div>
     <div class="ratspeak-footer-license">
       Docs content: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>
     </div>
     <nav class="ratspeak-footer-links" aria-label="Footer navigation">
-      <a href="https://ratspeak.org/about.html">About</a>
-      <a href="/">Docs</a>
+      <a href="https://ratspeak.org/map.html">Map</a>
+      <a href="/docs">Docs</a>
       <a href="https://ratspeak.org/download.html">Download</a>
       <a href="https://github.com/ratspeak" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
@@ -124,7 +124,7 @@ const config = {
       tagName: 'meta',
       attributes: {
         name: 'theme-color',
-        content: '#FAF7F3',
+        content: '#18171a',
       },
     },
     {
@@ -145,7 +145,7 @@ const config = {
       tagName: 'meta',
       attributes: {
         name: 'msapplication-TileColor',
-        content: '#FAF7F3',
+        content: '#18171a',
       },
     },
     {
@@ -279,7 +279,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       colorMode: {
-        defaultMode: 'light',
+        defaultMode: 'dark',
         disableSwitch: false,
         respectPrefersColorScheme: false,
       },
@@ -310,7 +310,7 @@ const config = {
             value: `
               <nav class="ratspeak-navbar-center" aria-label="Primary navigation">
                 <a href="https://ratspeak.org/index.html">Home</a>
-                <a href="https://ratspeak.org/about.html">About</a>
+                <a href="https://ratspeak.org/map.html">Map</a>
                 <a href="/docs">Docs</a>
                 <a href="/tutorials">Tutorials</a>
                 <a href="https://ratspeak.org/download.html">Download</a>

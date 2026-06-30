@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#18171a">
   <title>Ratspeak - Documentation hub</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,8 +19,9 @@
     </a>
     <div class="navbar-center">
       <a href="https://ratspeak.org" class="nav-link">Home</a>
-      <a href="https://ratspeak.org/about.html" class="nav-link">About</a>
-      <a href="https://docs.ratspeak.org" class="nav-link">Docs</a>
+      <a href="https://ratspeak.org/map.html" class="nav-link">Map</a>
+      <a href="https://docs.ratspeak.org/docs" class="nav-link">Docs</a>
+      <a href="https://docs.ratspeak.org/tutorials" class="nav-link">Tutorials</a>
       <a href="https://ratspeak.org/download.html" class="nav-link">Download</a>
     </div>
     <div class="navbar-right">
@@ -43,7 +45,7 @@
   <!-- Main navigation cards -->
   <section class="content">
     <div class="cards">
-      <a href="https://docs.ratspeak.org" class="card">
+      <a href="https://docs.ratspeak.org/docs" class="card">
         <div class="card-glow"></div>
         <div class="card-inner">
           <div class="card-icon">
@@ -131,7 +133,7 @@
           <svg class="support-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
 
-        <a href="https://docs.ratspeak.org/reference/faq" class="support-card">
+        <a href="https://docs.ratspeak.org/docs/reference/faq" class="support-card">
           <div class="support-icon faq">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           </div>
@@ -154,23 +156,31 @@
     const toggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
     const logo = document.getElementById('navbar-logo');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
 
     const saved = localStorage.getItem('rs-hub-theme');
-    if (saved) html.setAttribute('data-theme', saved);
-    else if (window.matchMedia('(prefers-color-scheme: light)').matches) html.setAttribute('data-theme', 'light');
+    html.setAttribute('data-theme', saved || 'dark');
     updateLogo();
+    updateThemeColor();
 
     toggle.addEventListener('click', () => {
       const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       localStorage.setItem('rs-hub-theme', next);
       updateLogo();
+      updateThemeColor();
     });
 
     function updateLogo() {
       logo.src = html.getAttribute('data-theme') === 'dark'
         ? '/static/img/ratspeak-512-dark.png'
         : '/static/img/ratspeak-512.png';
+    }
+
+    function updateThemeColor() {
+      if (themeMeta) {
+        themeMeta.setAttribute('content', html.getAttribute('data-theme') === 'dark' ? '#18171a' : '#FAF7F3');
+      }
     }
 
     /* ── Hero word cycle ── */
