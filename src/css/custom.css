@@ -151,7 +151,9 @@
 }
 
 .ratspeak-navbar-center a:hover,
-.ratspeak-navbar-center a.is-active {
+.ratspeak-navbar-center a.is-active,
+html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/docs'],
+html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials'] {
   color: var(--ratspeak-text-primary);
 }
 
@@ -169,7 +171,9 @@
 }
 
 .ratspeak-navbar-center a:hover::after,
-.ratspeak-navbar-center a.is-active::after {
+.ratspeak-navbar-center a.is-active::after,
+html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/docs']::after,
+html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials']::after {
   transform: scaleX(0.6);
 }
 
@@ -336,25 +340,48 @@
     width: 24px;
   }
 
+  /* Flatten Docusaurus's two sliding panels (primary navbar items + secondary
+     doc menu) into one vertical scrolling column. The original overlay/slide
+     approach stacked the panels on top of each other, which let the doc menu
+     swallow clicks on the nav links and made the wrapped links collide with the
+     "Documentation" heading. */
   .navbar-sidebar__items {
     background: var(--ifm-background-color);
+    flex-direction: column;
     height: calc(100% - 72px);
-    min-width: calc(var(--ifm-navbar-sidebar-width) * 2);
-    overflow: hidden;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
-    width: calc(var(--ifm-navbar-sidebar-width) * 2);
+    transform: none !important;
+    width: var(--ifm-navbar-sidebar-width);
     z-index: 1;
   }
 
   .navbar-sidebar__item {
     background: var(--ifm-background-color);
-    flex: 0 0 var(--ifm-navbar-sidebar-width);
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    flex: 0 0 auto;
+    height: auto;
+    overflow: visible;
     padding: 18px;
     -webkit-overflow-scrolling: touch;
-    width: var(--ifm-navbar-sidebar-width);
+    width: 100%;
+  }
+
+  /* Secondary panel (the documentation menu) sits directly below the nav links. */
+  .navbar-sidebar__item + .navbar-sidebar__item {
+    border-top: 1px solid var(--ratspeak-border-subtle);
+    padding-top: 16px;
+  }
+
+  .navbar-sidebar__item + .navbar-sidebar__item::before {
+    color: var(--ratspeak-text-muted);
+    content: 'Documentation';
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin: 0 0 8px 4px;
   }
 
   .navbar-sidebar .menu__list {
@@ -368,38 +395,12 @@
     padding: 0;
   }
 
-  .navbar-sidebar .ratspeak-mobile-docs-link,
-  .navbar-sidebar .ratspeak-navbar-center a.is-active,
+  /* The docs menu is shown directly below the nav links (flattened drawer), so
+     the "Docs ›" entry that slides to it is redundant. `a.` keeps this more
+     specific than the `.navbar-sidebar .navbar__link` link styling below. */
+  .navbar-sidebar a.ratspeak-mobile-docs-link,
   .navbar-sidebar__back {
     display: none;
-  }
-
-  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:first-child {
-    overflow: visible;
-    pointer-events: none;
-    position: relative;
-    z-index: 2;
-  }
-
-  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:first-child .ratspeak-navbar-center {
-    pointer-events: auto;
-  }
-
-  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:nth-child(2) {
-    padding-top: 110px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .navbar-sidebar__items--show-secondary .navbar-sidebar__item:nth-child(2)::before {
-    color: var(--ratspeak-text-muted);
-    content: 'Documentation';
-    font-size: 12px;
-    font-weight: 700;
-    left: 18px;
-    line-height: 1.2;
-    position: absolute;
-    top: 82px;
   }
 
   .navbar-sidebar .ratspeak-navbar-center {
@@ -411,13 +412,6 @@
     position: static;
     top: auto;
     transform: none;
-  }
-
-  .navbar-sidebar__items--show-secondary .ratspeak-navbar-center {
-    display: grid;
-    gap: 6px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    transform: translateX(var(--ifm-navbar-sidebar-width));
   }
 
   .navbar-sidebar .ratspeak-navbar-center a,
@@ -434,25 +428,14 @@
     text-decoration: none;
   }
 
-  .navbar-sidebar__items--show-secondary .ratspeak-navbar-center a {
-    align-items: center;
-    background: rgba(42, 37, 34, 0.035);
-    font-size: 14px;
-    justify-content: center;
-    min-height: 40px;
-    padding: 9px 8px;
-  }
-
-  [data-theme='dark'] .navbar-sidebar__items--show-secondary .ratspeak-navbar-center a {
-    background: var(--ifm-background-surface-color);
-  }
-
   .navbar-sidebar .ratspeak-navbar-center a::after {
     content: none;
   }
 
   .navbar-sidebar .ratspeak-navbar-center a:hover,
   .navbar-sidebar .ratspeak-navbar-center a.is-active,
+  html[data-rs-section='docs'] .navbar-sidebar .ratspeak-navbar-center a[href='/docs'],
+  html[data-rs-section='tutorials'] .navbar-sidebar .ratspeak-navbar-center a[href='/tutorials'],
   .navbar-sidebar .menu__link:hover,
   .navbar-sidebar .menu__link--active,
   .navbar-sidebar .navbar__link:hover,
@@ -497,6 +480,8 @@
 }
 
 .markdown h2 {
+  /* Slightly smaller than the Infima default h2, but larger than h3 */
+  font-size: 1.4rem;
   border-bottom: 1px solid var(--ifm-toc-border-color);
   padding-bottom: 0.4rem;
 }

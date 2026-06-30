@@ -65,6 +65,13 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  // Highlights the correct link in the custom HTML navbar (Docs vs Tutorials)
+  // based on the current path, since the navbar markup is static and shared.
+  clientModules: [
+    require.resolve('./src/js/navbarActive.js'),
+    require.resolve('./src/js/mobileSidebar.js'),
+  ],
+
   headTags: [
     {
       tagName: 'link',
@@ -245,7 +252,7 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          routeBasePath: '/',
+          routeBasePath: '/docs',
           sidebarPath: './sidebars.js',
         },
         blog: false,
@@ -253,6 +260,18 @@ const config = {
           customCss: './src/css/custom.css',
         },
       }),
+    ],
+  ],
+
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'tutorials',
+        path: 'tutorials',
+        routeBasePath: 'tutorials',
+        sidebarPath: './sidebars-tutorials.js',
+      },
     ],
   ],
 
@@ -292,7 +311,8 @@ const config = {
               <nav class="ratspeak-navbar-center" aria-label="Primary navigation">
                 <a href="https://ratspeak.org/index.html">Home</a>
                 <a href="https://ratspeak.org/about.html">About</a>
-                <a class="is-active" href="/">Docs</a>
+                <a href="/docs">Docs</a>
+                <a href="/tutorials">Tutorials</a>
                 <a href="https://ratspeak.org/download.html">Download</a>
               </nav>
             `,

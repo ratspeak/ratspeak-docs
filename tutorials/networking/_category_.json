@@ -1,0 +1,5 @@
+{
+  "label": "Networking",
+  "position": 3,
+  "description": "Set up LoRa, Bluetooth, and IP interfaces for your mesh."
+}

@@ -10,6 +10,8 @@
 
 # Misc
 .DS_Store
+*.swp
+*.kate-swp
 .env.local
 .env.development.local
 .env.test.local
