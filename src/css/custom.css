@@ -590,6 +590,10 @@ pre code {
   justify-self: end;
 }
 
+html[data-rs-section='docs'] .ratspeak-footer-links a[href='/docs'] {
+  display: none;
+}
+
 .ratspeak-footer-inner a {
   color: inherit;
   text-decoration: none;
