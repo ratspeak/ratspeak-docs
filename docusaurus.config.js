@@ -39,7 +39,7 @@ const footerMarkup = `
     </div>
     <nav class="ratspeak-footer-links" aria-label="Footer navigation">
       <a href="https://ratspeak.org/map.html">Map</a>
-      <a href="/docs">Docs</a>
+      <a href="/">Docs</a>
       <a href="https://ratspeak.org/download.html">Download</a>
       <a href="https://github.com/ratspeak" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
@@ -65,8 +65,8 @@ const config = {
 
   onBrokenLinks: 'throw',
 
-  // Highlights the correct link in the custom HTML navbar (Docs vs Tutorials)
-  // based on the current path, since the navbar markup is static and shared.
+  // Highlights Docs in the custom HTML navbar based on the current path, since
+  // the navbar markup is static and shared.
   clientModules: [
     require.resolve('./src/js/navbarActive.js'),
     require.resolve('./src/js/mobileSidebar.js'),
@@ -311,18 +311,22 @@ const config = {
               <nav class="ratspeak-navbar-center" aria-label="Primary navigation">
                 <a href="https://ratspeak.org/index.html">Home</a>
                 <a href="https://ratspeak.org/map.html">Map</a>
-                <a href="/docs">Docs</a>
-                <a href="/tutorials">Tutorials</a>
+                <a href="/">Docs</a>
                 <a href="https://ratspeak.org/download.html">Download</a>
               </nav>
             `,
+          },
+          {
+            type: 'html',
+            position: 'left',
+            value: '<a class="navbar__item navbar__link ratspeak-mobile-docs-link" href="/">Docs</a>',
           },
           {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Docs',
-            className: 'ratspeak-mobile-docs-link',
+            className: 'ratspeak-docs-sidebar-trigger',
           },
           {
             type: 'html',

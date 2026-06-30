@@ -1,7 +1,7 @@
 // The mobile navigation drawer is flattened (see custom.css) so that the
-// primary panel (Home/Map/Docs/Tutorials/Download) and the secondary panel
-// (the documentation menu) are shown stacked together rather than as two
-// sliding panels.
+// primary panel (Home/Map/Docs/Download) and the secondary panel (the
+// documentation menu) are shown stacked together rather than as two sliding
+// panels.
 //
 // Docusaurus, however, marks the *inactive* panel with the `inert` attribute
 // whenever the drawer is in its "secondary" state (in the stock UI that panel

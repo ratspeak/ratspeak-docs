@@ -128,6 +128,10 @@
   display: none;
 }
 
+.ratspeak-docs-sidebar-trigger {
+  display: none;
+}
+
 .ratspeak-navbar-center {
   align-items: center;
   display: flex;
@@ -152,8 +156,7 @@
 
 .ratspeak-navbar-center a:hover,
 .ratspeak-navbar-center a.is-active,
-html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/docs'],
-html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials'] {
+html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/'] {
   color: var(--ratspeak-text-primary);
 }
 
@@ -172,8 +175,7 @@ html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials'] {
 
 .ratspeak-navbar-center a:hover::after,
 .ratspeak-navbar-center a.is-active::after,
-html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/docs']::after,
-html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials']::after {
+html[data-rs-section='docs'] .ratspeak-navbar-center a[href='/']::after {
   transform: scaleX(0.6);
 }
 
@@ -399,6 +401,7 @@ html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials']::
      the "Docs ›" entry that slides to it is redundant. `a.` keeps this more
      specific than the `.navbar-sidebar .navbar__link` link styling below. */
   .navbar-sidebar a.ratspeak-mobile-docs-link,
+  .navbar-sidebar a.ratspeak-docs-sidebar-trigger,
   .navbar-sidebar__back {
     display: none;
   }
@@ -434,8 +437,7 @@ html[data-rs-section='tutorials'] .ratspeak-navbar-center a[href='/tutorials']::
 
   .navbar-sidebar .ratspeak-navbar-center a:hover,
   .navbar-sidebar .ratspeak-navbar-center a.is-active,
-  html[data-rs-section='docs'] .navbar-sidebar .ratspeak-navbar-center a[href='/docs'],
-  html[data-rs-section='tutorials'] .navbar-sidebar .ratspeak-navbar-center a[href='/tutorials'],
+  html[data-rs-section='docs'] .navbar-sidebar .ratspeak-navbar-center a[href='/'],
   .navbar-sidebar .menu__link:hover,
   .navbar-sidebar .menu__link--active,
   .navbar-sidebar .navbar__link:hover,
@@ -590,7 +592,7 @@ pre code {
   justify-self: end;
 }
 
-html[data-rs-section='docs'] .ratspeak-footer-links a[href='/docs'] {
+html[data-rs-section='docs'] .ratspeak-footer-links a[href='/'] {
   display: none;
 }
 

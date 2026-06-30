@@ -1,5 +1,5 @@
-// Reflects the current docs section (Docs vs Tutorials) onto an attribute on
-// <html>, so the custom HTML navbar can highlight the matching link via CSS.
+// Reflects the current docs shell onto an attribute on <html>, so the custom
+// HTML navbar can highlight the matching link via CSS.
 //
 // The navbar markup is a single static HTML block shared across every page, so
 // the active link can't be determined at build time. We can't reliably toggle a
@@ -11,8 +11,15 @@
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 function sectionFor(pathname) {
-  if (pathname === '/tutorials' || pathname.startsWith('/tutorials/')) return 'tutorials';
-  if (pathname === '/' || pathname === '/docs' || pathname.startsWith('/docs/')) return 'docs';
+  if (
+    pathname === '/' ||
+    pathname === '/docs' ||
+    pathname.startsWith('/docs/') ||
+    pathname === '/tutorials' ||
+    pathname.startsWith('/tutorials/')
+  ) {
+    return 'docs';
+  }
   return '';
 }
 
