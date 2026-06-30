@@ -12,7 +12,7 @@ import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 function sectionFor(pathname) {
   if (pathname === '/tutorials' || pathname.startsWith('/tutorials/')) return 'tutorials';
-  if (pathname === '/docs' || pathname.startsWith('/docs/')) return 'docs';
+  if (pathname === '/' || pathname === '/docs' || pathname.startsWith('/docs/')) return 'docs';
   return '';
 }
 
