@@ -1,12 +1,11 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 sidebar_label: LilyGO T-Deck Plus
 ---
 
 # Flashing the T-Deck Plus
 
 This section provides step-by-step instructions for flashing the [LilyGO T-Deck Plus](https://lilygo.cc/en-ca/products/t-deck-plus-1) with Ratspeak using the web-based installer.
-
 
 ## Preparation
 
@@ -51,7 +50,7 @@ For new users, it is advised to simply use the Full installation. This will prov
 
 4. A successful flash will produce the below output:
 
-![Complete flash](/img/tutorial/td_complete.png)
+![Complete flash](./img/td_complete.png)
 
 5. Simply reboot your device using the button on the left side of the T-Deck Plus. Ratspeak should boot up in a few seconds.
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 1
 sidebar_label: Heltec LoRa32
 ---
 
@@ -8,7 +8,6 @@ sidebar_label: Heltec LoRa32
 This section provides step-by-step instructions for flashing the [Heltec LoRa32 device](https://heltec.org/product-category/lora/lrnode/esp32-lora/) with Ratspeak using the web-based installer.
 
 This guide assumes you're using the V4 device; however, the general instructions also apply to earlier versions.
-
 
 ## Preparation
 
@@ -31,7 +30,7 @@ If this is the first time using the Heltec LoRa32, ensure that the antenna is at
 
 2. Scroll down to the **Build your own** section and select **Flash**.
 
-![Ratspeak download page with the Flash button](/img/tutorial/rs_dl.png)
+![Ratspeak download page with the Flash button](./img/rs_dl.png)
 
 
 ## Connecting the Heltec LoRa32
@@ -49,20 +48,20 @@ If this is the first time using the Heltec LoRa32, ensure that the antenna is at
 
 3. It is recommended to also turn on **full erase** under advanced options.
 
-![RNode flash options with Device variant and full erase selected](/img/tutorial/rs_v4.png)
+![RNode flash options with Device variant and full erase selected](./img/rs_v4.png)
 
 
 4. Click **Flash**. The installation process will now commence.
 
 5. A successful flash will produce the below output:
 
-![Successful flash output in the web installer](/img/tutorial/rs_lr1.png)
+![Successful flash output in the web installer](./img/rs_lr1.png)
 
 6. Press the **right** button on the device to reboot it. When the screen returns, click **Finish flashing** in the browser.
 
 7. After the device has finished flashing successfully, the following output will be shown, and you can safely disconnect the device:
 
-![Final output after flashing completes](/img/tutorial/rs_lr2.png)
+![Final output after flashing completes](./img/rs_lr2.png)
 
 
 :::tip[Congratulations, you're now a Ratspeak user!]

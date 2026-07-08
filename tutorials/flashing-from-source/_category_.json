@@ -1,0 +1,5 @@
+{
+  "label": "Flashing from source",
+  "position": 3,
+  "description": "Compile and flash device firmware yourself — the developer path."
+}
