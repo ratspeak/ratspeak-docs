@@ -19,6 +19,45 @@ chmod +x Ratspeak-*.AppImage
 
 If it still won't start, install FUSE (`sudo apt install libfuse2` on Debian/Ubuntu).
 
+If it starts but only shows a blank window with an EGL error:
+
+```bash
+LD_PRELOAD=/usr/lib64/libwayland-client.so ./Ratspeak-*.AppImage
+```
+
+Use your distro's `libwayland-client.so` path if it lives somewhere else.
+
+## Gray or blank window on Linux
+
+The window opens but stays uniformly gray, with no error output and no CPU activity. Seen mostly on Wayland — niri, COSMIC, and other smithay-based compositors, and on NixOS.
+
+Ratspeak v1.0.20 through v1.0.24 always disabled WebKit's DMA-BUF renderer on Wayland as a defensive measure. On WebKitGTK 2.46 and newer that switch no longer selects a fallback renderer — it turns off hardware acceleration entirely, which on some graphics stacks renders nothing at all. Releases after v1.0.24 apply the workaround only where it still helps (WebKitGTK older than 2.46) and add `ratspeak --webview-diag`, which prints the rendering environment for bug reports.
+
+If you see a gray window, try these in order, one at a time:
+
+```bash
+# 1. On v1.0.20–v1.0.24: skip the app's forced renderer setting
+RATSPEAK_DISABLE_WEBKIT_DMABUF_WORKAROUND=1 ratspeak
+
+# 2. Force the WebKit renderer off (helps mostly on NVIDIA / older stacks)
+WEBKIT_DISABLE_DMABUF_RENDERER=1 ratspeak
+
+# 3. Last resort: disable accelerated compositing
+WEBKIT_DISABLE_COMPOSITING_MODE=1 ratspeak
+
+# NVIDIA Wayland with "Error 71" protocol errors
+__NV_DISABLE_EXPLICIT_SYNC=1 ratspeak
+```
+
+Two packaging notes:
+
+- **AppImage** builds force the X11 backend, so the compositor must provide XWayland. On niri that means running `xwayland-satellite` with `DISPLAY` exported before launching.
+- **NixOS** cannot run the `.deb` build natively — it is a foreign binary that resolves graphics drivers the NixOS way only under an FHS wrapper. Launch it with `steam-run` (or nix-ld with your GL drivers in the library path), or build from source, which is the supported path on NixOS.
+
+## Two title bars under Sway, Hyprland, or niri
+
+On tiling Wayland compositors, Ratspeak up to v1.0.24 draws its own title bar (a GTK client-side header) below the compositor's bar. Releases after v1.0.24 hide the app title bar automatically when a tiling Wayland compositor is detected, and **Settings → System → Window Decorations** lets you force it either way (Auto / On / Off).
+
 ## Windows SmartScreen blocks the installer
 
 SmartScreen warns on unsigned executables. Click **More info**, then **Run anyway**. Code signing is on the roadmap.
