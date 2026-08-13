@@ -33,20 +33,20 @@ For images specifically, Ratspeak shows an inline preview in the message bubble.
 Every outgoing message gets a small status indicator that tells you what happened to it.
 
 - **Sending** — the message is in flight. Ratspeak is actively trying to reach the recipient.
-- **Delivered** — Ratspeak has positive proof the recipient received it. This is the strongest state.
-- **Sent** — the message left your node, but no delivery confirmation has come back yet. This is normal for some delivery modes (see below).
+- **Delivered** — the orange check means Ratspeak received an authenticated delivery proof from the recipient's destination.
+- **Sent** — the gray check means the message left your node, but no delivery proof has come back yet.
 - **Stored in Offline Inbox** — the message was accepted by an LXMF propagation node for later pickup. This proves the inbox node received the encrypted message; it is not the same as end-to-end recipient delivery.
 - **Failed** — delivery did not succeed. The most common cause is that the destination is currently unreachable. You can resend.
 
-Ratspeak sends in Auto mode by default. Auto prefers Direct for normal messages because it gives delivery proof. If Offline Inbox is enabled and the recipient has not been seen recently, Auto can store the message on a reachable inbox node instead. If no inbox node is reachable yet, Ratspeak asks the mesh for a path and tells you it is still looking instead of silently sending into a dead store.
+Ratspeak sends in Auto mode by default. Auto prefers Direct for normal messages because its Link and Resource machinery supports reliable transfers and larger payloads. If Offline Inbox is enabled and the recipient has not been seen recently, Auto can store the message on a reachable inbox node instead. If no inbox node is reachable yet, Ratspeak asks the mesh for a path and tells you it is still looking instead of silently sending into a dead store.
 
 The underlying LXMF delivery modes are:
 
-- **Direct** uses an encrypted live link to the recipient — fastest, with end-to-end delivery confirmation. Best when both sides are online.
-- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, but only fits messages up to **295 bytes** of content, and there's no delivery proof — just confirmation that the packet was transmitted.
+- **Direct** uses an encrypted live link to the recipient, with Link packet or Resource confirmation. Best when both sides are online or the message is too large for one packet.
+- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, only fits messages up to **295 bytes** of content, and can return an authenticated Reticulum packet proof. If no proof returns, Ratspeak cannot distinguish non-delivery from a lost proof.
 - **Offline Inbox** is Ratspeak's name for LXMF propagated delivery. It hands the encrypted message to a propagation node, which holds it until the recipient asks for waiting mail.
 
-Most users do not have to choose a mode by hand. The state icon on each message reflects which path was used.
+Most users do not have to choose a mode by hand. The state icon reports the observable delivery result rather than the transport method.
 
 ## Searching your messages
 

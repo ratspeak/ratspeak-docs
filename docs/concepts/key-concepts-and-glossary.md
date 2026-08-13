@@ -86,7 +86,7 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Direct Delivery.** LXMF opens a Reticulum link to the recipient and delivers the message over that encrypted session. This is preferred when the recipient is reachable and the message needs reliable delivery.
 
-**Opportunistic Delivery.** LXMF sends a small message as one encrypted Reticulum packet without establishing a link. With default parameters, the practical LXMF content limit is about 295 bytes. It is fast and cheap, but it has no link-level acknowledgement.
+**Opportunistic Delivery.** LXMF sends a small message as one encrypted Reticulum packet without establishing a link. With default parameters, the practical LXMF content limit is about 295 bytes. It has no Link session, but the recipient can return an authenticated Reticulum packet proof; no returned proof leaves delivery uncertain.
 
 **Propagated Delivery.** LXMF gives the encrypted message blob to a propagation node, which stores it until the recipient connects and requests waiting mail.
 

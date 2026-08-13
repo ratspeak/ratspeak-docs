@@ -6,7 +6,7 @@ sidebar_position: 4
 
 The **Games** view is where you play turn-based games with your contacts over the mesh. Two games ship today: **Tic-Tac-Toe** and **Chess**. Both ride on top of [LRGP](../products/lrgp.md) — each move is a small MessagePack envelope tucked inside an LXMF custom field, so a move is just another message as far as the network is concerned.
 
-Move payloads stay well under 295 bytes, so Ratspeak can use the cheapest delivery path that still makes sense. When your opponent has a fresh path, game actions default to Direct delivery so you get proof-backed delivery and retries. If Offline Inbox is enabled and a suitable propagation node is reachable, the move can wait for later pickup. Without Offline Inbox coverage, both sides still need a usable path before a move can land.
+Move payloads stay well under 295 bytes, so Ratspeak can use the cheapest delivery path that still makes sense. When your opponent has a fresh path, game actions default to Direct delivery for its Link-based transfer and retry behavior. If Offline Inbox is enabled and a suitable propagation node is reachable, the move can wait for later pickup. Without Offline Inbox coverage, both sides still need a usable path before a move can land.
 
 ## What the Games view does
 

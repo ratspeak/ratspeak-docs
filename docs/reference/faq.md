@@ -58,7 +58,7 @@ Yes. Offline Inbox is Ratspeak's name for an LXMF propagation node, and propagat
 
 ## What happens if the recipient is offline when I send a message?
 
-Three possibilities. If you send opportunistically and they never come online, the message expires unsent. If you use Direct, Ratspeak needs a live path and delivery proof from the recipient. If Offline Inbox is enabled and a suitable inbox node is reachable, Ratspeak can store the encrypted message there for later pickup. If no inbox node is reachable yet, the app tells you it is looking and requests paths instead of pretending the message was stored.
+Three possibilities. An explicitly Opportunistic send retries its connectionless packet and can confirm delivery if an authenticated proof returns; without one, Ratspeak eventually reports that delivery could not be confirmed. Direct needs a live path and completes through its Link packet or Resource proof. In Auto mode, if Offline Inbox is enabled and a suitable inbox node is reachable, Ratspeak can instead store the encrypted message there for later pickup. If no inbox node is reachable yet, the app tells you it is looking and requests paths instead of pretending the message was stored.
 
 ## Why are the public Ratspeak servers TCP addresses?
 
