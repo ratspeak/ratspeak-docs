@@ -68,7 +68,7 @@ Tap any peer in the Peers list. Their detail panel opens. Tap **Message** to sta
 
 Type your message in the composer at the bottom and hit send. The message is encrypted to the peer's public key, signed with yours, and handed off to the transport layer. From your side, that's the whole interaction.
 
-Watch the small status indicator next to your message. It moves through a few states — sending, sent, delivered, or stored in Offline Inbox — as the network confirms each step. If the recipient is offline and no inbox node is reachable, Ratspeak will tell you it is looking instead of pretending the message was stored. For the full delivery state reference, see [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
+Watch the small status indicator next to your message. It moves through a few states — sending, sent, delivered, or stored in Offline Inbox — as the network confirms each step. Auto tries the recipient live first. If live delivery ultimately fails, it can retry through a reachable Offline Inbox; without one, the message is marked failed instead of pretending it was stored. For the full delivery state reference, see [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
 
 ## Save them as a contact
 

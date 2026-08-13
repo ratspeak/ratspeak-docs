@@ -38,7 +38,7 @@ Every outgoing message gets a small status indicator that tells you what happene
 - **Stored in Offline Inbox** — the message was accepted by an LXMF propagation node for later pickup. This proves the inbox node received the encrypted message; it is not the same as end-to-end recipient delivery.
 - **Failed** — delivery did not succeed. The most common cause is that the destination is currently unreachable. You can resend.
 
-Ratspeak sends in Auto mode by default. Auto prefers Direct for normal messages because its Link and Resource machinery supports reliable transfers and larger payloads. If Offline Inbox is enabled and the recipient has not been seen recently, Auto can store the message on a reachable inbox node instead. If no inbox node is reachable yet, Ratspeak asks the mesh for a path and tells you it is still looking instead of silently sending into a dead store.
+Ratspeak sends in Auto mode by default. Auto tries live delivery first, even if the recipient has not announced recently: a quiet device can still be online and listening. Normal messages, attachments, and game actions start with Direct delivery and its Link/Resource retry machinery. For compatibility, a short message to a peer that explicitly reports no compression support can start Opportunistic instead. If that live method reaches a terminal failure and Offline Inbox is enabled with a reachable node, Auto retries once by storing the encrypted message there. If no inbox node is ready, the message fails instead of claiming it was stored.
 
 The underlying LXMF delivery modes are:
 
