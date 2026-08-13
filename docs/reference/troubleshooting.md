@@ -170,7 +170,7 @@ A few things to check:
 - Confirm both sides granted microphone permission (see above).
 - Check your OS default audio input and output. Ratspeak uses the OS default device and does not yet expose an in-app picker.
 - On Linux, confirm PulseAudio or PipeWire actually exposes the device you expect (`pactl info`, `pactl list short sinks/sources`).
-- On Android, leave the app foregrounded during the first call. Background audio routing while the OS is still confirming foreground service state can drop the capture stream.
+- On Android, a denied microphone permission leaves an established call in listen-only mode. Grant the permission before speaking; Ratspeak promotes microphone capture only while the active call needs it.
 - If the audio strip in the app shows a yellow warning text, that is the runtime telling you which side of the pipeline failed to start (microphone vs speaker) — copy that string when filing a bug.
 
 ## High latency on LoRa

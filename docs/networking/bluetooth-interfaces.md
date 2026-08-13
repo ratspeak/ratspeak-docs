@@ -6,7 +6,7 @@ sidebar_position: 3
 
 Ratspeak speaks two different Bluetooth dialects, and they are not interchangeable. The **BLE RNode bridge** connects a phone to a LoRa radio over Bluetooth so you can carry a transceiver in your pocket without a USB cable. **Bluetooth Peer** connects two phones (or laptops) directly to each other so they form a Reticulum link with no radio, no router, and no internet between them.
 
-Both share the same underlying stack: Ratspeak uses the cross-platform `btleplug` crate with native code per OS — Core Bluetooth via `objc2` on macOS and iOS, JNI bindings on Android, and BlueZ via `bluer` on Linux. There is no Python runtime in the loop. Bluetooth support is gated behind the `ble` build feature; mobile builds turn it on by default.
+There is no Python runtime in either path. Desktop Bluetooth uses Ratspeak's Rust Bluetooth stack. On Android, a native application-scoped supervisor owns the radio connection while Rust continues to own the RNode protocol and message queues. This lets a configured BLE RNode remain registered across Activity recreation and reconnect after the physical radio returns. Bluetooth support is gated behind the `ble` build feature; mobile builds turn it on by default.
 
 ## BLE RNode bridge
 
@@ -21,7 +21,7 @@ The radio still does the radio work. The bridge replaces nothing about LoRa modu
 3. Select the radio. The OS surfaces the standard pairing prompt; enter the passkey if one is shown on the device.
 4. Set a name, region, and preset. Ratspeak brings the interface up immediately.
 
-Bonding is persistent. The next time the radio is in range, Ratspeak reconnects without prompting. If the same physical RNode is later plugged in over USB, the BLE side tears down automatically — the radio is never driven from two transports at once.
+Bonding is persistent. The next time the radio is in range, Ratspeak reconnects without prompting. Android supports one enabled BLE RNode at a time and keeps its reconnect owner outside the app screen, so going Home or recreating the Activity does not itself discard the radio session. If the same physical RNode is later plugged in over USB, the BLE side tears down automatically — the radio is never driven from two transports at once.
 
 If a connect fails partway through, power-cycle the radio and remove the stale pairing from the OS Bluetooth settings before retrying. Stuck bonds are the most common cause of "scans but won't connect." On Linux, make sure the user account is in the `bluetooth` group; on Android, granting the *Nearby devices* runtime permission is required before any scan returns results.
 

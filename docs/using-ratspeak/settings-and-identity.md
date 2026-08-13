@@ -88,6 +88,12 @@ Toggle it in **Settings → Network → Bluetooth Peer**. It is unbonded by desi
 
 On Windows, the Bluetooth Peer advertiser/peripheral role requires the MSIX build. The plain `.exe` / MSI builds do not provide that role. On Linux, advertising requires a working BlueZ GATT server and LE advertising setup; if BlueZ cannot advertise, Ratspeak will show the interface as central-only.
 
+## Mobile notifications and background connection
+
+On Android and iOS, **Settings → Notifications** keeps Ratspeak's notification preference separate from the operating system permission. If permission has not been requested, use **Allow**; after a denial, use **Open Settings** to change it at the OS level. Turning Ratspeak notifications off hides those permission actions without changing the OS setting.
+
+Android also offers **Keep Ratspeak connected**. It is off by default and opens Android's battery-optimization control only after you choose it. This is useful when Doze interrupts a long-lived off-grid radio or network session, but it increases battery use and does not guarantee delivery after force stop, reboot, or OS process termination.
+
 ## Theme
 
 **Settings → Appearance → Theme** offers **Light**, **Dark**, and **OS preference** (follows your system setting and switches automatically). The theme applies instantly to every view.
