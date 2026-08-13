@@ -72,6 +72,8 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
 
 ### RNode keys (`RNodeInterface`, LoRa radios)
 
+Ratspeak writes `mode = roaming` for a newly added RNode, matching the usual mobile-radio role. Developer Mode exposes the interface-mode selector for fixed infrastructure and other deliberate topologies. Existing or imported RNode configurations keep their configured mode; if an older configuration omits `mode`, Reticulum's ordinary `full` default still applies.
+
 | Key | Description |
 |---|---|
 | `port` | Serial device, e.g. `/dev/ttyUSB0` or `COM3`, or a TCP-backed RNode stream such as `tcp://192.168.1.50:7633`. |
