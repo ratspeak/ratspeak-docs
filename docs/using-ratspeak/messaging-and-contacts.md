@@ -48,6 +48,13 @@ The underlying LXMF delivery modes are:
 
 Most users do not have to choose a mode by hand. The state icon reports the observable delivery result rather than the transport method.
 
+While a message is still in flight, **Cancel** stops Ratspeak's remaining local
+delivery work for that message. Mesh delivery is asynchronous: a packet or
+Resource part that was already handed to an interface cannot be recalled, so a
+cancelled message can still arrive at the recipient. The sender will continue
+to show it as cancelled because it is no longer waiting for or acting on the
+delivery result.
+
 ## Searching your messages
 
 The search box at the top of the Messages tab does a full-text search across every message you've ever sent or received, in every conversation. Type a word or phrase and matching messages surface immediately, grouped by conversation. Tap a result to jump straight to that message in its thread, with the matched text briefly highlighted.
