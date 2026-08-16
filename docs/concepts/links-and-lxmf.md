@@ -31,6 +31,10 @@ At a high level, link establishment works like this:
 
 The initiator does not have to reveal a long-term identity just to open a link. If an application wants the remote side to know who opened the session, it can identify over the encrypted link afterward with a signed identity packet. That identification step is optional and application-driven.
 
+The first Link Request still uses normal Reticulum path discovery and may be broadcast when no path is known. After the responder accepts that request and the initiator validates its proof, the Link stays bound to the exact interface that completed the handshake. Link data, resources, keepalives, proofs, and teardown do not fall back to another interface if that interface disappears or becomes unusable; the Link closes and a new Link must discover a new path. This prevents an established session from unexpectedly leaking onto an unrelated radio or network interface.
+
+Packet proofs sent inside an active Link also follow the sender's role. An initiator proves packets with the temporary signing key it advertised in the Link Request, while a responder proves packets with the destination identity that accepted the Link. This lets either peer authenticate delivery without requiring an initiator to disclose its long-term identity.
+
 ## Link Timers
 
 The defaults are tuned for slow, lossy networks:
