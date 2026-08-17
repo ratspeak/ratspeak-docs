@@ -83,18 +83,17 @@ LoRa operates on **ISM bands** (Industrial, Scientific, Medical) - unlicensed bu
 
 | Region | Band | Key Rules |
 |--------|------|-----------|
-| **US (FCC)** | 915 MHz | Power/channel rules apply; duty-cycle limits are not the usual constraint |
-| **EU (ETSI)** | 868 MHz | Sub-band duty-cycle limits apply; configure conservative airtime caps |
-| **EU** | 433 MHz | Duty cycle limits apply |
+| **US (FCC)** | 915 MHz | Power/channel rules apply (FCC Part 15.247); no duty-cycle limit |
+| **EU (ETSI)** | 868 MHz | ETSI EN 300 220-2 Table 4: 25 mW e.r.p. and 1 % duty cycle per hour in 865–868.6 MHz; 869.4–869.65 MHz allows 500 mW e.r.p. at 10 %; other sub-bands are 0.1 % |
+| **EU** | 433 MHz | ETSI EN 300 220-2 Table 4 row H: 10 mW e.r.p. and 10 % duty cycle per hour in 433.05–434.79 MHz |
 
-For EU 868 MHz, Ratspeak's default region metadata uses conservative airtime caps:
+For the Europe region (868.0 MHz default), Ratspeak prefills the published hourly duty cycle for that sub-band:
 
 ```ini
-airtime_limit_long = 1.5
-airtime_limit_short = 33
+airtime_limit_long = 1.0
 ```
 
-When configured, Reticulum rate-limits transmissions against those caps. That helps, but it does not replace checking the exact sub-band, antenna gain, and power rules for your country.
+The figure is the regulation's, not a rule of thumb: the duty cycle is the cumulative on-time over one hour (EN 300 220-2 clause 4.4.3.2). No short-term cap is prefilled because none is published; you can still set `airtime_limit_short` per interface. If you move to another sub-band (for example 869.525 MHz), adjust the cap to that sub-band's limit. Reticulum then rate-limits transmissions against the configured caps. That does not replace checking the exact sub-band, antenna gain, and power rules for your country.
 
 > **Warning**: Verify the legal frequency band and power limits for your country before transmitting. ISM bands are unlicensed but usage rules vary by jurisdiction.
 
