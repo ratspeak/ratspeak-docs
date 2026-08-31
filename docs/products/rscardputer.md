@@ -4,6 +4,10 @@ sidebar_position: 3
 
 # rsCardputer
 
+Cardputer Adv support in [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld)
+is in testing. The released firmware described below remains **rsCardputer**;
+the web flasher's Cardputer preset continues to use those legacy releases.
+
 rsCardputer is the firmware family for the M5Stack Cardputer Adv with the Cap
 LoRa-1262 add-on. It replaces the older standalone Cardputer firmware and adds a
 launcher that can boot either mode from the same install:
@@ -24,12 +28,12 @@ The supported device is M5Stack's Cardputer Adv: an ESP32-S3 handheld with a
 240 by 135 display, micro keyboard, internal battery, microSD support, and the
 separate Cap LoRa-1262 SX1262 radio module.
 
-## rsCardputer vs rsDeck
+## Cardputer and T-Deck Plus
 
 Both are standalone Reticulum/LXMF handhelds when used in their native messaging
 modes.
 
-- **[rsDeck](../products/rsdeck.md)** has the larger screen, full keyboard,
+- **[T-Deck Plus](./rsdeck.md)** has the larger screen, full keyboard,
   integrated radio, and more memory headroom.
 - **rsCardputer** is smaller and modular, with the LoRa radio supplied by the
   M5Stack cap. It can also reboot into RNode mode when you want the Cardputer to
@@ -38,8 +42,12 @@ modes.
 ## Flash it
 
 The fastest path is the [web flasher](https://ratspeak.org/download.html).
-Hold **G0** while plugging the Cardputer Adv into USB to enter download mode,
-pick Cardputer Adv, and flash.
+With the side power switch off, hold **G0** while applying USB power, then release
+it to enter download mode. Pick Cardputer Adv and check the firmware version.
+
+Back up your identity and data before flashing. Full, Standalone, and RNode ZIPs
+are factory images; leaving **Full Erase** off does not guarantee preservation.
+Follow the selected release's upgrade instructions for an existing installation.
 
 For recovery mode, serial verification, and post-flash checks, see
 [Flashing Firmware](../hardware/flashing-firmware.md).
@@ -65,6 +73,8 @@ For the full preset table and tuning guidance, see
 
 ## Build from source
 
+These commands build the legacy rsCardputer firmware:
+
 ```bash
 git clone https://github.com/ratspeak/rsCardputer
 cd rsCardputer
@@ -76,6 +86,11 @@ make flash port=/dev/cu.usbmodem3101
 
 Release artifacts include the full launcher image, split Standalone and RNode
 web-flasher zips, and M5Launcher app binaries.
+
+For experimental unified builds, use the
+[Ratspeak Handheld build instructions](../hardware/flashing-firmware.md#build-from-source)
+with `DEVICE=cardputer`. These can be uploaded explicitly through **Build your
+own**; they are not part of the first beta's automatic downloads.
 
 ## License
 

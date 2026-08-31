@@ -7,6 +7,12 @@ sidebar_label: LilyGO T-Deck Plus
 
 This section provides step-by-step instructions for flashing the [LilyGO T-Deck Plus](https://lilygo.cc/en-ca/products/t-deck-plus-1) with Ratspeak using the web-based installer.
 
+For the unified firmware, check that the selected release is **Ratspeak Handheld**.
+If the board preset still shows rsDeck, upload `rsdeck-full.zip` from the
+[unified releases](https://github.com/ratspeak/ratspeak-handheld/releases) through
+**Build your own** instead. See the [package guide](/docs/hardware/flashing-firmware)
+for the distinction between fresh installs and updates.
+
 ## Preparation
 
 In order to begin, you will need:
@@ -16,10 +22,17 @@ In order to begin, you will need:
 - A computer with an appropriate browser
 
 
-In order to use the web flasher, you must be using a browser that supports WebSerial (Firefox 151+, Chrome, Opera, or Edge) in order to detect and connect with the board.
+Use a desktop browser with Web Serial support, such as Chrome or Edge, to connect
+to the board.
+
+Back up internal flash and the SD card before flashing; see the
+[backup instructions](/docs/hardware/flashing-firmware#before-flashing).
+Full packages are fresh-install images, not data-preserving updates.
+Leaving **Full Erase** off does not prevent
+a factory image from overwriting saved data.
 
 :::warning
-If this is the first time using the T-Deck Plus, ensure that the antenna is attached before powering it on, as using the device without it can damage the radio receiver.
+Attach the antenna before powering on the T-Deck Plus. Transmitting without it can damage the radio.
 :::
 
 ## Getting started
@@ -40,13 +53,10 @@ If this is the first time using the T-Deck Plus, ensure that the antenna is atta
 
 1. On the T-Deck Plus download page, click '**Select USB Device**'. A menu will appear prompting you to select the proper device. Pair the T-Deck Plus; depending on the system hardware, it may have a variety of names.
 
-2. It is recommended to also turn on **full erase** under advanced options.
+2. For a fresh installation, choose **Full** to include the launcher and both
+   modes. After verifying your backup, enable **Full Erase** to clear internal storage.
 
-:::note
-For new users, it is advised to simply use the Full installation. This will provide access to a launcher page to select between booting in either Standalone or RNode modes.
-:::
-
-3. Click **Flash**. The installation process will now commence.
+3. Click **Flash**, check the device and backup notice, then continue.
 
 4. A successful flash will produce the below output:
 

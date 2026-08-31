@@ -3,7 +3,12 @@ sidebar_position: 3
 sidebar_label: LilyGO T-Deck Plus
 ---
 
-# Building rsDeck (T-Deck Plus)
+# Building legacy rsDeck (T-Deck Plus)
+
+This guide covers the older `ratspeak/rsDeck` repository. For the unified Rust-core
+firmware, use the [Ratspeak Handheld build instructions](/docs/hardware/flashing-firmware#build-from-source)
+with `DEVICE=tdeck`. The legacy commands and artifact names below are retained
+for existing branches and releases.
 
 The LilyGO T-Deck Plus runs Ratspeak's **rsDeck** firmware, built from [`ratspeak/rsDeck`](https://github.com/ratspeak/rsDeck) with **PlatformIO**. A single build produces the launcher, Standalone mode, and RNode mode together.
 
@@ -93,6 +98,10 @@ make package
 This compiles the three parts of rsDeck (launcher, Standalone messenger, and RNode radio firmware), then merges and bundles them. The first `make package` also downloads PlatformIO's ESP32 platform, so it can take several minutes; later builds are much faster. When it finishes, the release images are in the `dist/` folder (see [Build artifacts](#build-artifacts)).
 
 ## 6. Flash the board
+
+Back up internal flash and the SD card first; see the
+[backup instructions](/docs/hardware/flashing-firmware#before-flashing).
+`make flash` writes a factory image, not a data-preserving update.
 
 **Put the T-Deck in download mode.** Unlike most boards, you enter download mode as the board *powers on*, not by plugging it in:
 
