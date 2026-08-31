@@ -118,7 +118,7 @@ Use `DEVICE=tpager` for T-Pager. `DEVICE=cardputer` builds the experimental
 Cardputer firmware; it is not part of the first beta download set. Packages go
 to `dist/` and can be uploaded through **Build your own**. Normal builds use the
 included Rust libraries and do not need a Rust toolchain. Protocol development
-is covered in the [build notes](https://github.com/ratspeak/ratspeak-handheld/blob/main/protocol/prebuilt/README.md).
+is covered in the [source build instructions](https://github.com/ratspeak/ratspeak-handheld#build-from-source).
 
 ## Legacy firmware
 
