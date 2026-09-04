@@ -18,9 +18,13 @@ Ratspeak is the app. It embeds the protocol and support repos below:
 - **[lrgp-rs](https://github.com/ratspeak/lrgp-rs)** - the lightweight game protocol used by the Ratspeak app.
 - **[rsLXST](https://github.com/ratspeak/rsLXST)** - the experimental LXST telephony layer used for Ratspeak's voice calls. Required for the default Ratspeak build; skip with `--no-default-features` if you want to build without voice.
 
-For a reproducible release build, follow the app's [exact-source packaging guide](https://github.com/ratspeak/Ratspeak/blob/main/docs/source-packaging.md) and its pinned dependency set. The host app and protocol libraries require Rust 1.89 or newer; handheld firmware uses its separately pinned MCU toolchain.
+## Select an exact source set
 
-During development these repos resolve each other by relative path. Git is the easiest way to fetch them, but GitHub ZIP downloads also work if you extract and rename the folders to match this layout:
+For a released app, read `release/dependency-set.json` from that **Ratspeak release tag** and fetch each sibling's exact `commit`. A component's Cargo `version` is not a Git revision: standalone tags with the same version can lack APIs used by the app. The annotated `integrationTag` must resolve to the manifest commit. Do not mix current branch tips, standalone releases, or commits selected by date.
+
+The [source-packaging guide](https://github.com/ratspeak/Ratspeak/blob/main/docs/source-packaging.md) includes a source-checkout helper, an exact-release verification command, and the Nix packaging contract. Nix packagers should derive sibling fetches from the manifest commits and update their fixed-output hashes together. Use `Ratspeak/src-tauri/Cargo.lock` for the application; do not substitute the root workspace lockfile.
+
+The following clones establish the **development folder layout**, not a verified release source set. Align their revisions with the selected app manifest before building. GitHub source archives also work when fetched at those exact revisions and extracted under these folder names; the Ratspeak archive alone does not contain its siblings.
 
 ```bash
 mkdir ratspeak-src
@@ -51,11 +55,11 @@ If you clone only `Ratspeak`, Cargo will fail because it cannot find the sibling
 Install these first on every desktop platform:
 
 1. **Git**, or GitHub ZIP downloads renamed to the folder layout above.
-2. **Rust 1.89 or newer**, installed through [`rustup`](https://www.rust-lang.org/tools/install).
-3. **Tauri v2 CLI**, installed with Cargo:
+2. **Rust 1.89 or newer**, installed through [`rustup`](https://www.rust-lang.org/tools/install). Release builds use the exact `toolchains.rustRelease` in the selected manifest; the minimum supported version is not the release toolchain pin.
+3. **Tauri v2 CLI**, using the selected manifest's `toolchains.tauriCli` version. For example, the v1.0.31 source set uses:
 
 ```bash
-cargo install tauri-cli --version "^2.0.0" --locked
+cargo install tauri-cli --version 2.11.1 --locked
 ```
 
 Check that the tools are visible in your terminal:
@@ -67,7 +71,7 @@ cargo --version
 cargo tauri --version
 ```
 
-Ratspeak's frontend is plain HTML, CSS, and JavaScript bundled into the Tauri app. There is no npm install step for this repo.
+Ratspeak's frontend is plain HTML, CSS, and JavaScript bundled into the Tauri app. There is no npm install step for this repo. The release source tools additionally use Node.js (the reviewed version is recorded in the manifest).
 
 ## Platform setup
 
@@ -95,6 +99,11 @@ sudo apt install libwebkit2gtk-4.1-dev \
   libxdo-dev \
   libssl-dev \
   libayatana-appindicator3-dev \
+  libasound2-dev \
+  libudev-dev \
+  libpcsclite-dev \
+  libdbus-1-dev \
+  pkg-config \
   librsvg2-dev
 ```
 
@@ -126,13 +135,15 @@ Install Android Studio. In Android Studio's SDK Manager, install:
 - Android SDK Platform-Tools
 - Android SDK Build-Tools
 - Android SDK Command-line Tools
-- NDK (Side by side)
+- NDK (Side by side), at the exact `toolchains.androidNdk` revision in the selected manifest
 
 Set `JAVA_HOME`, `ANDROID_HOME`, and `NDK_HOME` as described by [Tauri's Android prerequisites](https://v2.tauri.app/start/prerequisites/#android), then add the Android Rust targets:
 
 ```bash
 rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 ```
+
+Do not assume `NDK_HOME` alone controls Tauri's selection when several NDKs are installed. Maintainer Android builds expose only the pinned NDK through a disposable SDK view, retain it through Gradle and artifact checks, and verify Tauri's actual selection in the build log. See `scripts/release/android-sdk-view.mjs` in the current Ratspeak tooling checkout. The helper supports the Linux x86_64 and macOS build hosts; it does not delete installed SDKs. Older product tags may not contain the helper.
 
 For a physical device, enable Developer Options and USB debugging. `adb devices` should show the phone before you build or install.
 
