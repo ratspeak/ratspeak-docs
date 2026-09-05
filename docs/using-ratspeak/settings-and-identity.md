@@ -49,11 +49,11 @@ Identities created before the recovery-phrase system have random keys with no ph
 
 ## PIN protection
 
-You can lock a software identity behind a **PIN**. Ratspeak encrypts the on-disk key with a key derived from your PIN (Argon2id + authenticated encryption), so a stolen or lost device can't use the identity without it. Set it in **Settings → Identity →** the identity's menu **→ Set PIN**. Additional software identities can also be PIN-protected at creation.
+You can protect a software identity's stored key with a **PIN**. Ratspeak encrypts the on-disk key with a key derived from your PIN (Argon2id + authenticated encryption). This protects the key at rest; it does not prevent someone using an already-unlocked Ratspeak session. Set it in **Settings → Identity →** the identity's menu **→ Set PIN**. Additional software identities can also be PIN-protected at creation.
 
-When a PIN is set, Ratspeak prompts for it once each time you open the app (and again after an auto-lock timeout, if enabled). It is **not** asked per message — unlock once per session. There is **no recovery if you forget the PIN**; your 12-word phrase remains the fallback to re-create a recoverable identity, so keep it. For an older identity without a phrase, keep a separate export or full backup before relying on a PIN.
+The PIN is required when a fresh Ratspeak runtime starts and loads the protected identity, not per message or whenever its screen reopens. On Android, the runtime can remain unlocked in the background after the task is removed; reopening its screen resumes that same session. Software identities do not currently have an automatic lock timeout.
 
-Auto-lock timeout (how long a session stays unlocked) is configured in **Settings → Network → Hardware Key Auto-Lock**; it applies to both PIN-protected software identities and hardware-key identities. "Off" relies on locking when you quit the app.
+There is **no recovery if you forget the PIN**; your 12-word phrase remains the fallback to re-create a recoverable identity, so keep it. For an older identity without a phrase, keep a separate export or full backup before relying on a PIN.
 
 ## Auto-announce
 
@@ -101,6 +101,8 @@ On Android, **Background battery access** shows the current OS battery-optimizat
 ## Hardware keys (YubiKey)
 
 On **desktop**, you can back an identity with a YubiKey 5-class PIV token instead of a private-key file: signing and encryption operations happen on the token, and the app unlocks it with your PIN once per session. Set one up from the **Hardware Key** button on first setup, or **Settings → Identity → Hardware**. Choose **Recoverable** (a 12-word phrase backup that can restore the same identity) or **Hardware-only** (no backup; losing or resetting the key loses the identity). Hardware identities are wire-identical to software ones — peers can't tell the difference. This support is still labeled experimental.
+
+**Settings → Identity → Hardware Key Auto-Lock** appears when a hardware identity exists and applies only to hardware-key identities. It uses a fixed unlocked-session duration, not an inactivity timer; interacting with the app does not reset it. Changes apply on the next unlock or runtime start. **Off** disables the timeout; quitting the runtime still locks the hardware identity.
 
 Hardware keys are **desktop-only** for now (the token transport relies on the desktop PC/SC stack). On **mobile**, use a software identity and bring it across with your recovery phrase — that's the practical mobile path until a tap-to-unlock NFC model lands. Re-provisioning or resetting a token overwrites its Ratspeak PIV keys, so Ratspeak warns before it would destroy an identity already on the key. Resetting the PIV app does not erase passkeys, FIDO sign-ins, OTP, or other non-PIV features, but it does erase the Ratspeak keys on that YubiKey.
 

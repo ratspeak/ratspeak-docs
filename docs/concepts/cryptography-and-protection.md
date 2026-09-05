@@ -23,7 +23,7 @@ The two roles stay separate. Signing material is not used for encryption, and ke
 
 The private key material is a bearer credential. If someone else copies it, they can impersonate that identity. There is no recovery server or central registry that can restore or revoke it for you.
 
-New Ratspeak software identities are recoverable: the 64-byte keyset is derived from a 12-word BIP-39 recovery phrase. That phrase is a second copy of the identity, so it must be protected like the key itself. Ratspeak can encrypt the local software key and stored phrase behind a PIN using Argon2id-derived authenticated encryption, and it prompts once per app session or after auto-lock.
+New Ratspeak software identities are recoverable: the 64-byte keyset is derived from a 12-word BIP-39 recovery phrase. That phrase is a second copy of the identity, so it must be protected like the key itself. Ratspeak can encrypt the local software key and stored phrase behind a PIN using Argon2id-derived authenticated encryption. The PIN protects this material at rest and is required when a fresh runtime starts and loads the identity. It does not lock an already-unlocked session when its screen closes or reopens, and software identities do not currently have an automatic lock timeout. On Android, that unlocked runtime can continue in the background after task removal.
 
 Desktop hardware-key identities use the same Reticulum identity shape on the wire, but the private operations happen on a YubiKey/PIV token instead of an extractable file. The token signs announces and performs ECDH locally after PIN unlock. Peers cannot tell whether an identity is software-backed or hardware-backed.
 
