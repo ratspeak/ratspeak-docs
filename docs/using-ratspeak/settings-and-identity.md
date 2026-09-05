@@ -92,7 +92,7 @@ On Windows, the Bluetooth Peer advertiser/peripheral role requires the MSIX buil
 
 On Android and iOS, **Settings → Notifications** keeps Ratspeak's notification preference separate from the operating system permission. If permission has not been requested, use **Allow**; after a denial, use **Open Settings** to change it at the OS level. Turning Ratspeak notifications off hides those permission actions without changing the OS setting.
 
-Android also offers **Keep Ratspeak connected**. It is off by default and opens Android's battery-optimization control only after you choose it. This is useful when Doze interrupts a long-lived off-grid radio or network session, but it increases battery use and does not guarantee delivery after force stop, reboot, or OS process termination.
+On Android, **Background battery access** shows the current OS battery-optimization status, not a saved Ratspeak on/off preference. Choose **Review** to open Android's battery controls. Exempting Ratspeak from battery optimization can help background connections but may increase battery use. Android or the device maker can still stop the app; this does not guarantee delivery after a force stop, reboot, or OS process termination.
 
 ## Theme
 
