@@ -6,8 +6,9 @@ sidebar_label: T-Pager
 # Ratspeak for T-Pager
 
 The LilyGO T-Pager runs [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
-alongside [T-Deck Plus](./rsdeck.md) in the first beta. It replaces the separate
-rsPager firmware with the shared Rust Reticulum/LXMF core.
+alongside [T-Deck Plus](./rsdeck.md) and [Cardputer Adv](./rscardputer.md). It
+uses the shared Rust Reticulum/LXMF core. This page describes
+**Ratspeak Handheld 2.2.0 beta**.
 
 ## Hardware
 
@@ -28,8 +29,8 @@ for a fresh installation. Upload it through **Build your own** on the
 [web flasher](https://ratspeak.org/download.html), or select the T-Pager preset
 when it shows **Ratspeak Handheld**.
 
-**Back up your identity and data first.** Factory packages can replace saved
-data even with Full Erase off. See the
+**Back up your identity and data first.** Factory packages reset internal
+storage after you accept the web flasher's backup notice. See the
 [backup instructions](../hardware/flashing-firmware.md#before-flashing) before
 replacing an existing installation.
 
@@ -44,11 +45,41 @@ The full package starts a launcher with two choices:
 - **Standalone** — on-device LXMF messaging over LoRa or Wi-Fi.
 - **RNode** — a host-controlled radio for Ratspeak or another Reticulum client.
 
-Use the keyboard and scroll encoder to navigate; click the encoder or press
-Enter to select. In Standalone mode, a short **BOOT** press sleeps or wakes the
-screen. Holding BOOT while the screen is on opens the power-off confirmation; a six-second hold forces
+Use the scroll encoder to move between tabs. Click it or press **Enter** to
+enter the selected tab, then turn it to move through that screen's controls.
+The first click enters the screen; it does not also activate a control.
+**Backspace** goes back to tab navigation when the current screen has no more
+specific back/edit action. **Alt+Backspace** is Escape for cancelling an edit.
+
+For a selected setting, press Enter or click to edit, then turn the encoder
+**up to increase/advance** or **down to decrease/go back**. Editing changes the
+value without scrolling the surrounding page. Enter saves; Backspace cancels
+ordinary value edits. A setting with only one available choice cannot be edited.
+
+### Select a frequency without touch
+
+1. Open **Settings → LoRa**. Select **Developer Radio Controls**, then hold the
+   encoder button as prompted to unlock the custom fields.
+2. Open **Frequency** and press Enter or click to edit. Use **A/D** to choose the highlighted digit. Comma/slash also work here.
+3. Turn the encoder up to increase that digit or down to decrease it, or type
+   a digit; **Alt+Q…P** enters 1…0.
+4. Press **Enter** to save, or **Alt+Backspace** to cancel. Backspace alone moves
+   to the preceding digit while editing.
+
+The bracketed digit and the on-screen hint show what will change. Match the
+frequency and radio preset with the other device; unsupported frequencies are
+rejected. This editor does not require touch, a trackball or horizontal scrolling.
+
+### Power buttons
+
+In Standalone mode, a short **BOOT** press sleeps or wakes the screen. Holding BOOT while the screen is on opens the power-off confirmation; a six-second hold forces
 power off. **PWR** powers the device on from shutdown; **RST** resets it.
-Prefer the confirmed shutdown over a forced power-off when saving data.
+Prefer the confirmed shutdown over a forced power-off when saving data. A forced
+power-off can interrupt a save. If the display is dark, tap and release BOOT to
+wake it before holding again.
+
+See the [handheld guide](../hardware/handheld-guide.md) for messaging states,
+long history and storage/recovery behavior.
 
 ## Legacy rsPager
 

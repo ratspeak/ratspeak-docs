@@ -41,7 +41,11 @@ Before buying or flashing, check the practical kit:
 
 1. **Flash your own** - buy a supported board (see below) and run `rnodeconf --autoinstall` to flash RNode firmware. See [Flashing Firmware](../hardware/flashing-firmware.md).
 2. **Buy pre-made** - purchase from [unsigned.io](https://unsigned.io) or community vendors.
-3. **Use Ratspeak hardware** - [rsDeck](../products/rsdeck.md) includes an integrated LoRa radio, and [rsCardputer](../products/rscardputer.md) attaches one through the Cap LoRa add-on.
+3. **Use a supported handheld** — [T-Deck Plus](../products/rsdeck.md) and
+   [T-Pager](../products/rspager.md) have integrated LoRa. [Cardputer Adv](../products/rscardputer.md)
+   requires the Cap LoRa-1262. Their full Ratspeak Handheld packages include
+   Standalone messaging and a separate host-controlled RNode mode; check each
+   device page for controls and installation instructions.
 
 ## Connection Methods
 

@@ -338,6 +338,18 @@ You do not separately install `rnsd-rs` or `lxmd-rs` on Android or iOS. Mobile R
 
 If you are debugging protocol code for mobile, make the change in `rsReticulum` or `rsLXMF`, then rebuild Ratspeak for that mobile target. The sibling checkout is what makes that loop work.
 
+## Ratspeak Handheld
+
+T-Deck Plus, T-Pager and Cardputer Adv use the unified `ratspeak-handheld`
+repository. Follow its [firmware build procedure](../hardware/flashing-firmware.md#build-from-source)
+with the matching `DEVICE`. Normal firmware builds use the included Rust archives;
+they do not need the desktop workspace layout above. The selected firmware/source
+identity is recorded in `tools/release_identity.json`.
+
+Keep launcher, Standalone and RNode components from the same source build, and use the
+package validator before installing. Old `rsDeck`, `rsPager` and `rsCardputer`
+repositories remain references for their earlier releases.
+
 ## Common build problems
 
 **Cargo cannot find `../rsReticulum`, `../rsLXMF`, `../lrgp-rs`, or `../rsLXST`.** The repos are not checked out as siblings. Move them into the layout shown at the top of this page. If you only see the error for `../rsLXST`, either clone that sibling too or pass `--no-default-features` to `cargo tauri dev` / `cargo tauri build` to build Ratspeak without the experimental voice stack.

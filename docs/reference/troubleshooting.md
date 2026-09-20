@@ -177,6 +177,34 @@ A few things to check:
 
 This is normal, not a bug. At SF12 / 125 kHz, a single packet takes around 1.5 seconds on the air, and end-to-end delivery over multiple hops with retries can take 30 to 120 seconds. To trade range for speed, drop to SF7–SF9 and (if regulations allow) widen to 250 kHz.
 
+## Ratspeak Handheld
+
+The following applies to **Ratspeak Handheld 2.2.0 beta**.
+
+- **T-Pager frequency is hard to change:** open Settings → LoRa, select Developer
+  Radio Controls and hold the encoder as prompted. In Frequency, A/D selects the
+  digit, the encoder tunes it, Enter saves and Alt+Backspace cancels. See the
+  [Pager controls](../products/rspager.md#select-a-frequency-without-touch).
+- **Cardputer has no LoRa:** Cardputer Adv requires the Cap LoRa-1262. Check that
+  module and the matching antenna before investigating networking. Wi-Fi and a
+  saved TCP endpoint do not supply a missing radio.
+- **Sent but not delivered:** `sent` is a transport-start indication; only a
+  verified proof produces `delivered`. A late/lost proof can leave a received
+  message unconfirmed. Check the path and matching radio settings; repeated
+  resends create separate outgoing records.
+- **Save retry, storage error or unavailable history:** keep the exact detail,
+  allow the pending operation to settle, and check the SD card if used. Do not
+  format merely to clear a warning. A valid delivery proof and an unsaved status
+  can coexist.
+- **Reset recovery at boot:** the reset did not complete. Normal identity loading
+  is intentionally paused. Review the recorded scope before confirming another
+  erase; restarting alone leaves it pending. Follow the
+  [recovery guide](../hardware/handheld-guide.md#restart-erase-and-recovery).
+
+For a handheld report, include the board/radio model, firmware repository/version,
+mode, displayed error and relevant serial log. Keep private identity files, whole
+flash backups and Wi-Fi passwords out of reports.
+
 ## Still stuck
 
 Open **Settings → About** and check the version. Then ask in the community channels with: your OS, the version string, what you tried, and what you saw.

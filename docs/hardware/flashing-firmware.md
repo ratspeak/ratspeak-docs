@@ -4,10 +4,10 @@ sidebar_position: 2
 
 # Flashing firmware
 
-Ratspeak Handheld brings T-Deck Plus and T-Pager firmware into one codebase.
-The first beta covers those two devices; Cardputer Adv is in testing, with
-existing rsCardputer releases still available separately. RNode-class boards
-can also use the upstream `rnodeconf` toolchain below.
+Ratspeak Handheld shares one firmware codebase across T-Deck Plus, T-Pager and
+Cardputer Adv. Version **2.2.0 beta** provides packages for all three devices.
+Check the selected board, release and installation mode before flashing.
+RNode-class boards can also use the upstream `rnodeconf` toolchain below.
 
 > **Warning**: Attach an antenna matched to your frequency band before powering or testing a LoRa radio. Transmitting without an antenna can damage the radio module.
 
@@ -15,15 +15,17 @@ can also use the upstream `rnodeconf` toolchain below.
 
 The `*-full.zip`, `*-standalone.zip`, and `*-rnode.zip` packages are **fresh
 installs, not data-preserving updates**. They write firmware and a partition
-layout; leaving **Full Erase** off does not protect existing data. This beta
-does not provide an automatic migration from rsDeck or rsPager.
+layout. The web flasher resets internal storage after you accept its backup
+notice. Do not rely on an in-place migration when installing a factory package.
+The firmware can recognize supported legacy storage, but that is not a promise
+to restore an arbitrary backup; see [storage and recovery](./handheld-guide.md).
 
 Back up internal flash and the SD card before replacing an existing installation.
 A flash backup lets you return to the old firmware and its saved data; it does
 not import that data into the new firmware. Keep the original SD card aside
 during the fresh install.
 
-### Back up an existing T-Deck or T-Pager
+### Back up an existing handheld
 
 1. Shut down the device and copy the entire SD card to your computer, if fitted.
    An SD copy alone is not a complete backup: identities and settings can be
@@ -39,14 +41,16 @@ python3 -m esptool --chip esp32s3 --port PORT --after no-reset read-flash 0 ALL 
 python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
 ```
 
-Both commands must finish successfully before flashing. These boards have 16 MB
-of flash, so the backup should be 16,777,216 bytes. Keep it with the SD copy in
-private storage: it contains identity keys and may contain Wi-Fi passwords.
-Do not attach it to a bug report.
+Both commands must finish successfully before flashing. T-Deck Plus and T-Pager
+have 16 MB of flash: the backup should be 16,777,216 bytes. Cardputer Adv has
+8 MB: expect 8,388,608 bytes. Stop if the detected capacity or backup length does
+not match your device. Keep the backup with the SD copy in private storage: it
+contains identity keys and may contain Wi-Fi passwords. Do not attach it to a
+bug report.
 
 ### Keep an existing identity
 
-If you already have the identity's **64-byte private key file**, copy it to
+On T-Deck or T-Pager, if you already have the identity's **64-byte private key file**, copy it to
 `/ratdeck/identity/import.identity` on an SD card for T-Deck, or
 `/ratpager/identity/import.identity` for T-Pager. After installation, insert the
 card before booting and open **Settings → Identity & Device → Import Identity**.
@@ -56,7 +60,9 @@ Check its address against your old one, then remove the import file from the car
 The firmware has no identity-export menu, and a contact QR is not a private-key
 backup. If you need the same identity but do not have its key file, keep the old
 installation until you have recovered it. Messages, contacts and settings are
-not restored by importing a key.
+not restored by importing a key. Cardputer's compact settings do not expose the
+Deck/Pager identity-slot/import controls; use a complete backup for recovery
+rather than assuming the same menu exists.
 
 ### Return to your backup
 
@@ -76,14 +82,14 @@ one device's backup onto another.
 Use a desktop browser with Web Serial support, such as Chrome or Edge, and a
 USB-C data cable. Open the [Ratspeak download page](https://ratspeak.org/download.html).
 
-1. Select **T-Deck Plus** or **T-Pager**, then **Flash in browser**.
+1. Select **T-Deck Plus**, **T-Pager** or **Cardputer**, then **Flash in browser**.
 2. Check the firmware name and version. Unified releases are labelled
    **Ratspeak Handheld**; rsDeck, rsPager, and rsCardputer labels refer to legacy firmware.
 3. For a fresh installation, choose **Full** to include the launcher, Standalone
-   messenger, and RNode mode. After verifying your backup, enable **Full Erase**
-   to start with empty internal storage. The other packages install one mode only.
+   messenger, and RNode mode. The other packages install one mode only.
 4. Enter [download mode](#recovery-download-mode), select the correct USB device,
-   and flash. Confirm the device model and backup notice before continuing.
+   and flash. Confirm the device model and backup notice before continuing; the
+   fresh install then clears internal storage automatically.
 5. When writing finishes, reset the device manually.
 
 To install a downloaded or locally built package, open **Build your own** on the
@@ -94,10 +100,14 @@ download page and upload the complete `.zip`. Unified release packages come from
 | --- | --- |
 | T-Deck Plus | `rsdeck-full.zip` |
 | T-Pager | `rspager-full.zip` |
+| Cardputer Adv + Cap LoRa-1262 | `rscardputer-full.zip` |
 
 Bare `*-app.bin` and `*-m5launcher.bin` files are for their intended launcher or
-layout-specific installation, not the normal ZIP upload flow. Cardputer's board
-preset continues to use [legacy rsCardputer releases](https://github.com/ratspeak/rsCardputer/releases).
+layout-specific installation, not the normal ZIP upload flow. A raw application
+preserves data only if you write it to the matching app slot without erasing flash
+or changing the partition table. Do not infer that slot from a filename. Earlier
+[legacy rsCardputer releases](https://github.com/ratspeak/rsCardputer/releases)
+have different layouts; do not mix them with unified packages.
 
 ## Build from source
 
@@ -114,11 +124,13 @@ make doctor DEVICE=tdeck
 make package DEVICE=tdeck
 ```
 
-Use `DEVICE=tpager` for T-Pager. `DEVICE=cardputer` builds the experimental
-Cardputer firmware; it is not part of the first beta download set. Packages go
+Use `DEVICE=tpager` for T-Pager or `DEVICE=cardputer` for Cardputer Adv. Packages go
 to `dist/` and can be uploaded through **Build your own**. Normal builds use the
-included Rust libraries and do not need a Rust toolchain. Protocol development
-is covered in the [source build instructions](https://github.com/ratspeak/ratspeak-handheld#build-from-source).
+included Rust libraries and do not need a Rust toolchain. Packaging checks board,
+mode, product version, source identity, component size and the complete factory
+layout; use the launcher and both app modes from the same source build. These
+checks detect mismatches, not source authenticity. Protocol development
+is covered in the [build notes](https://github.com/ratspeak/ratspeak-handheld#build-from-source).
 
 ## Legacy firmware
 
@@ -183,5 +195,7 @@ A successful handheld installation should pass these checks:
 4. Test a message with another Reticulum/LXMF device using matching radio settings
    or a reachable network path.
 
-If startup fails, record the serial log at 115200 baud before considering another
-flash. Do not erase the device as a first response to a missing identity or history.
+If startup fails, note the displayed error and record the serial log at 115200
+baud before considering another flash. Do not erase the device as a first
+response to a missing identity or history. See [Reset recovery and maintenance](./handheld-guide.md#restart-erase-and-recovery)
+for an interrupted reset or a save that has not settled.

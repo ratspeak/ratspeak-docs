@@ -6,15 +6,14 @@ sidebar_label: T-Deck Plus
 # Ratspeak for T-Deck Plus
 
 The T-Deck Plus is supported by [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
-the shared successor to rsDeck, rsPager, and rsCardputer. The first beta covers
-T-Deck Plus and [T-Pager](./rspager.md); Cardputer Adv is in testing.
+the shared successor to rsDeck, rsPager, and rsCardputer. This page describes
+**Ratspeak Handheld 2.2.0 beta**.
 The full image boots a small launcher that can start either mode:
 
 - **Standalone** — on-device Reticulum/LXMF messaging over LoRa, with local identity, contacts, messages, radio settings, Wi-Fi options, GPS time sync, and SD-card storage support.
 - **RNode** — a host-controlled RNode-style radio for Ratspeak, Sideband, or another Reticulum client over BLE or USB serial.
 
-For the smaller Cardputer-based handheld and its existing firmware, see
-[rsCardputer](./rscardputer.md). Both speak Reticulum/LXMF and can exchange
+For the smaller modular handheld, see [Cardputer Adv](./rscardputer.md). Both speak Reticulum/LXMF and can exchange
 messages when their radio settings and reachable paths match.
 
 ## Hardware
@@ -33,9 +32,10 @@ accepts the complete ZIP through **Build your own**; check that a board preset
 shows **Ratspeak Handheld** if selecting an automatic download.
 
 **Back up your identity and data first.** Full, Standalone, and RNode ZIPs are
-factory images, not data-preserving updates, even with Full Erase off. See the
-[backup instructions](../hardware/flashing-firmware.md#before-flashing) before
-replacing an existing installation.
+factory images, not data-preserving updates. The web flasher clears internal
+storage after you accept its backup notice. See the [backup
+instructions](../hardware/flashing-firmware.md#before-flashing) before replacing
+an existing installation.
 
 If you'd rather build from source, see the bottom of this page. For recovery mode, serial verification, and post-flash checks, see [Flashing Firmware](../hardware/flashing-firmware.md).
 
@@ -65,6 +65,16 @@ Five tabs along the bottom, navigated with touch or the trackball:
 
 To remove a saved contact, focus it with the trackball, hold the trackball button,
 then press Enter to confirm. Esc keeps the contact.
+
+For a custom frequency, open **Settings → LoRa**. Select **Developer Radio
+Controls**, then hold the trackball button as prompted to unlock the custom
+fields. Open **Frequency**. Use **A/D** (or left/right) to choose a digit and
+the trackball up/down to tune it. Press
+**Enter** to save; hold the trackball button or use the visible cancel control
+to discard the edit. Comma/slash also move between digits while editing.
+
+The [handheld guide](../hardware/handheld-guide.md) explains saved drafts,
+delivery states, long-message/history navigation and storage recovery.
 
 ## LoRa presets
 

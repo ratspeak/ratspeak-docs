@@ -1,98 +1,90 @@
 ---
 sidebar_position: 3
+sidebar_label: Cardputer Adv
 ---
 
-# rsCardputer
+# Ratspeak for Cardputer Adv
 
-Cardputer Adv support in [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld)
-is in testing. The released firmware described below remains **rsCardputer**;
-the web flasher's Cardputer preset continues to use those legacy releases.
-
-rsCardputer is the firmware family for the M5Stack Cardputer Adv with the Cap
-LoRa-1262 add-on. It replaces the older standalone Cardputer firmware and adds a
-launcher that can boot either mode from the same install:
-
-- **Standalone** — on-device Ratspeak/LXMF messaging over LoRa, with local
-  identity, contacts, messages, radio settings, Wi-Fi options, GPS time sync,
-  and SD-card storage support.
-- **RNode** — a host-controlled RNode-style radio for Ratspeak, Sideband, or
-  another Reticulum client over BLE or USB serial.
-
-Use the full rsCardputer image when you want to switch modes on-device. Split
-Standalone and RNode images are also published for recovery, testing, or
-M5Launcher users who already boot apps from SD.
+[**Ratspeak Handheld**](https://github.com/ratspeak/ratspeak-handheld) includes
+Cardputer Adv alongside [T-Deck Plus](./rsdeck.md) and [T-Pager](./rspager.md).
+Cardputer support remains beta. This page describes **Ratspeak Handheld 2.2.0**,
+which includes unified Cardputer downloads.
 
 ## Hardware
 
-The supported device is M5Stack's Cardputer Adv: an ESP32-S3 handheld with a
-240 by 135 display, micro keyboard, internal battery, microSD support, and the
-separate Cap LoRa-1262 SX1262 radio module.
+Use the **M5Stack Cardputer Adv with a Cap LoRa-1262** for LoRa. The Cap supplies
+the SX1262 radio; the handheld alone has no LoRa transceiver. Match the antenna
+and operating band to the radio hardware.
 
-## Cardputer and T-Deck Plus
+The Cardputer Adv has an ESP32-S3, 240×135 display, compact keyboard, battery and
+microSD slot. An SD card is optional for normal messaging. Its interface uses
+compact pages; full message content remains available through the reader.
 
-Both are standalone Reticulum/LXMF handhelds when used in their native messaging
-modes.
+## Install and modes
 
-- **[T-Deck Plus](./rsdeck.md)** has the larger screen, full keyboard,
-  integrated radio, and more memory headroom.
-- **rsCardputer** is smaller and modular, with the LoRa radio supplied by the
-  M5Stack cap. It can also reboot into RNode mode when you want the Cardputer to
-  behave like a radio peripheral for another client.
+The unified full package is `rscardputer-full.zip`. It includes the launcher,
+**Standalone** messenger and **RNode** radio mode. Single-mode ZIPs install one
+mode; `*-m5launcher.bin` files are application images for a compatible launcher
+or matching slot, not complete factory installations.
 
-## Flash it
+Use a package from the selected [Ratspeak Handheld
+release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local build
+with `DEVICE=cardputer`. Select **Cardputer** on the
+[web flasher](https://ratspeak.org/download.html), or upload a complete ZIP
+through **Build your own**. Check that the selected firmware is
+**Ratspeak Handheld 2.2.0**.
 
-The fastest path is the [web flasher](https://ratspeak.org/download.html).
-With the side power switch off, hold **G0** while applying USB power, then release
-it to enter download mode. Pick Cardputer Adv and check the firmware version.
+**Back up internal flash and the SD card first.** Factory packages are not
+data-preserving updates. See [Flashing firmware](../hardware/flashing-firmware.md)
+for the 8 MB backup size, download mode and installation limits.
 
-Back up your identity and data before flashing. Full, Standalone, and RNode ZIPs
-are factory images; leaving **Full Erase** off does not guarantee preservation.
-Follow the selected release's upgrade instructions for an existing installation.
+In the full launcher, select Standalone for on-device LXMF messaging over LoRa or
+Wi-Fi, or RNode to use the device as a radio for a host client over USB serial or
+BLE. Standalone does not provide BLE messaging. RNode radio settings are managed
+by its host client.
 
-For recovery mode, serial verification, and post-flash checks, see
-[Flashing Firmware](../hardware/flashing-firmware.md).
+## Controls
 
-## Modes
+- **Fn+arrows** moves through lists; left/right changes tabs where the current
+  screen does not consume it. **Tab / Shift+Tab** also changes tabs outside chat.
+- **Enter** opens or confirms. **Backspace** goes back outside text entry; in
+  an editor it deletes text first, then a fresh tap on an empty field goes back.
+  **Fn+Backspace** is forward Delete.
+- **Ctrl+H** opens Help; **Ctrl+M** opens Messages, **Ctrl+N** starts a new message,
+  and **Ctrl+S** opens Settings.
+- In a chat, **Tab** selects a displayed message and **Enter** opens its full
+  text. **Fn+arrows** scrolls; **Backspace** returns to chat. **R** refreshes while
+  reading or selecting a message.
 
-The full image boots to a small launcher. Choose **Standalone** for local
-messaging on the Cardputer itself, or **RNode** to pair/connect it to a host
-client.
+The Messages footer uses **first / previous / next / last** arrows. Move down
+past the last conversation to focus the footer, choose an enabled arrow with
+left/right and press Enter. **Fn+Left/Right** changes pages directly; adding
+**Shift** jumps to either end. Unavailable arrows stay visible and disabled.
 
-Standalone first boot asks for timezone and display name, then generates a local
-Reticulum identity. RNode mode self-provisions its RNode configuration and
-firmware hash on first boot.
+Screen dimming or blanking does not power off the Cardputer. Use the side power
+switch for hardware power-off, and wait for pending saves or maintenance first.
 
-## LoRa presets
+## Radio and storage
 
-Eight presets cover the useful range from short, fast local links to slower
-long-haul links. Standalone mode exposes them under Settings -> Radio. RNode
-mode accepts normal RNode radio profile changes from the host client.
+**Settings → Radio** offers the shared presets and custom frequency, spreading
+factor, bandwidth, coding rate, TX power and **preamble**. Match the radio tuple
+with your peers. Cardputer exposes these fields directly; it does not use the
+Deck/Pager developer-unlock screen.
 
-For the full preset table and tuning guidance, see
-[LoRa Radio Interfaces](../networking/lora-and-rnode.md).
+The [handheld guide](../hardware/handheld-guide.md) explains message phases,
+save errors, paged history, SD-copy scope and reset recovery. The compact editor
+retains a draft across a pending send; it does not promise a separate saved draft
+for every conversation.
 
-## Build from source
+## Legacy rsCardputer
 
-These commands build the legacy rsCardputer firmware:
-
-```bash
-git clone https://github.com/ratspeak/rsCardputer
-cd rsCardputer
-pip install platformio
-make prep-cardputer_adv
-make package
-make flash port=/dev/cu.usbmodem3101
-```
-
-Release artifacts include the full launcher image, split Standalone and RNode
-web-flasher zips, and M5Launcher app binaries.
-
-For experimental unified builds, use the
-[Ratspeak Handheld build instructions](../hardware/flashing-firmware.md#build-from-source)
-with `DEVICE=cardputer`. These can be uploaded explicitly through **Build your
-own**; they are not part of the first beta's automatic downloads.
+Earlier firmware and its instructions remain in
+[`ratspeak/rsCardputer`](https://github.com/ratspeak/rsCardputer). Unified packages
+retain the `rscardputer-` prefix, so filenames alone do not identify a release.
+Do not mix legacy and unified partition layouts.
 
 ## License
 
-The rsCardputer launcher, Standalone mode, partition tables, and packaging tools
-are AGPL-3.0-or-later. The bundled upstream-derived RNode firmware is GPL-3.0.
+Unified Standalone firmware and the launcher are AGPL-3.0-or-later. Bundled RNode
+firmware retains GPLv3. See the [third-party
+notices](https://github.com/ratspeak/ratspeak-handheld/blob/main/THIRD_PARTY_NOTICES.md).

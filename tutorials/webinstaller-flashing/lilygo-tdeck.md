@@ -28,8 +28,7 @@ to the board.
 Back up internal flash and the SD card before flashing; see the
 [backup instructions](/docs/hardware/flashing-firmware#before-flashing).
 Full packages are fresh-install images, not data-preserving updates.
-Leaving **Full Erase** off does not prevent
-a factory image from overwriting saved data.
+The web flasher clears internal storage after you accept its backup notice.
 
 :::warning
 Attach the antenna before powering on the T-Deck Plus. Transmitting without it can damage the radio.
@@ -54,7 +53,7 @@ Attach the antenna before powering on the T-Deck Plus. Transmitting without it c
 1. On the T-Deck Plus download page, click '**Select USB Device**'. A menu will appear prompting you to select the proper device. Pair the T-Deck Plus; depending on the system hardware, it may have a variety of names.
 
 2. For a fresh installation, choose **Full** to include the launcher and both
-   modes. After verifying your backup, enable **Full Erase** to clear internal storage.
+   modes. Verify your backup before continuing.
 
 3. Click **Flash**, check the device and backup notice, then continue.
 
