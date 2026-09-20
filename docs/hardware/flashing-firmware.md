@@ -98,12 +98,12 @@ download page and upload the complete `.zip`. Unified release packages come from
 
 | Device | Full package |
 | --- | --- |
-| T-Deck Plus | `rsdeck-full.zip` |
-| T-Pager | `rspager-full.zip` |
-| Cardputer Adv + Cap LoRa-1262 | `rscardputer-full.zip` |
+| T-Deck Plus | `tdeck-full.zip` |
+| T-Pager | `pager-full.zip` |
+| Cardputer Adv + Cap LoRa-1262 | `cardputer-full.zip` |
 
-Bare `*-app.bin` and `*-m5launcher.bin` files are for their intended launcher or
-layout-specific installation, not the normal ZIP upload flow. A raw application
+The matching `*-standalone.bin` and `*-rnode.bin` files contain only the application,
+for a compatible launcher or application slot. Use the ZIP for a complete installation. A raw application
 preserves data only if you write it to the matching app slot without erasing flash
 or changing the partition table. Do not infer that slot from a filename. Earlier
 [legacy rsCardputer releases](https://github.com/ratspeak/rsCardputer/releases)

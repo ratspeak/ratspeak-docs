@@ -25,7 +25,7 @@ An SD card is optional for normal messaging.
 
 ## Get the firmware on your device
 
-Use `rsdeck-full.zip` from
+Use `tdeck-full.zip` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
 for a fresh installation. The [web flasher](https://ratspeak.org/download.html)
 accepts the complete ZIP through **Build your own**; check that a board preset

@@ -22,9 +22,9 @@ compact pages; full message content remains available through the reader.
 
 ## Install and modes
 
-The unified full package is `rscardputer-full.zip`. It includes the launcher,
+The unified full package is `cardputer-full.zip`. It includes the launcher,
 **Standalone** messenger and **RNode** radio mode. Single-mode ZIPs install one
-mode; `*-m5launcher.bin` files are application images for a compatible launcher
+mode; `cardputer-standalone.bin` and `cardputer-rnode.bin` are application images for a compatible launcher
 or matching slot, not complete factory installations.
 
 Use a package from the selected [Ratspeak Handheld

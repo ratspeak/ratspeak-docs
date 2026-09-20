@@ -23,7 +23,7 @@ settings, and messages on internal flash.
 
 ## Install
 
-Use `rspager-full.zip` from
+Use `pager-full.zip` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
 for a fresh installation. Upload it through **Build your own** on the
 [web flasher](https://ratspeak.org/download.html), or select the T-Pager preset

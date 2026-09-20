@@ -8,7 +8,7 @@ sidebar_label: LilyGO T-Deck Plus
 This section provides step-by-step instructions for flashing the [LilyGO T-Deck Plus](https://lilygo.cc/en-ca/products/t-deck-plus-1) with Ratspeak using the web-based installer.
 
 For the unified firmware, check that the selected release is **Ratspeak Handheld**.
-If the board preset still shows rsDeck, upload `rsdeck-full.zip` from the
+If the board preset still shows rsDeck, upload `tdeck-full.zip` from the
 [unified releases](https://github.com/ratspeak/ratspeak-handheld/releases) through
 **Build your own** instead. See the [package guide](/docs/hardware/flashing-firmware)
 for the distinction between fresh installs and updates.
