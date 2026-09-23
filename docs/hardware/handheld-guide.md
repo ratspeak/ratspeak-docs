@@ -5,7 +5,7 @@ sidebar_label: Handheld use and recovery
 
 # Handheld messaging and recovery
 
-This guide describes **Ratspeak Handheld 2.2.0 beta** for T-Deck Plus, T-Pager
+This guide describes **Ratspeak Handheld 2.2.1 beta** for T-Deck Plus, T-Pager
 and Cardputer Adv. Use the notes for the release you install.
 
 For board controls, see [T-Deck](../products/rsdeck.md),
@@ -42,12 +42,21 @@ The Chats/Messages list uses **first / previous / next / last** arrows. They
 remain visible and disabled when a page is unavailable. New activity offers a
 return to the newest conversations without interrupting an older page.
 
-History loads in pages. On Deck/Pager, use **Older**, **Newer**, **Newest** and
-**Retry**. **Read full** opens a long message, with **Prev**, **Next** and **Back**
-controls. On Cardputer, use the chat's Tab/Enter reader controls described on its
+History loads in pages as you scroll. On Deck/Pager, continue scrolling past
+the top or bottom to reach the adjacent page; the touchscreen also supports
+swiping at the edge. Retry or new-message actions appear when needed. **Read
+full** opens a long message, with **Prev**, **Next** and **Back** controls. On Cardputer, use the chat's Tab/Enter reader controls described on its
 device page. A shortened preview is not a truncated stored message. A failed
 read displays an unavailable/retry state; it should not be treated as an empty
 conversation. New arrivals do not force you away from an older page you are reading.
+
+## Message dates
+
+The handheld needs GPS time or a successful Wi-Fi/NTP synchronization for an
+accurate date. Choosing a timezone only changes how that date is displayed.
+Without a usable clock, outgoing messages use time since boot; other clients
+can display those timestamps near January 1970. Synchronizing the clock fixes
+new messages, but does not change timestamps on messages already sent.
 
 ## Network and radio settings
 

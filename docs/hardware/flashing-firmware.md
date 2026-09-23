@@ -5,7 +5,7 @@ sidebar_position: 2
 # Flashing firmware
 
 Ratspeak Handheld shares one firmware codebase across T-Deck Plus, T-Pager and
-Cardputer Adv. Version **2.2.0 beta** provides packages for all three devices.
+Cardputer Adv. Version **2.2.1 beta** provides packages for all three devices.
 Check the selected board, release and installation mode before flashing.
 RNode-class boards can also use the upstream `rnodeconf` toolchain below.
 
