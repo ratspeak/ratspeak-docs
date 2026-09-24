@@ -4,8 +4,9 @@ sidebar_position: 2
 
 # Flashing firmware
 
-Ratspeak Handheld shares one firmware codebase across T-Deck Plus, T-Pager and
-Cardputer Adv. Version **2.2.1 beta** provides packages for all three devices.
+Ratspeak Handheld shares one firmware codebase across T-Deck Plus, T-Pager,
+Cardputer Adv and ThinkNode M9. Version **2.2.2 beta** provides downloads for all
+four devices. M9 supports Standalone; RNode support is coming soon.
 Check the selected board, release and installation mode before flashing.
 RNode-class boards can also use the upstream `rnodeconf` toolchain below.
 
@@ -41,8 +42,8 @@ python3 -m esptool --chip esp32s3 --port PORT --after no-reset read-flash 0 ALL 
 python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
 ```
 
-Both commands must finish successfully before flashing. T-Deck Plus and T-Pager
-have 16 MB of flash: the backup should be 16,777,216 bytes. Cardputer Adv has
+Both commands must finish successfully before flashing. T-Deck Plus, T-Pager
+and M9 have 16 MB of flash: the backup should be 16,777,216 bytes. Cardputer Adv has
 8 MB: expect 8,388,608 bytes. Stop if the detected capacity or backup length does
 not match your device. Keep the backup with the SD copy in private storage: it
 contains identity keys and may contain Wi-Fi passwords. Do not attach it to a
@@ -109,6 +110,25 @@ or changing the partition table. Do not infer that slot from a filename. Earlier
 [legacy rsCardputer releases](https://github.com/ratspeak/rsCardputer/releases)
 have different layouts; do not mix them with unified packages.
 
+## ThinkNode M9
+
+M9 web flashing is not available yet. Download `m9-standalone.zip` from the
+[Ratspeak Handheld release](https://github.com/ratspeak/ratspeak-handheld/releases)
+and extract it into an empty directory. Use the **factory image inside the ZIP**,
+not the separately listed application `.bin`.
+
+After backing up any data you want to keep, connect USB with the power switch on.
+Replace `PORT` with the M9's serial port. Close any serial monitor, then run:
+
+```sh
+python3 -m esptool --chip esp32s3 --port PORT --baud 115200 erase-flash
+python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 m9-standalone.bin
+```
+
+These commands erase the existing installation and install Standalone. Leave
+power and USB connected until writing and verification finish. The first boot
+opens setup. M9 does not yet have Full or RNode packages.
+
 ## Build from source
 
 On Linux or macOS, install Git, Make, Python 3.12, and Arduino CLI 1.4.1:
@@ -124,8 +144,9 @@ make doctor DEVICE=tdeck
 make package DEVICE=tdeck
 ```
 
-Use `DEVICE=tpager` for T-Pager or `DEVICE=cardputer` for Cardputer Adv. Packages go
-to `dist/` and can be uploaded through **Build your own**. Normal builds use the
+Use `DEVICE=tpager`, `DEVICE=cardputer` or `DEVICE=m9` for the other boards.
+M9 builds Standalone only and does not require Arduino CLI. Packages go to
+`dist/`; the three web-flasher boards also accept them through **Build your own**. Normal builds use the
 included Rust libraries and do not need a Rust toolchain. Packaging checks board,
 mode, product version, source identity, component size and the complete factory
 layout; use the launcher and both app modes from the same source build. These

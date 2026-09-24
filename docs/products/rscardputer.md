@@ -6,9 +6,8 @@ sidebar_label: Cardputer Adv
 # Ratspeak for Cardputer Adv
 
 [**Ratspeak Handheld**](https://github.com/ratspeak/ratspeak-handheld) includes
-Cardputer Adv alongside [T-Deck Plus](./rsdeck.md) and [T-Pager](./rspager.md).
-Cardputer support remains beta. This page describes **Ratspeak Handheld 2.2.1**,
-which includes unified Cardputer downloads.
+Cardputer Adv alongside T-Deck Plus, T-Pager and ThinkNode M9.
+This page describes **Ratspeak Handheld 2.2.2 beta**.
 
 ## Hardware
 
@@ -32,7 +31,7 @@ release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local buil
 with `DEVICE=cardputer`. Select **Cardputer** on the
 [web flasher](https://ratspeak.org/download.html), or upload a complete ZIP
 through **Build your own**. Check that the selected firmware is
-**Ratspeak Handheld 2.2.1**.
+**Ratspeak Handheld 2.2.2**.
 
 **Back up internal flash and the SD card first.** Factory packages are not
 data-preserving updates. See [Flashing firmware](../hardware/flashing-firmware.md)

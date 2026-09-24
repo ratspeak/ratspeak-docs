@@ -5,8 +5,8 @@ sidebar_label: Handheld use and recovery
 
 # Handheld messaging and recovery
 
-This guide describes **Ratspeak Handheld 2.2.1 beta** for T-Deck Plus, T-Pager
-and Cardputer Adv. Use the notes for the release you install.
+This guide describes **Ratspeak Handheld 2.2.2 beta** for T-Deck Plus, T-Pager
+Cardputer Adv and ThinkNode M9. Use the notes for the release you install.
 
 For board controls, see [T-Deck](../products/rsdeck.md),
 [T-Pager](../products/rspager.md) or [Cardputer](../products/rscardputer.md).
@@ -39,10 +39,10 @@ this is not a permanent duplicate archive. Cancelling a transfer does not erase
 a record that already committed.
 
 The Chats/Messages list uses **first / previous / next / last** arrows. They
-remain visible and disabled when a page is unavailable. New activity offers a
-return to the newest conversations without interrupting an older page.
+show two conversations per page. Unavailable arrows stay visible and disabled.
+Recent previews update automatically; older pages keep their place.
 
-History loads in pages as you scroll. On Deck/Pager, continue scrolling past
+History loads in pages as you scroll. On Deck/Pager/M9, continue scrolling past
 the top or bottom to reach the adjacent page; the touchscreen also supports
 swiping at the edge. Retry or new-message actions appear when needed. **Read
 full** opens a long message, with **Prev**, **Next** and **Back** controls. On Cardputer, use the chat's Tab/Enter reader controls described on its
@@ -68,7 +68,7 @@ you choose a preset. Cardputer includes the same preamble setting as Deck/Pager.
 Standalone can use a saved Wi-Fi client network, a local hotspot, configured TCP
 peers and enabled LAN discovery. Client and hotspot are alternative modes;
 a hotspot is not an Internet router. No public TCP peer is selected automatically.
-The Deck/Pager SSID/password editor configures client networks; the Cardputer UI
+The Deck/Pager/M9 SSID/password editor configures client networks; the Cardputer UI
 also exposes hotspot credentials. Standalone BLE messaging is not implemented;
 RNode is the separate host-controlled radio mode.
 
@@ -87,8 +87,8 @@ optional, and its copies are not a complete backup of the device. Message storag
 requires a verified committed copy; an optional mirror may need repair without
 invalidating the committed record. Do not remove a card during an active operation.
 
-The managed SD roots are `/ratdeck` (Deck), `/ratpager` (Pager) and `/ratcom`
-(Cardputer). **Initialize SD** creates the required structure; **wipe SD data**
+The managed SD roots are `/ratdeck` (Deck), `/ratpager` (Pager), `/ratcom`
+(Cardputer) and `/m9` (M9). **Initialize SD** creates the required structure; **wipe SD data**
 removes managed SD data, not unrelated files or internal device data. Data already
 imported into internal flash, including contacts, can remain and later be mirrored
 back. The startup SD-copy prompt has the same limited scope.
