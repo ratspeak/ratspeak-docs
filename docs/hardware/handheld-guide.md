@@ -3,130 +3,96 @@ sidebar_position: 2.5
 sidebar_label: Handheld use and recovery
 ---
 
-# Handheld messaging and recovery
+# Handheld use and recovery
 
-This guide describes **Ratspeak Handheld 2.2.2 beta** for T-Deck Plus, T-Pager
-Cardputer Adv and ThinkNode M9. Use the notes for the release you install.
+Ratspeak Handheld runs on T-Deck Plus, T-Pager, Cardputer Adv and ThinkNode M9.
+Use Standalone mode to send encrypted messages over LoRa or WiFi without a phone.
 
-For board controls, see [T-Deck](../products/rsdeck.md),
-[T-Pager](../products/rspager.md) or [Cardputer](../products/rscardputer.md).
-For backups and package selection, start with [Flashing firmware](./flashing-firmware.md).
+For installation and backups, see [Flashing firmware](./flashing-firmware.md).
+Device controls are covered in the [T-Deck](../products/rsdeck.md),
+[T-Pager](../products/rspager.md) and [Cardputer](../products/rscardputer.md) guides.
 
 ## Sending and reading messages
 
-Submitting a message first saves its local record. While **Saving message** is
-shown, keep the device powered. A failed save is not a successful send; the
-composer retains the submitted text for recovery. Capacity or storage errors
-can delay admission even if a network path exists.
+Open a peer or contact to start a conversation. Messages are saved before sending.
+If a save fails, your text stays in the composer; check the displayed error before
+trying again.
 
-| Label | Meaning |
+| Status | Meaning |
 | --- | --- |
-| `queued` / `sending` | Saved outgoing work or an attempt in progress; no delivery proof yet. |
-| `sent` | A transport reported that transmission started. It does not confirm receipt. |
-| `delivered` | A delivery proof was validated. This does not mean the recipient read the message. |
-| `unconfirmed` | The expected proof did not arrive in time. The recipient may still have received it. |
-| `failed` | The attempt could not complete. Check the path, radio settings and any storage detail before resending. |
+| `queued` / `sending` | Waiting to send, or sending is in progress. |
+| `sent` | Transmission has started; receipt is not yet confirmed. |
+| `delivered` | The recipient confirmed delivery. This is not a read receipt. |
+| `unconfirmed` | No delivery confirmation arrived in time. The recipient may still have received it. |
+| `failed` | The send could not complete. Check the connection and any displayed error before resending. |
 
-A separate **saving status**, **save retry**, **storage error** or **not sending**
-caption describes local persistence or a stopped attempt. For example, a valid
-proof can establish `delivered` while saving that status still needs a retry.
-These are coarse phases, not a transfer percentage. An explicit resend creates
-a new local outgoing record.
+The chat list shows two conversations per page. Use the first, previous, next and
+last arrows to move between pages. Previews update automatically.
 
-Incoming messages are acknowledged only after the required local save succeeds.
-A repeated message is recognized while its record remains in retained history;
-this is not a permanent duplicate archive. Cancelling a transfer does not erase
-a record that already committed.
-
-The Chats/Messages list uses **first / previous / next / last** arrows. They
-show two conversations per page. Unavailable arrows stay visible and disabled.
-Recent previews update automatically; older pages keep their place.
-
-History loads in pages as you scroll. On Deck/Pager/M9, continue scrolling past
-the top or bottom to reach the adjacent page; the touchscreen also supports
-swiping at the edge. Retry or new-message actions appear when needed. **Read
-full** opens a long message, with **Prev**, **Next** and **Back** controls. On Cardputer, use the chat's Tab/Enter reader controls described on its
-device page. A shortened preview is not a truncated stored message. A failed
-read displays an unavailable/retry state; it should not be treated as an empty
-conversation. New arrivals do not force you away from an older page you are reading.
+Inside a conversation, scroll to read earlier messages. On T-Deck, T-Pager and
+M9, continuing past the top or bottom loads the next part of the history. T-Deck
+also supports swiping at the edge. **Read full** opens a long message. On
+Cardputer, press **Tab** to select a message, then **Enter** to open it.
+New messages leave your place in older history intact.
 
 ## Message dates
 
-The handheld needs GPS time or a successful Wi-Fi/NTP synchronization for an
-accurate date. Choosing a timezone only changes how that date is displayed.
-Without a usable clock, outgoing messages use time since boot; other clients
-can display those timestamps near January 1970. Synchronizing the clock fixes
-new messages, but does not change timestamps on messages already sent.
+The clock syncs through GPS or WiFi. Set your timezone in Settings to display
+local time. GPS reception can take longer indoors.
+
+Before the clock syncs, sent messages can appear dated near January 1970 in other
+clients. Once it syncs, new messages get the correct date; messages already sent
+keep their original timestamps.
 
 ## Network and radio settings
 
-Match frequency and radio parameters with the other device. Choosing a region
-preset selects its default frequency; it is not a substitute for checking the
-hardware band and local operating rules. A custom tuple remains **Custom** until
-you choose a preset. Cardputer includes the same preamble setting as Deck/Pager.
+For LoRa, match the other device's frequency, bandwidth, spreading factor, coding
+rate and preamble. Choose a region suited to your hardware and location. See
+[LoRa radio settings](../networking/lora-and-rnode.md) for presets and tuning.
 
-Standalone can use a saved Wi-Fi client network, a local hotspot, configured TCP
-peers and enabled LAN discovery. Client and hotspot are alternative modes;
-a hotspot is not an Internet router. No public TCP peer is selected automatically.
-The Deck/Pager/M9 SSID/password editor configures client networks; the Cardputer UI
-also exposes hotspot credentials. Standalone BLE messaging is not implemented;
-RNode is the separate host-controlled radio mode.
+For WiFi, join a network and configure a TCP peer, or enable LAN discovery to find
+nearby nodes. A local hotspot is also available; it does not provide internet
+access. WiFi client and hotspot modes are alternatives.
 
-**Auto Announce** can be **OFF** on every device, followed by 30 minutes and up.
-OFF disables automatic announcements; manual Announce remains available.
+**Auto Announce** can be set to **OFF**, or an interval of 30 minutes and up.
+Manual **Announce** remains available when automatic announcements are off.
 
-Settings save before they are applied. Keep the displayed failure detail and
-retry rather than assuming a selection reached the radio. A saved setting may
-show a pending/restart requirement. Invalid new credentials are rejected without
-replacing the saved configuration; an empty password can represent an open network.
+Wait for settings to finish saving and follow any restart prompt. Standalone
+uses LoRa and WiFi; USB/BLE radio connections use **RNode** mode, which is coming
+soon for M9.
 
-## Internal flash, SD copies and deletion
+## Storage and SD cards {#internal-flash-sd-copies-and-deletion}
 
-Identity and configuration are authoritative in internal flash. An SD card is
-optional, and its copies are not a complete backup of the device. Message storage
-requires a verified committed copy; an optional mirror may need repair without
-invalidating the committed record. Do not remove a card during an active operation.
+An SD card is optional for messaging. Identity and settings are stored in internal
+flash, so copying the SD card alone is not a complete backup. Follow the
+[backup instructions](./flashing-firmware.md#back-up-an-existing-handheld)
+before replacing firmware or erasing a device.
 
-The managed SD roots are `/ratdeck` (Deck), `/ratpager` (Pager), `/ratcom`
-(Cardputer) and `/m9` (M9). **Initialize SD** creates the required structure; **wipe SD data**
-removes managed SD data, not unrelated files or internal device data. Data already
-imported into internal flash, including contacts, can remain and later be mirrored
-back. The startup SD-copy prompt has the same limited scope.
+**Initialize SD** prepares the card for Ratspeak. **Wipe SD Data** removes only
+Ratspeak's files from the card: `/ratdeck` on T-Deck, `/ratpager` on T-Pager,
+`/ratcom` on Cardputer and `/m9` on M9. Internal data remains and may be copied
+back to the card later. To remove a conversation, delete it from Chats.
 
-Conversation deletion is separate. It becomes effective when the durable deletion
-record commits; a failed deletion keeps the conversation. Cleanup of an optional
-mirror can still report an error after logical deletion has succeeded. Do not
-interpret leftover files or a cleanup warning as an instruction to restore old
-history over the device.
-
-The firmware recognizes supported legacy storage, but it is not a universal
-migration or backup-restoration tool. Preserve the original flash and SD backup,
-and investigate a recovery error before formatting. Importing a private identity
-key alone does not restore messages, contacts or settings.
+Wait for saves or deletions to finish before switching off or removing the card.
+If a read or deletion fails, keep the data intact and retry before considering a
+reset.
 
 ## Restart, erase and recovery
 
-Use the normal restart, mode-switch or confirmed shutdown action when available.
-It waits for owned saves and transfers to settle. A failed maintenance action
-stays failed; it does not silently continue erasing later. A forced restart or
-power-off can lose pending work. On Cardputer, screen blanking is display-only.
+Use the device's restart or shutdown controls when available so pending saves can
+finish. Turning off the screen on Cardputer does not shut it down.
 
-**Erase Device / Factory Reset** is destructive. It includes internal device data
-and the board's managed SD data if that medium was included when the reset began.
-Keep power connected until completion. It is not a first response to a read error.
+**Erase Device / Factory Reset** deletes internal data and Ratspeak's SD files
+if the card is included in the reset. Check the confirmation screen and keep
+power connected until it finishes.
 
-If a reset is interrupted, startup shows **Reset recovery** before normal identity
-or settings loading. It does not automatically repeat the erase:
+If power is lost during a reset, the device opens **Reset recovery**:
 
-- **R** reviews the recorded scope; a fresh **Enter** confirms erasing that scope.
-- **B** returns without confirming. **X** restarts and leaves reset pending.
-- If the recorded scope includes an unavailable SD card, reinsert it to retry.
-  A reset begun without SD does not erase a card inserted later.
-- If the scope itself is unreadable, the screen explicitly offers a new scope
-  for review. Do not confirm unless that is the data you intend to erase.
+- Press **R** to review what will be erased, then **Enter** to confirm.
+- Press **B** to go back, or **X** to restart with the reset still pending.
+- Reinsert the SD card if the interrupted reset included it.
 
-For other startup errors, note the exact message and keep the data intact. Check
-power, the matching package and SD availability; a visible retry/restart is not
-permission to format. [Download mode](./flashing-firmware.md#recovery-download-mode)
-can restore a full backup or reinstall firmware, but reinstalling a factory
-package can destroy the data you are trying to recover.
+For other startup problems, note the error and check power and the SD card.
+[Download mode](./flashing-firmware.md#recovery-download-mode) lets you restore a
+full backup or reinstall firmware. Reinstalling clears internal data, so keep
+that as a last step when recovering messages or an identity.

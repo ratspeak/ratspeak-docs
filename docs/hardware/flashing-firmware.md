@@ -4,219 +4,182 @@ sidebar_position: 2
 
 # Flashing firmware
 
-Ratspeak Handheld shares one firmware codebase across T-Deck Plus, T-Pager,
-Cardputer Adv and ThinkNode M9. Version **2.2.2 beta** provides downloads for all
-four devices. M9 supports Standalone; RNode support is coming soon.
-Check the selected board, release and installation mode before flashing.
-RNode-class boards can also use the upstream `rnodeconf` toolchain below.
-
-> **Warning**: Attach an antenna matched to your frequency band before powering or testing a LoRa radio. Transmitting without an antenna can damage the radio module.
+Install Ratspeak Handheld on T-Deck Plus, T-Pager, Cardputer Adv or ThinkNode M9.
+Firmware is available from the [download page](https://ratspeak.org/download.html)
+and [GitHub releases](https://github.com/ratspeak/ratspeak-handheld/releases).
 
 ## Before flashing
 
-The `*-full.zip`, `*-standalone.zip`, and `*-rnode.zip` packages are **fresh
-installs, not data-preserving updates**. They write firmware and a partition
-layout. The web flasher resets internal storage after you accept its backup
-notice. Do not rely on an in-place migration when installing a factory package.
-The firmware can recognize supported legacy storage, but that is not a promise
-to restore an arbitrary backup; see [storage and recovery](./handheld-guide.md).
+**Installing a firmware ZIP resets internal storage.** Back up your device and
+SD card if you want to keep your identity, messages or settings. A full backup
+restores the previous installation; it does not transfer that data into a new one.
+See [backup instructions](#back-up-an-existing-handheld) below.
 
-Back up internal flash and the SD card before replacing an existing installation.
-A flash backup lets you return to the old firmware and its saved data; it does
-not import that data into the new firmware. Keep the original SD card aside
-during the fresh install.
+Attach a suitable LoRa antenna before powering the radio. Transmitting without
+one can damage it.
 
-### Back up an existing handheld
+## Choose a package
 
-1. Shut down the device and copy the entire SD card to your computer, if fitted.
-   An SD copy alone is not a complete backup: identities and settings can be
-   stored only in internal flash.
-2. Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
-   in a Python environment: `python3 -m pip install esptool==5.2.0`.
-3. Connect only the device being backed up and enter [download mode](#recovery-download-mode).
-   Replace `PORT` below with its serial port, and use a new backup filename for
-   each device. Close the web flasher or serial monitor first.
+- **Full** includes Standalone and RNode, with a launcher to choose between them.
+- **Standalone** is the on-device messenger, using LoRa or WiFi.
+- **RNode** turns the handheld into a radio for a Reticulum client over USB or BLE.
 
-```sh
-python3 -m esptool --chip esp32s3 --port PORT --after no-reset read-flash 0 ALL handheld-backup.bin
-python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
-```
+T-Deck, T-Pager and Cardputer offer all three packages. M9 offers Standalone;
+RNode support is coming soon. Download the ZIP for your device:
 
-Both commands must finish successfully before flashing. T-Deck Plus, T-Pager
-and M9 have 16 MB of flash: the backup should be 16,777,216 bytes. Cardputer Adv has
-8 MB: expect 8,388,608 bytes. Stop if the detected capacity or backup length does
-not match your device. Keep the backup with the SD copy in private storage: it
-contains identity keys and may contain Wi-Fi passwords. Do not attach it to a
-bug report.
+| Device | Example download |
+| --- | --- |
+| T-Deck Plus | `tdeck-full.zip` |
+| T-Pager | `pager-standalone.zip` |
+| Cardputer Adv | `cardputer-rnode.zip` |
+| ThinkNode M9 | `m9-standalone.zip` |
 
-### Keep an existing identity
-
-On T-Deck or T-Pager, if you already have the identity's **64-byte private key file**, copy it to
-`/ratdeck/identity/import.identity` on an SD card for T-Deck, or
-`/ratpager/identity/import.identity` for T-Pager. After installation, insert the
-card before booting and open **Settings → Identity & Device → Import Identity**.
-Then select the imported **Identity Slot**; the device restarts with that identity.
-Check its address against your old one, then remove the import file from the card.
-
-The firmware has no identity-export menu, and a contact QR is not a private-key
-backup. If you need the same identity but do not have its key file, keep the old
-installation until you have recovered it. Messages, contacts and settings are
-not restored by importing a key. Cardputer's compact settings do not expose the
-Deck/Pager identity-slot/import controls; use a complete backup for recovery
-rather than assuming the same menu exists.
-
-### Return to your backup
-
-On the **same device**, enter download mode and restore the complete flash backup:
-
-```sh
-python3 -m esptool --chip esp32s3 --port PORT --after no-reset write-flash 0 handheld-backup.bin
-python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
-```
-
-This replaces the current firmware and internal data with the saved snapshot.
-Restore the matching SD copy with the device off, then reset it. Do not restore
-one device's backup onto another.
+The separate `.bin` downloads contain only the application. They require a
+compatible launcher or the correct application slot and partition layout. Use
+the ZIP for a complete installation.
 
 ## Web flasher
 
-Use a desktop browser with Web Serial support, such as Chrome or Edge, and a
-USB-C data cable. Open the [Ratspeak download page](https://ratspeak.org/download.html).
+Use Chrome or Edge on a computer, with a USB data cable.
 
-1. Select **T-Deck Plus**, **T-Pager** or **Cardputer**, then **Flash in browser**.
-2. Check the firmware name and version. Unified releases are labelled
-   **Ratspeak Handheld**; rsDeck, rsPager, and rsCardputer labels refer to legacy firmware.
-3. For a fresh installation, choose **Full** to include the launcher, Standalone
-   messenger, and RNode mode. The other packages install one mode only.
-4. Enter [download mode](#recovery-download-mode), select the correct USB device,
-   and flash. Confirm the device model and backup notice before continuing; the
-   fresh install then clears internal storage automatically.
-5. When writing finishes, reset the device manually.
+1. Open the [download page](https://ratspeak.org/download.html), select
+   **T-Deck Plus**, **T-Pager** or **Cardputer**, then **Flash in browser**.
+2. Choose a package and check the version.
+3. Connect the device and choose **Select USB Device**. If it does not connect,
+   try [download mode](#recovery-download-mode).
+4. Select **Flash Ratspeak** and confirm the device and erase notice. Keep USB
+   connected until flashing finishes, then restart the device if needed.
 
-To install a downloaded or locally built package, open **Build your own** on the
-download page and upload the complete `.zip`. Unified release packages come from
-[`ratspeak-handheld` releases](https://github.com/ratspeak/ratspeak-handheld/releases):
-
-| Device | Full package |
-| --- | --- |
-| T-Deck Plus | `tdeck-full.zip` |
-| T-Pager | `pager-full.zip` |
-| Cardputer Adv + Cap LoRa-1262 | `cardputer-full.zip` |
-
-The matching `*-standalone.bin` and `*-rnode.bin` files contain only the application,
-for a compatible launcher or application slot. Use the ZIP for a complete installation. A raw application
-preserves data only if you write it to the matching app slot without erasing flash
-or changing the partition table. Do not infer that slot from a filename. Earlier
-[legacy rsCardputer releases](https://github.com/ratspeak/rsCardputer/releases)
-have different layouts; do not mix them with unified packages.
+To use a ZIP you already downloaded or built, choose **Flash** under **Build
+your own** and upload it. For M9, use the instructions below.
 
 ## ThinkNode M9
 
-M9 web flashing is not available yet. Download `m9-standalone.zip` from the
-[Ratspeak Handheld release](https://github.com/ratspeak/ratspeak-handheld/releases)
-and extract it into an empty directory. Use the **factory image inside the ZIP**,
-not the separately listed application `.bin`.
+Download `m9-standalone.zip` and extract it into an empty directory. Use the
+**factory image inside the ZIP**; the separate application download has the
+same filename but cannot be installed at this address.
 
-After backing up any data you want to keep, connect USB with the power switch on.
-Replace `PORT` with the M9's serial port. Close any serial monitor, then run:
+Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
+with `python3 -m pip install esptool==5.2.0`. Back up any data you want to keep,
+then connect USB with the power switch on. Close any serial monitor, replace
+`PORT` with the M9's serial port, and run these commands from the extracted folder:
 
 ```sh
 python3 -m esptool --chip esp32s3 --port PORT --baud 115200 erase-flash
 python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 m9-standalone.bin
 ```
 
-These commands erase the existing installation and install Standalone. Leave
-power and USB connected until writing and verification finish. The first boot
-opens setup. M9 does not yet have Full or RNode packages.
+Leave power connected until writing and verification finish. If no serial port
+appears, check the cable and your [WCH driver](https://learn.adafruit.com/how-to-install-drivers-for-wch-usb-to-serial-chips-ch9102f-ch9102/overview).
+
+## Backups
+
+### Back up an existing handheld
+
+1. Switch off the device and copy its SD card to your computer, if fitted.
+2. Install esptool: `python3 -m pip install esptool==5.2.0`.
+3. Connect the device in [download mode](#recovery-download-mode). Close the web
+   flasher and any serial monitor. Replace `PORT` with its serial port and use a
+   new backup filename for each device:
+
+```sh
+python3 -m esptool --chip esp32s3 --port PORT --after no-reset read-flash 0 ALL handheld-backup.bin
+python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
+```
+
+Both commands must succeed. Check the backup size before proceeding:
+
+| Device | Backup size |
+| --- | --- |
+| T-Deck Plus, T-Pager, ThinkNode M9 | 16,777,216 bytes (16 MB) |
+| Cardputer Adv | 8,388,608 bytes (8 MB) |
+
+Keep the backup and SD copy private: they contain identity keys and may contain
+WiFi passwords. Keep the original SD card aside during a fresh installation.
+
+### Keep an existing identity
+
+If you have your identity's **64-byte private key file**, T-Deck, T-Pager and M9
+can import it from an SD card:
+
+| Device | File path on SD |
+| --- | --- |
+| T-Deck Plus | `/ratdeck/identity/import.identity` |
+| T-Pager | `/ratpager/identity/import.identity` |
+| ThinkNode M9 | `/m9/identity/import.identity` |
+
+Insert the card, open **Settings → Identity & Device → Import Identity**, then
+select the imported **Identity Slot**. The device restarts with that identity.
+Check its address and remove the key file from the card.
+
+Importing an identity does not restore messages, contacts or settings. There is
+no identity-export menu, and a contact QR does not contain the private key.
+Cardputer does not have this import menu; use a full backup to recover its
+existing installation.
+
+### Return to your backup
+
+Connect the **same device** in download mode and write back its full backup:
+
+```sh
+python3 -m esptool --chip esp32s3 --port PORT --after no-reset write-flash 0 handheld-backup.bin
+python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 handheld-backup.bin
+```
+
+After both commands succeed, switch off, restore the matching SD copy and restart.
+This replaces the current installation with the saved firmware and data.
+
+## Recovery (download mode) {#recovery-download-mode}
+
+- **T-Deck Plus:** connect USB with the main power off. Hold the trackball button,
+  switch the power on, then release the button after a few seconds.
+- **T-Pager:** hold **BOOT**, tap **RST**, then release BOOT when the computer
+  detects the device. PWR is the separate power button.
+- **Cardputer Adv:** switch the side power off, hold **G0** while connecting USB,
+  then release it.
+- **ThinkNode M9:** leave the power switch on and USB connected. Esptool enters
+  download mode automatically; use `--baud 115200`.
+
+The screen may stay black in download mode. Entering it does not erase data.
+
+## After installation {#verifying-the-flash-worked}
+
+A Full installation opens the launcher; single-mode packages start directly.
+In Standalone, complete the name and timezone setup, check the radio settings,
+and send a message to a reachable peer.
+
+If startup fails, note the error and collect a serial log at 115200 baud before
+reflashing. See [Handheld recovery](./handheld-guide.md#restart-erase-and-recovery)
+for interrupted resets or storage problems.
 
 ## Build from source
 
-On Linux or macOS, install Git, Make, Python 3.12, and Arduino CLI 1.4.1:
-
-```bash
-git clone https://github.com/ratspeak/ratspeak-handheld
-cd ratspeak-handheld
-python3 -m venv .venv
-. .venv/bin/activate
-python3 -m pip install -r requirements-build.txt
-make setup DEVICE=tdeck
-make doctor DEVICE=tdeck
-make package DEVICE=tdeck
-```
-
-Use `DEVICE=tpager`, `DEVICE=cardputer` or `DEVICE=m9` for the other boards.
-M9 builds Standalone only and does not require Arduino CLI. Packages go to
-`dist/`; the three web-flasher boards also accept them through **Build your own**. Normal builds use the
-included Rust libraries and do not need a Rust toolchain. Packaging checks board,
-mode, product version, source identity, component size and the complete factory
-layout; use the launcher and both app modes from the same source build. These
-checks detect mismatches, not source authenticity. Protocol development
-is covered in the [build notes](https://github.com/ratspeak/ratspeak-handheld#build-from-source).
+Follow the [build instructions](https://github.com/ratspeak/ratspeak-handheld#build-from-source)
+for your device. Packaged ZIPs are written to `dist/`.
 
 ## Legacy firmware
 
 Earlier builds remain in [rsDeck](https://github.com/ratspeak/rsDeck),
-[rsPager](https://github.com/ratspeak/rsPager), and
-[rsCardputer](https://github.com/ratspeak/rsCardputer). Use each repository's
-build instructions for those versions; do not mix their images or partition
-layouts with the unified firmware.
+[rsPager](https://github.com/ratspeak/rsPager) and
+[rsCardputer](https://github.com/ratspeak/rsCardputer). Use their own installation
+instructions; their firmware and partition layouts differ from Ratspeak Handheld.
 
 ## RNode (rnodeconf)
 
-RNode-class boards (RNode, LilyGO T-Beam Supreme, Heltec V3, etc.) use the upstream RNode toolchain rather than PlatformIO directly. The `rnodeconf` utility ships with Reticulum.
+For boards supported by upstream RNode firmware, such as Heltec or T-Beam,
+install Reticulum and run its installer:
 
-1. Install Reticulum, which brings in `rnodeconf`:
-
-```bash
-pip install rns
-```
-
-2. Plug the board into USB and run the auto-installer:
-
-```bash
+```sh
+python3 -m pip install rns
 rnodeconf --autoinstall
 ```
 
-The utility detects your board, downloads the right RNode firmware image, flashes it, and provisions the EEPROM with the correct transceiver and frequency settings. Follow the interactive prompts.
+Follow the prompts to select and install firmware. To inspect or update an
+existing RNode, replace `PORT` with its serial port:
 
-To verify or update an existing RNode later:
-
-```bash
-rnodeconf -i        # show device info
-rnodeconf --update  # update firmware in place
+```sh
+rnodeconf PORT --info
+rnodeconf PORT --update
 ```
 
-Note: `airtime_limit_long` and `airtime_limit_short` are *runtime* configuration keys — you set them in your Reticulum config under the RNode interface stanza, not at flash time.
-
-## Recovery (Download Mode)
-
-If a flash fails partway through and the board no longer enumerates, force the ESP32-S3 into download mode:
-
-- **T-Deck Plus**: connect USB with the main power off. Hold the **trackball
-  button**, switch the power on, then release the trackball after a few seconds.
-- **T-Pager**: hold **BOOT**, tap **RST**, then release BOOT after the host detects
-  the device. PWR is the separate power button, not reset.
-- **Cardputer Adv**: switch the side power off, hold **G0** while applying USB
-  power, then release it.
-
-The screen can remain black in download mode. Retry with the package for that
-board; entering download mode does not itself erase data.
-
-For RNode boards, hold the BOOT button (and tap RESET if the board has a reset button) before re-running `rnodeconf --autoinstall`.
-
-## Verifying the Flash Worked
-
-A successful handheld installation should pass these checks:
-
-1. The device boots into its splash/animation screen within a few seconds of reset.
-2. A Full installation opens the launcher with Standalone and RNode choices;
-   a single-mode package boots that mode directly.
-3. Standalone mode starts without storage or radio errors. On a fresh device,
-   complete the name and timezone setup, then check the radio region and preset.
-4. Test a message with another Reticulum/LXMF device using matching radio settings
-   or a reachable network path.
-
-If startup fails, note the displayed error and record the serial log at 115200
-baud before considering another flash. Do not erase the device as a first
-response to a missing identity or history. See [Reset recovery and maintenance](./handheld-guide.md#restart-erase-and-recovery)
-for an interrupted reset or a save that has not settled.
+For Ratspeak Handheld, use the device's **RNode** or **Full** package above.
