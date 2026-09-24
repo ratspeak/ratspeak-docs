@@ -42,20 +42,21 @@ the ZIP for a complete installation.
 
 Use Chrome or Edge on a computer, with a USB data cable.
 
-1. Open the [download page](https://ratspeak.org/download.html), select
-   **T-Deck Plus**, **T-Pager** or **Cardputer**, then **Flash in browser**.
-2. Choose a package and check the version.
+1. Open the [download page](https://ratspeak.org/download.html), select your
+   device, then **Flash in browser**.
+2. Check the package and version. M9 supports Standalone only.
 3. Connect the device and choose **Select USB Device**. If it does not connect,
    try [download mode](#recovery-download-mode).
 4. Select **Flash Ratspeak** and confirm the device and erase notice. Keep USB
    connected until flashing finishes, then restart the device if needed.
 
 To use a ZIP you already downloaded or built, choose **Flash** under **Build
-your own** and upload it. For M9, use the instructions below.
+your own** and upload it.
 
 ## ThinkNode M9
 
-Download `m9-standalone.zip` and extract it into an empty directory. Use the
+To install M9 firmware from a terminal, download `m9-standalone.zip` and extract
+it into an empty directory. Use the
 **factory image inside the ZIP**; the separate application download has the
 same filename but cannot be installed at this address.
 
