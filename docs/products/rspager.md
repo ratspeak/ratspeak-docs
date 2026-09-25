@@ -8,7 +8,7 @@ sidebar_label: T-Pager
 The LilyGO T-Pager runs [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
 alongside [T-Deck Plus](./rsdeck.md) and [Cardputer Adv](./rscardputer.md). It
 uses the shared Rust Reticulum/LXMF core. This page describes
-**Ratspeak Handheld 2.2.3 beta**.
+**Ratspeak Handheld 2.2.4 beta**.
 
 ## Hardware
 

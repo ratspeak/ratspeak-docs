@@ -26,6 +26,9 @@ trying again.
 | `unconfirmed` | No delivery confirmation arrived in time. The recipient may still have received it. |
 | `failed` | The send could not complete. Check the connection and any displayed error before resending. |
 
+A brief failure to refresh a delivery status keeps its last known label. If the
+problem persists, a separate retry action appears outside the message bubble.
+
 The chat list shows two conversations per page. Use the first, previous, next and
 last arrows to move between pages. Previews update automatically.
 
@@ -43,6 +46,12 @@ local time. GPS reception can take longer indoors.
 Before the clock syncs, sent messages can appear dated near January 1970 in other
 clients. Once it syncs, new messages get the correct date; messages already sent
 keep their original timestamps.
+
+## Discovering peers
+
+The Peers screen uses one continuous list. Scroll to browse it; incoming updates
+keep the selected peer in place. Open a peer to save it as a contact or send a
+message.
 
 ## Network and radio settings
 
