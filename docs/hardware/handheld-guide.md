@@ -29,14 +29,67 @@ trying again.
 A brief failure to refresh a delivery status keeps its last known label. If the
 problem persists, a separate retry action appears outside the message bubble.
 
-The chat list shows two conversations per page. Use the first, previous, next and
-last arrows to move between pages. Previews update automatically.
+Use the chat list's navigation arrows to move through conversations. Previews
+update automatically; recently opened conversations reuse their loaded history.
 
 Inside a conversation, scroll to read earlier messages. On T-Deck, T-Pager and
 M9, continuing past the top or bottom loads the next part of the history. T-Deck
-also supports swiping at the edge. **Read full** opens a long message. On
-Cardputer, press **Tab** to select a message, then **Enter** to open it.
-New messages leave your place in older history intact.
+also supports swiping at the edge. **Read full** opens a long message.
+
+- On T-Deck, touch and hold a message to open its actions. Tap a voice clip's
+  playback control to play or pause it.
+- On T-Pager, turn the wheel to select messages, then click or press Enter to
+  open the selected message or play/pause its audio. **M** opens message actions.
+- On Cardputer and M9, use up/down to select messages and Enter to open the
+  selection. Cardputer uses **Fn+up/down**; **M** opens message actions.
+
+Back dismisses message selection before leaving the conversation. Opening a
+conversation starts at its newest messages without a preselected message.
+New messages leave your place in older history intact while you are reading.
+
+## Voice messages
+
+T-Deck, T-Pager, and Cardputer Adv can record and play short voice clips. Open
+**Voice message** in a Direct conversation; on Cardputer, **Ctrl+V** opens the
+recorder. Select **Record**, then **Stop** when finished, up to 15 seconds.
+Preview the clip before selecting **Send**, or delete it and record again.
+Sending returns to the conversation, where its delivery status is shown.
+
+Unsent clips are temporary and are removed when you close the conversation.
+Playback controls show elapsed and total time. Adjust **Settings → Voice →
+Playback volume** for the speaker.
+
+**Max voice messages** limits retained audio on internal storage, from 1 to 50,
+with a default of 2. Reaching the limit removes the oldest audio while keeping
+its message in chat with an **Audio removed** label. SD-card audio has no
+clip-count limit, but still needs available storage.
+
+The accompanying Ratspeak app selects compact Codec2 700C recordings when it
+has received or cached the handheld's no-compression announce. Announce from the
+handheld before recording in the app. If the recipient's capability is unknown,
+the app uses Opus, which these handhelds cannot play. Existing recordings retain
+their original format. ThinkNode M9 has no supported audio hardware. Live
+handheld calls and Hub/channel access are unavailable in this release.
+
+## Propagation
+
+**Settings → Propagation** enables delivery through propagation nodes and
+retrieval of messages stored while you were offline.
+
+- **AUTO** node selection chooses an available candidate from discovered nodes.
+- **MANUAL** lets you enter an address or choose a discovered node. The selected
+  address stays fixed even if that node becomes unreachable; replace or clear it
+  in the same settings.
+- **AUTO: direct first** tries direct delivery before using propagation when
+  appropriate. **ALWAYS: relay only** requires a propagation node and does not
+  silently fall back to direct delivery if it is unavailable.
+
+**Selected** identifies the automatic candidate, not a confirmed connection.
+Use **Sync now** to check the selected node for incoming messages. A node accepting
+an outgoing message is not confirmation that its recipient has received it.
+If a send is unconfirmed, it may have reached the node; check its status before
+retrying. Connection availability, node policy, and proof-of-work requirements
+can affect how quickly propagation completes.
 
 ## Message dates
 

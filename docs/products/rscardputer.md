@@ -7,7 +7,7 @@ sidebar_label: Cardputer Adv
 
 [**Ratspeak Handheld**](https://github.com/ratspeak/ratspeak-handheld) includes
 Cardputer Adv alongside T-Deck Plus, T-Pager and ThinkNode M9.
-This page describes **Ratspeak Handheld 2.2.4 beta**.
+This page describes **Ratspeak Handheld 2.3.0 beta**.
 
 ## Hardware
 
@@ -31,7 +31,7 @@ release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local buil
 with `DEVICE=cardputer`. Select **Cardputer** on the
 [web flasher](https://ratspeak.org/download.html), or upload a complete ZIP
 through **Build your own**. Check that the selected firmware is
-**Ratspeak Handheld 2.2.4**.
+**Ratspeak Handheld 2.3.0**.
 
 **Back up internal flash and the SD card first.** Factory packages are not
 data-preserving updates. See [Flashing firmware](../hardware/flashing-firmware.md)
@@ -51,9 +51,9 @@ by its host client.
   **Fn+Backspace** is forward Delete.
 - **Ctrl+H** opens Help; **Ctrl+M** opens Messages, **Ctrl+N** starts a new message,
   and **Ctrl+S** opens Settings.
-- In a chat, **Tab** selects a displayed message and **Enter** opens its full
-  text. **Fn+arrows** scrolls; **Backspace** returns to chat. **R** refreshes while
-  reading or selecting a message.
+- In a chat, **Fn+up/down** selects messages. **Enter** opens a text message or
+  plays/pauses selected audio; **M** opens message actions. **Backspace** dismisses
+  selection before leaving the chat. **Ctrl+V** opens the voice-message recorder.
 
 The Messages footer uses **first / previous / next / last** arrows. Move down
 past the last conversation to focus the footer, choose an enabled arrow with
@@ -71,7 +71,7 @@ with your peers. Cardputer exposes these fields directly; it does not use the
 Deck/Pager developer-unlock screen.
 
 The [handheld guide](../hardware/handheld-guide.md) explains message phases,
-save errors, paged history, SD-copy scope and reset recovery. The compact editor
+save errors, voice messages, propagation, history, SD-copy scope, and reset recovery. The compact editor
 retains a draft across a pending send; it does not promise a separate saved draft
 for every conversation.
 
