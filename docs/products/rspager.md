@@ -56,6 +56,14 @@ For a selected setting, press Enter or click to edit, then turn the encoder
 value without scrolling the surrounding page. Enter saves; Backspace cancels
 ordinary value edits. A setting with only one available choice cannot be edited.
 
+### Conversation controls
+
+From the composer, turn the wheel down to select **Voice message**, then **Send**.
+Click to activate the selected control, or press Enter in the composer to send
+text. Turning the wheel up selects messages in the history and scrolls them into
+view. Click to play/pause selected audio or open a text message; **M** opens its
+actions. Back dismisses selection before leaving the conversation.
+
 ### Select a frequency without touch
 
 1. Open **Settings → LoRa**. Select **Developer Radio Controls**, then hold the

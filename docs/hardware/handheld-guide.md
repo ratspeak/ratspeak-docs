@@ -51,7 +51,8 @@ New messages leave your place in older history intact while you are reading.
 
 T-Deck, T-Pager, and Cardputer Adv can record and play short voice clips. Open
 **Voice message** in a Direct conversation; on Cardputer, **Ctrl+V** opens the
-recorder. Select **Record**, then **Stop** when finished, up to 15 seconds.
+recorder. On Pager, turn the wheel down from the composer to reach Voice or Send,
+then click to activate the selected control. Select **Record**, then **Stop** when finished, up to 15 seconds.
 Preview the clip before selecting **Send**, or delete it and record again.
 Sending returns to the conversation, where its delivery status is shown.
 
@@ -108,8 +109,9 @@ message.
 
 ## Network and radio settings
 
+New and reset radio settings use **Medium Fast**; saved presets are retained.
 For LoRa, match the other device's frequency, bandwidth, spreading factor, coding
-rate and preamble. Choose a region suited to your hardware and location. See
+rate, and preamble. Choose a region suited to your hardware and location. See
 [LoRa radio settings](../networking/lora-and-rnode.md) for presets and tuning.
 
 For WiFi, join a network and configure a TCP peer, or enable LAN discovery to find

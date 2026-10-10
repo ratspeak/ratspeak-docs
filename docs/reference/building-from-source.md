@@ -12,11 +12,13 @@ This page assumes you are comfortable following terminal commands but not that y
 
 Ratspeak is the app. It embeds the protocol and support repos below:
 
-- **[Ratspeak](https://github.com/ratspeak/Ratspeak)** - the desktop and mobile app. The current app release is v1.0.20, published as a normal public GitHub release on the [Ratspeak releases page](https://github.com/ratspeak/Ratspeak/releases).
-- **[rsReticulum](https://github.com/ratspeak/rsReticulum)** - the Reticulum network stack and `*-rs` command-line tools. The current public release is the [v0.9.4 pre-release](https://github.com/ratspeak/rsReticulum/releases/tag/v0.9.4).
-- **[rsLXMF](https://github.com/ratspeak/rsLXMF)** - the LXMF messaging layer and `lxmd-rs` propagation daemon. The current public release is the [v0.9.2 pre-release](https://github.com/ratspeak/rsLXMF/releases/tag/v0.9.2).
+- **[Ratspeak](https://github.com/ratspeak/Ratspeak)** - the desktop and mobile app. Downloads are on the [Ratspeak releases page](https://github.com/ratspeak/Ratspeak/releases).
+- **[rsReticulum](https://github.com/ratspeak/rsReticulum)** - the Reticulum network stack and `*-rs` command-line tools.
+- **[rsLXMF](https://github.com/ratspeak/rsLXMF)** - the LXMF messaging layer and `lxmd-rs` propagation daemon.
 - **[lrgp-rs](https://github.com/ratspeak/lrgp-rs)** - the lightweight game protocol used by the Ratspeak app.
 - **[rsLXST](https://github.com/ratspeak/rsLXST)** - the experimental LXST telephony layer used for Ratspeak's voice calls. Required for the default Ratspeak build; skip with `--no-default-features` if you want to build without voice.
+
+For a reproducible release build, follow the app's [exact-source packaging guide](https://github.com/ratspeak/Ratspeak/blob/main/docs/source-packaging.md) and its pinned dependency set. The host app and protocol libraries require Rust 1.89 or newer; handheld firmware uses its separately pinned MCU toolchain.
 
 During development these repos resolve each other by relative path. Git is the easiest way to fetch them, but GitHub ZIP downloads also work if you extract and rename the folders to match this layout:
 
@@ -49,7 +51,7 @@ If you clone only `Ratspeak`, Cargo will fail because it cannot find the sibling
 Install these first on every desktop platform:
 
 1. **Git**, or GitHub ZIP downloads renamed to the folder layout above.
-2. **Rust 1.85 or newer**, installed through [`rustup`](https://www.rust-lang.org/tools/install).
+2. **Rust 1.89 or newer**, installed through [`rustup`](https://www.rust-lang.org/tools/install).
 3. **Tauri v2 CLI**, installed with Cargo:
 
 ```bash

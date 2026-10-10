@@ -78,7 +78,7 @@ delivery states, long-message/history navigation and storage recovery.
 
 ## LoRa presets
 
-The default radio preset is **Long Fast**. Match the frequency and preset with
+New and reset radio settings use **Medium Fast**. Saved presets are retained. Match the frequency and preset with
 the peers you want to reach; a shared preset name alone does not establish a
 connection. Radio controls are in Settings.
 
