@@ -10,10 +10,10 @@ and [GitHub releases](https://github.com/ratspeak/ratspeak-handheld/releases).
 
 ## Before flashing
 
-**Installing a firmware ZIP resets internal storage.** Back up your device and
-SD card if you want to keep your identity, messages or settings. A full backup
-restores the previous installation; it does not transfer that data into a new one.
-See [backup instructions](#back-up-an-existing-handheld) below.
+**Compatible web updates preserve identity, messages and settings.** If the
+installation cannot be identified or updated safely, the flasher offers
+**Erase and install** or **Cancel**. Erasing removes all internal data; see
+[backup instructions](#back-up-an-existing-handheld) if you need to keep it.
 
 Attach a suitable LoRa antenna before powering the radio. Transmitting without
 one can damage it.
@@ -47,7 +47,8 @@ Use Chrome or Edge on a computer, with a USB data cable.
 2. Check the package and version. M9 supports Standalone only.
 3. Connect the device and choose **Select USB Device**. If it does not connect,
    try [download mode](#recovery-download-mode).
-4. Select **Flash Ratspeak** and confirm the device and erase notice. Keep USB
+4. Select **Flash Ratspeak**. The flasher checks the device and updates compatible
+   firmware automatically. An erase always requires confirmation. Keep USB
    connected until flashing finishes, then restart the device if needed.
 
 To use a ZIP you already downloaded or built, choose **Flash** under **Build
