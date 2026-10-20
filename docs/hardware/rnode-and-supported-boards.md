@@ -53,6 +53,7 @@ Before buying or flashing, check the practical kit:
 ```ini
 [[LoRa Radio]]
   type = RNodeInterface
+  enabled = yes
   port = /dev/ttyUSB0
 ```
 
@@ -60,6 +61,7 @@ Before buying or flashing, check the practical kit:
 ```ini
 [[LoRa Radio]]
   type = RNodeInterface
+  enabled = yes
   port = ble://RNode 3B87
 ```
 
@@ -67,6 +69,7 @@ Before buying or flashing, check the practical kit:
 ```ini
 [[LoRa Radio]]
   type = RNodeInterface
+  enabled = yes
   port = tcp://10.0.0.1:7633
 ```
 

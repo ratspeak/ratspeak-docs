@@ -106,6 +106,7 @@ Any interface above can be locked to peers that share a passphrase. Set `network
 ```ini
 [[Private TCP]]
   type = TCPServerInterface
+  enabled = yes
   listen_ip = 0.0.0.0
   listen_port = 4242
   network_name = our-mesh

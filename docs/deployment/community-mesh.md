@@ -42,6 +42,7 @@ A gateway is a transport router with two interfaces: one LoRa, one IP. It runs `
 [interfaces]
   [[Local LoRa]]
     type = RNodeInterface
+    enabled = yes
     port = /dev/ttyACM0
     frequency = 915000000
     bandwidth = 250000
@@ -52,6 +53,7 @@ A gateway is a transport router with two interfaces: one LoRa, one IP. It runs `
 
   [[Backhaul]]
     type = TCPClientInterface
+    enabled = yes
     target_host = backhaul.example.org
     target_port = 4242
     mode = boundary

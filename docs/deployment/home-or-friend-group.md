@@ -56,6 +56,7 @@ Pick a network name and a strong shared secret. Write them down somewhere your g
 [interfaces]
   [[Friend Group VPS]]
     type = TCPServerInterface
+    enabled = yes
     listen_ip = 0.0.0.0
     listen_port = 4242
     network_name = our-friends
@@ -74,6 +75,7 @@ Open Ratspeak, head to Settings, then Network, then Interfaces. Add a new TCP cl
 [interfaces]
   [[Home VPS]]
     type = TCPClientInterface
+    enabled = yes
     target_host = vps.example.org
     target_port = 4242
     network_name = our-friends

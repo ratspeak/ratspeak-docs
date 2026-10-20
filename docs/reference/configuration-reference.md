@@ -8,7 +8,7 @@ Reference for the configuration files relevant to Ratspeak users and operators: 
 
 ## Reticulum config (`~/.rsReticulum/config` or `~/.reticulum/config`)
 
-INI format. Common config files are read by Reticulum-compatible daemons such as `rnsd-rs`. For portable configs, set `enabled = yes` or `enabled = no` explicitly on every interface.
+INI format. Common config files are read by Reticulum-compatible daemons such as `rnsd-rs`. Set `enabled = yes` on every interface you want running: an interface with neither `enabled` nor `interface_enabled` is skipped.
 
 rsReticulum defaults to rsReticulum-specific paths such as `~/.rsReticulum/config`, with `/etc/rsReticulum/config` or `~/.config/rsReticulum/config` taking precedence on Unix-like systems if present. Point `--config` at another Reticulum-compatible directory only when shared local state is intentional.
 
@@ -52,7 +52,7 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
 | Key | Description |
 |---|---|
 | `type` | `TCPClientInterface`, `TCPServerInterface`, `UDPInterface`, `AutoInterface`, `RNodeInterface`, `RNodeMultiInterface`, `SerialInterface`, `KISSInterface`, `I2PInterface`, etc. |
-| `enabled` / `interface_enabled` | `yes` / `no` or `True` / `False`. This docs set uses `enabled = yes` in examples. |
+| `enabled` / `interface_enabled` | `yes` / `no` or `True` / `False`. Either set to yes starts the interface; with neither, it is skipped. This docs set uses `enabled = yes` in examples. |
 | `mode` | `full` (default), `access_point`, `roaming`, `boundary`, `gateway`. Controls how announces are rebroadcast. |
 | `network_name` | IFAC network name. Interfaces with different names cannot exchange traffic on this link. |
 | `passphrase` | IFAC passphrase. Combined with `network_name` to authenticate frames. |
@@ -90,6 +90,7 @@ For RNode over TCP, keep `type = RNodeInterface` and set `port` to the radio end
 ```ini
 [[Field TCP RNode]]
     type = RNodeInterface
+    enabled = yes
     port = tcp://192.168.1.50:7633
     frequency = 915000000
     bandwidth = 250000

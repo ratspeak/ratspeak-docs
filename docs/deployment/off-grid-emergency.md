@@ -111,6 +111,7 @@ polluting your routing tables. Every node in your group sets the same
 [interfaces]
   [[Field LoRa]]
     type = RNodeInterface
+    enabled = yes
     port = /dev/ttyUSB0
     network_name = your-group-name
     passphrase = use-a-strong-shared-secret-here
