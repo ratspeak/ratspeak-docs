@@ -163,7 +163,7 @@ Install CocoaPods:
 brew install cocoapods
 ```
 
-There is no public iOS download yet. Source builds are for local development, device testing, or later TestFlight packaging. For a physical iPhone or iPad, you also need an Apple developer team and a provisioning profile that can sign `org.ratspeak.ios`. Simulator builds do not need App Store distribution signing, but they are not enough to validate Bluetooth, Local Network, notifications, or background behavior.
+There is no public iOS download yet. Source builds are for local development, device testing, or later TestFlight packaging. For a physical iPhone or iPad, you also need an Apple developer team and a provisioning profile that can sign `org.ratspeak.apple` with the approved multicast networking capability. Simulator builds do not need App Store distribution signing, but they are not enough to validate Bluetooth, Local Network, notifications, or background behavior.
 
 ## Build rsReticulum
 
@@ -314,7 +314,7 @@ cargo tauri android dev
 
 ## Build Ratspeak for iOS
 
-Ratspeak does not currently offer a public iOS artifact. Build from source on macOS when you are doing local development or have provisioning access for `org.ratspeak.ios`.
+Ratspeak does not currently offer a public iOS artifact. Build from source on macOS when you are doing local development or have provisioning access for `org.ratspeak.apple`.
 
 From macOS:
 
@@ -340,7 +340,7 @@ If a production iOS build opens to a blank page or tries to load a local dev ser
 
 iOS platform notes:
 
-- Local Network access is required for LAN peers. UDP multicast discovery also needs Apple's multicast networking entitlement in the signed provisioning profile; without it, local discovery can be limited.
+- Local Network access is required for LAN peers, and the user must grant the normal iOS permission. Ratspeak's project enables Apple's approved multicast networking entitlement; physical-device and TestFlight profiles must include the same capability.
 - iOS apps cannot use general USB serial devices. Use Bluetooth RNode hardware or an RNode TCP bridge for LoRa on iPhone and iPad.
 - Bluetooth, notifications, and camera/photo access all require the normal iOS permission prompts.
 - Background execution is controlled by iOS. Ratspeak can use declared Bluetooth background modes, but it should not be treated as a headless always-on daemon.
@@ -375,4 +375,4 @@ repositories remain references for their earlier releases.
 
 **Android builds cannot find the NDK.** Reopen the terminal after setting `ANDROID_HOME`, `NDK_HOME`, and `JAVA_HOME`, then confirm `adb devices` works.
 
-**iOS signing fails.** Check the Xcode project signing team and provisioning profile. The current iOS bundle identifier is `org.ratspeak.ios`. Multicast local discovery also requires Apple's multicast networking entitlement.
+**iOS signing fails.** Check the Xcode project signing team and provisioning profile. The current iOS bundle identifier is `org.ratspeak.apple`. The profile must be regenerated after multicast capability approval and include `com.apple.developer.networking.multicast`.

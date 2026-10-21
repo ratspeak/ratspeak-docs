@@ -43,9 +43,9 @@ Use the Windows installer from the download page or GitHub release. If multiple 
 
 ## iOS
 
-There is no public iOS download yet. iOS testing is currently source builds on macOS with Xcode and developer provisioning for `org.ratspeak.ios`; TestFlight and App Store distribution will come later. See [Building from Source](../reference/building-from-source.md).
+There is no public iOS download yet. iOS testing is currently source builds on macOS with Xcode and developer provisioning for `org.ratspeak.apple`; TestFlight and App Store distribution will come later. See [Building from Source](../reference/building-from-source.md).
 
-iOS does not support general USB serial from third-party apps, so LoRa on iPhone and iPad uses Bluetooth RNode hardware or an RNode TCP bridge on a reachable local network. Local Network and multicast discovery depend on Apple permissions and provisioning, notifications require user permission, and background execution remains subject to iOS lifecycle limits.
+iOS does not support general USB serial from third-party apps, so LoRa on iPhone and iPad uses Bluetooth RNode hardware or an RNode TCP bridge on a reachable local network. Signed Ratspeak builds include the approved multicast capability, but users must still grant Apple's Local Network permission. Notifications require user permission, and background execution remains subject to iOS lifecycle limits.
 
 ## Android
 
