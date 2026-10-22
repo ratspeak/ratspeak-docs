@@ -111,7 +111,9 @@ message.
 
 New and reset radio settings use **Medium Fast**; saved presets are retained.
 For LoRa, match the other device's frequency, bandwidth, spreading factor, coding
-rate, and preamble. Choose a region suited to your hardware and location. See
+rate, and preamble. Choose a region suited to your hardware and location, and
+follow your local radio regulations for frequency, transmit power and duty cycle;
+presets do not limit power or airtime for your region. See
 [LoRa radio settings](../networking/lora-and-rnode.md) for presets and tuning.
 
 For WiFi, join a network and configure a TCP peer, or enable LAN discovery to find

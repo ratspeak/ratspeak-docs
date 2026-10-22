@@ -91,7 +91,9 @@ For the full preset table and tuning guidance, see [LoRa Radio Interfaces](../ne
 
 Choose a radio region supported by your hardware and permitted where you use it.
 A timezone setting does not change the radio's hardware band or automatically
-select a legal frequency. Check the region and frequency before transmitting.
+select a legal frequency. Check the region and frequency before transmitting,
+and keep transmit power and duty cycle within local limits; presets do not limit
+either.
 
 ## Wi-Fi bridging
 

@@ -83,6 +83,8 @@ actions. Back dismisses selection before leaving the conversation.
 The bracketed digit and the on-screen hint show what will change. Match the
 frequency and radio preset with the other device; unsupported frequencies are
 rejected. This editor does not require touch, a trackball or horizontal scrolling.
+Follow your local radio regulations for frequency, transmit power and duty cycle;
+presets do not limit power or airtime for your region.
 
 ### Power buttons
 

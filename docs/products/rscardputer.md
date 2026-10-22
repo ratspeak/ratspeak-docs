@@ -72,7 +72,9 @@ switch for hardware power-off, and wait for pending saves or maintenance first.
 **Settings → Radio** offers the shared presets and custom frequency, spreading
 factor, bandwidth, coding rate, TX power and **preamble**. Match the radio tuple
 with your peers. Cardputer exposes these fields directly; it does not use the
-Deck/Pager developer-unlock screen.
+Deck/Pager developer-unlock screen. Follow your local radio regulations for
+frequency, transmit power and duty cycle; presets do not limit power or airtime
+for your region.
 
 Cardputer keeps messages on an inserted SD card automatically, and the card holds
 the full history. Without a card, internal storage keeps the newest messages and
