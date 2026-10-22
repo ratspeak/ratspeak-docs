@@ -27,8 +27,8 @@ to the board.
 
 Back up internal flash and the SD card before flashing; see the
 [backup instructions](/docs/hardware/flashing-firmware#before-flashing).
-Full packages are fresh-install images, not data-preserving updates.
-The web flasher clears internal storage after you accept its backup notice.
+Compatible updates keep identity, messages and settings. A fresh installation
+clears internal storage after you accept the web flasher's backup notice.
 
 :::warning
 Attach the antenna before powering on the T-Deck Plus. Transmitting without it can damage the radio.

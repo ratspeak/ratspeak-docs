@@ -8,7 +8,7 @@ sidebar_label: T-Pager
 The LilyGO T-Pager runs [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
 alongside [T-Deck Plus](./rsdeck.md) and [Cardputer Adv](./rscardputer.md). It
 uses the shared Rust Reticulum/LXMF core. This page describes
-**Ratspeak Handheld 2.3.2 beta**.
+**Ratspeak Handheld 2.3.3 beta**.
 
 ## Hardware
 
@@ -19,7 +19,8 @@ and GPS. Other radio variants are not interchangeable firmware targets. Match
 your antenna and radio configuration to the hardware and frequency band.
 
 An SD card is optional for normal messaging. The firmware can store identity,
-settings, and messages on internal flash.
+settings, and messages on internal flash, which keeps the newest messages; see
+[message history](../hardware/handheld-guide.md#message-history).
 
 ## Install
 
@@ -27,10 +28,15 @@ Use `pager-full.zip` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
 for a fresh installation. Upload it through **Build your own** on the
 [web flasher](https://ratspeak.org/download.html), or select the T-Pager preset
-when it shows **Ratspeak Handheld**.
+when it shows **Ratspeak Handheld**. `pager-standalone.bin` and
+`pager-rnode.bin` are the same complete images, for esptool or
+[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher).
+Launcher gives Ratspeak's internal storage a 448 KB partition; resizing it
+keeps its data, and a larger partition keeps more message history.
 
-**Back up your identity and data first.** Factory packages reset internal
-storage after you accept the web flasher's backup notice. See the
+**Back up your identity and data first.** Compatible web flasher updates keep
+identity, messages and settings; a factory installation resets internal storage
+after you accept the flasher's backup notice. See the
 [backup instructions](../hardware/flashing-firmware.md#before-flashing) before
 replacing an existing installation.
 

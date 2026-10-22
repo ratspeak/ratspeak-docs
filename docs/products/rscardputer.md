@@ -7,7 +7,7 @@ sidebar_label: Cardputer Adv
 
 [**Ratspeak Handheld**](https://github.com/ratspeak/ratspeak-handheld) includes
 Cardputer Adv alongside T-Deck Plus, T-Pager and ThinkNode M9.
-This page describes **Ratspeak Handheld 2.3.2 beta**.
+This page describes **Ratspeak Handheld 2.3.3 beta**.
 
 ## Hardware
 
@@ -23,19 +23,23 @@ compact pages; full message content remains available through the reader.
 
 The unified full package is `cardputer-full.zip`. It includes the launcher,
 **Standalone** messenger and **RNode** radio mode. Single-mode ZIPs install one
-mode; `cardputer-standalone.bin` and `cardputer-rnode.bin` are application images for a compatible launcher
-or matching slot, not complete factory installations.
+mode. `cardputer-standalone.bin` and `cardputer-rnode.bin` are the same complete
+images, for esptool or
+[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher).
+Launcher gives Ratspeak's internal storage a 448 KB partition; resizing it
+keeps its data, and a larger partition keeps more message history.
 
 Use a package from the selected [Ratspeak Handheld
 release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local build
 with `DEVICE=cardputer`. Select **Cardputer** on the
 [web flasher](https://ratspeak.org/download.html), or upload a complete ZIP
 through **Build your own**. Check that the selected firmware is
-**Ratspeak Handheld 2.3.2**.
+**Ratspeak Handheld 2.3.3**.
 
-**Back up internal flash and the SD card first.** Factory packages are not
-data-preserving updates. See [Flashing firmware](../hardware/flashing-firmware.md)
-for the 8 MB backup size, download mode and installation limits.
+**Back up internal flash and the SD card first.** Compatible web flasher updates
+keep your data; a factory installation erases it. See
+[Flashing firmware](../hardware/flashing-firmware.md) for the 8 MB backup size,
+download mode and installation limits.
 
 In the full launcher, select Standalone for on-device LXMF messaging over LoRa or
 Wi-Fi, or RNode to use the device as a radio for a host client over USB serial or
@@ -69,6 +73,10 @@ switch for hardware power-off, and wait for pending saves or maintenance first.
 factor, bandwidth, coding rate, TX power and **preamble**. Match the radio tuple
 with your peers. Cardputer exposes these fields directly; it does not use the
 Deck/Pager developer-unlock screen.
+
+Cardputer keeps messages on an inserted SD card automatically, and the card holds
+the full history. Without a card, internal storage keeps the newest messages and
+removes the oldest when it runs low. **Settings → Storage** shows which applies.
 
 The [handheld guide](../hardware/handheld-guide.md) explains message phases,
 save errors, voice messages, propagation, history, SD-copy scope, and reset recovery. The compact editor

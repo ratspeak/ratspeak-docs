@@ -7,7 +7,7 @@ sidebar_label: T-Deck Plus
 
 The T-Deck Plus is supported by [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
 the shared successor to rsDeck, rsPager, and rsCardputer. This page describes
-**Ratspeak Handheld 2.3.2 beta**.
+**Ratspeak Handheld 2.3.3 beta**.
 The full image boots a small launcher that can start either mode:
 
 - **Standalone** — on-device Reticulum/LXMF messaging over LoRa, with local identity, contacts, messages, radio settings, Wi-Fi options, GPS time sync, and SD-card storage support.
@@ -31,9 +31,9 @@ for a fresh installation. The [web flasher](https://ratspeak.org/download.html)
 accepts the complete ZIP through **Build your own**; check that a board preset
 shows **Ratspeak Handheld** if selecting an automatic download.
 
-**Back up your identity and data first.** Full, Standalone, and RNode ZIPs are
-factory images, not data-preserving updates. The web flasher clears internal
-storage after you accept its backup notice. See the [backup
+**Back up your identity and data first.** Compatible web flasher updates keep
+identity, messages and settings; a factory installation clears internal storage
+after you accept the flasher's backup notice. See the [backup
 instructions](../hardware/flashing-firmware.md#before-flashing) before replacing
 an existing installation.
 
@@ -43,8 +43,11 @@ If you'd rather build from source, see the bottom of this page. For recovery mod
 
 Use the full image to switch modes on-device. Choose **Standalone** for messaging
 on the T-Deck, or **RNode** to connect it to a host client. Standalone-only and
-RNode-only packages install a single mode. Bare app binaries require a compatible
-external launcher or the correct application slot; they are not full images.
+RNode-only packages install a single mode. `tdeck-standalone.bin` and
+`tdeck-rnode.bin` are the same complete images, for esptool or
+[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher).
+Launcher gives Ratspeak's internal storage a 448 KB partition; resizing it
+keeps its data, and a larger partition keeps more message history.
 
 ## First boot
 

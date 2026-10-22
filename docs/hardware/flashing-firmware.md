@@ -34,9 +34,10 @@ RNode support is coming soon. Download the ZIP for your device:
 | Cardputer Adv | `cardputer-rnode.zip` |
 | ThinkNode M9 | `m9-standalone.zip` |
 
-The separate `.bin` downloads contain only the application. They require a
-compatible launcher or the correct application slot and partition layout. Use
-the ZIP for a complete installation.
+Standalone and RNode are also published as a `.bin`, such as
+`cardputer-standalone.bin`. It is the same complete image as in the matching
+ZIP, for [esptool](#esptool) or [bmorcelli's Launcher](#bmorcellis-launcher).
+Full is published only as a ZIP.
 
 ## Web flasher
 
@@ -54,25 +55,50 @@ Use Chrome or Edge on a computer, with a USB data cable.
 To use a ZIP you already downloaded or built, choose **Flash** under **Build
 your own** and upload it.
 
-## ThinkNode M9
+## esptool {#esptool}
 
-To install M9 firmware from a terminal, download `m9-standalone.zip` and extract
-it into an empty directory. Use the
-**factory image inside the ZIP**; the separate application download has the
-same filename but cannot be installed at this address.
+Download the device's `.bin`, or extract it from the ZIP into an empty
+directory. Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
+with `python3 -m pip install esptool==5.2.0`, and
+[back up](#back-up-an-existing-handheld) any data you want to keep.
 
-Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
-with `python3 -m pip install esptool==5.2.0`. Back up any data you want to keep,
-then connect USB with the power switch on. Close any serial monitor, replace
-`PORT` with the M9's serial port, and run these commands from the extracted folder:
+Connect the device in [download mode](#recovery-download-mode). Close the web
+flasher and any serial monitor, replace `PORT` with its serial port, and run
+these commands from the folder that holds the image:
 
 ```sh
 python3 -m esptool --chip esp32s3 --port PORT --baud 115200 erase-flash
-python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 m9-standalone.bin
+python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 cardputer-standalone.bin
 ```
 
-Leave power connected until writing and verification finish. If no serial port
-appears, check the cable and your [WCH driver](https://learn.adafruit.com/how-to-install-drivers-for-wch-usb-to-serial-chips-ch9102f-ch9102/overview).
+This is a factory installation: it removes all internal data, including the
+identity. Leave power connected until writing and verification finish. On M9,
+keep the power switch on; if no serial port appears, check the cable and your
+[WCH driver](https://learn.adafruit.com/how-to-install-drivers-for-wch-usb-to-serial-chips-ch9102f-ch9102/overview).
+To update without losing data, use the [web flasher](#web-flasher).
+
+## bmorcelli's Launcher {#bmorcellis-launcher}
+
+On T-Deck Plus, T-Pager and Cardputer Adv,
+[bmorcelli's Launcher](https://github.com/bmorcelli/Launcher) 2.8 or later can
+install the Standalone or RNode `.bin` from the SD card or through Launcher's
+web interface. M9 is not supported.
+
+- **Storage:** Launcher creates a 448 KB data partition for Ratspeak's internal
+  storage, and Ratspeak prepares it on first start. You can resize it in
+  Launcher without losing data. At 448 KB, about 100 text messages are kept
+  before the oldest are removed; a 1.9 MB partition keeps several hundred. See
+  [message history](./handheld-guide.md#message-history).
+- **Updates:** installing a newer `.bin` through Launcher keeps identity,
+  messages and settings.
+- **Removing:** when you delete Ratspeak, Launcher offers to back up its data
+  partition to the SD card, and reinstalling offers to restore it.
+
+If internal storage holds another app's files or can't be read, for example
+after an older Launcher shared its storage, Ratspeak asks before changing it:
+**X** keeps it and restarts, and **E** erases it once you confirm with
+**Enter**. The SD card is not touched. If no storage partition is found,
+install the complete `.bin` or ZIP for your device.
 
 ## Backups
 

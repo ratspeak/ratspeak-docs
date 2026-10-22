@@ -141,6 +141,21 @@ Wait for saves or deletions to finish before switching off or removing the card.
 If a read or deletion fails, keep the data intact and retry before considering a
 reset.
 
+### Message history {#message-history}
+
+Internal storage keeps the newest messages. When it runs low, the oldest
+messages are removed across all conversations; messages still being sent and
+drafts are kept. The device shows a notice the first time this happens.
+
+To keep the full history, use an SD card for messages: turn on **Settings →
+Storage → SD Message Store**; Cardputer uses an inserted card automatically. The
+card then holds every message, and internal storage keeps recent copies. If the
+card is missing, the oldest internal messages are removed as without a card;
+those already on the card return when you insert it again.
+
+**Settings → Storage** shows internal usage and whether history is complete on
+the card or rolling.
+
 ## Restart, erase and recovery
 
 Use the device's restart or shutdown controls when available so pending saves can
