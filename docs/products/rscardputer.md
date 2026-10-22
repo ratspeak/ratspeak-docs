@@ -69,7 +69,7 @@ switch for hardware power-off, and wait for pending saves or maintenance first.
 
 ## Radio and storage
 
-**Settings → Radio** offers the shared presets and custom frequency, spreading
+**Settings → LoRa** offers the shared presets and custom frequency, spreading
 factor, bandwidth, coding rate, TX power and **preamble**. Match the radio tuple
 with your peers. Cardputer exposes these fields directly; it does not use the
 Deck/Pager developer-unlock screen. Follow your local radio regulations for
