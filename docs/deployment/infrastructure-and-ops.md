@@ -141,6 +141,8 @@ rnpath-rs --config ~/.rsReticulum -R <node_hash> -i ~/.rsReticulum/identities/mg
 rnprobe-rs --config ~/.rsReticulum rnstransport.probe <dest_hash> -n 5
 ```
 
+`<node_hash>` is the remote node's transport identity hash; on a transport node, `rnstatus-rs` run there shows it as the transport instance. A node with `enable_transport = no` gets a new management address every time it starts unless it sets `static_transport_identity = yes`, so set that on a leaf node you manage remotely. The `storage/remote_management_identity` file from earlier releases is no longer used and can be deleted.
+
 `rnstatus-rs` is what you reach for first — it shows interface health, traffic counters, and link state. `rnpath-rs` answers "does this node know how to reach X, and through whom." `rnprobe-rs` measures real RTT and loss for a destination, including hop count and (where the link supports it) RSSI/SNR. Add `-w <seconds>` to any of them to set a query timeout, or `-j` for JSON output you can pipe into a fleet monitor.
 
 A simple fleet check is a shell loop calling `rnstatus-rs -R -j` against each of your node hashes and flagging anything that times out.
