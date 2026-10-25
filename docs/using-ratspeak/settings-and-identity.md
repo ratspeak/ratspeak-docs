@@ -51,7 +51,7 @@ Identities created before the recovery-phrase system have random keys with no ph
 
 You can protect a software identity's stored key with a **PIN**. Ratspeak encrypts the on-disk key with a key derived from your PIN (Argon2id + authenticated encryption). This protects the key at rest; it does not prevent someone using an already-unlocked Ratspeak session. Set it in **Settings → Identity →** the identity's menu **→ Set PIN**. Additional software identities can also be PIN-protected at creation.
 
-The PIN is required when a fresh Ratspeak runtime starts and loads the protected identity, not per message or whenever its screen reopens. On Android, the runtime can remain unlocked in the background after the task is removed; reopening its screen resumes that same session. Software identities do not currently have an automatic lock timeout.
+The PIN is required when Ratspeak loads the protected identity: at launch, and again after you switch to another identity and back. It is not asked for per message, when its screen reopens, or when Ratspeak restarts the same identity's network. On Android, the runtime can remain unlocked in the background after the task is removed; reopening its screen resumes that same session. Software identities do not currently have an automatic lock timeout.
 
 There is **no recovery if you forget the PIN**; your 12-word phrase remains the fallback to re-create a recoverable identity, so keep it. For an older identity without a phrase, keep a separate export or full backup before relying on a PIN.
 
