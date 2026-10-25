@@ -126,6 +126,16 @@ Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.r
 
 Reticulum forgets stale paths. Open the contact and tap **Request Path**, or wait for the next announce from the recipient. If the recipient went offline, a reachable Offline Inbox/propagation node can still hold encrypted mail for later pickup.
 
+## "Ratspeak is already open"
+
+Another Ratspeak app is using the same data, for example a second build started with `RATSPEAK_DATA_DIR` pointing at it. Only one app can open the data at a time, so the second one stops at this screen and changes nothing. Quit the other app, then open Ratspeak again.
+
+On a network or virtual drive that can't lock files, Ratspeak can't tell that another app has the data open. It starts with a warning instead: open it from only one app, on one device, at a time.
+
+## "Update Ratspeak"
+
+The data was saved by a newer version of Ratspeak, for example before an older build was reinstalled. An older version can't use it safely, so it stops at this screen without writing to the database. Install the latest version to open your data again.
+
 ## "Database is locked"
 
 Only one instance of Ratspeak should run against a given data directory at a time. Quit any other copies (check the system tray and any leftover processes), then relaunch. If the error persists after a clean restart, the WAL files may be stuck — quit the app and delete `ratspeak.db-wal` and `ratspeak.db-shm` in your data directory. The main `.db` file is safe to leave alone.
