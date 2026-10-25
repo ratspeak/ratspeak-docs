@@ -107,6 +107,7 @@ Standard codes in use:
 - `service_unavailable` — RNS or transport not ready yet
 - `database_unavailable` — SQLite pool exhausted or migration mid-flight
 - `lxmf_not_initialized` — LXMF stack not up; retry after `system_status` reports ready
+- `files_not_removed` — the messages were deleted, but some of their files could not be removed yet; Ratspeak removes them later
 - `internal_error` — unexpected; the message is human-readable, the cause is logged
 
 Treat unknown codes as fatal for that call but not for the session.
@@ -121,7 +122,7 @@ Treat unknown codes as fatal for that call but not for the session.
 
 **Identity is implicit.** Commands operate against the currently loaded identity — there is no per-call identity argument. Listen for `identity_switched` to know when that context changes underneath you. While no identity is active, a command that works on an identity's data may answer `conflict` with the message `no active identity`. The admission check in front of every command refuses such calls only once Ratspeak knows that no identity is active. App settings, setup, platform probes and identity management always answer.
 
-**Bulk clears.** `api_clear_messages`, `api_clear_contacts` and `api_reset_database` act on the active identity only and keep its blocked users. A clear that waited out an identity switch answers `conflict` and deletes nothing. A finished clear first emits `identity_data_cleared` (`{ "messages": bool, "contacts": bool }`), then re-sends `contacts_update`, `unread_total` and `conversations_update`.
+**Bulk clears.** `api_clear_messages`, `api_clear_contacts` and `api_reset_database` act on the active identity only and keep its blocked users. A clear that waited out an identity switch answers `conflict` and deletes nothing. A finished clear first emits `identity_data_cleared` (`{ "messages": bool, "contacts": bool }`), then re-sends `contacts_update`, `unread_total` and `conversations_update`. When a clear or `delete_conversation` deletes messages whose files cannot all be removed yet, its events and lists still go out and it answers `files_not_removed`.
 
 **Attachments.** The app exposes its current message, attachment, efficient-resource, and Offline Inbox/propagation-node transfer limits through `api_lxmf_limits`. Do not hard-code UI limits; they depend on the protocol resource ceiling and, for Offline Inbox delivery, the selected propagation node's advertised transfer limit.
 
