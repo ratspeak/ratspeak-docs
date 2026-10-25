@@ -152,7 +152,7 @@ INI format. Read by `lxmd-rs`, the LXMF propagation node daemon. Ratspeak calls 
 
 Ratspeak does **not** use a hand-edited config file for app preferences. Display name, theme, auto-announce interval, Offline Inbox mode/manual node hash, notification preferences, and most UI state live in the SQLite database next to the app data and are managed through the Settings view.
 
-Network interface definitions are written to the app-managed Reticulum config at `.ratspeak/reticulum/config` under the Ratspeak data directory, not to the user's system-wide `~/.reticulum/config`. Set `RATSPEAK_RNS_CONFIG_DIR` only when you intentionally want Ratspeak to use a different Reticulum config directory.
+Network interface definitions are written to the app-managed Reticulum config at `.ratspeak/reticulum/config` under the Ratspeak data directory, not to the user's system-wide `~/.reticulum/config`. Set `RATSPEAK_RNS_CONFIG_DIR` only when you intentionally want Ratspeak to use a different Reticulum config directory. Every identity then uses that one directory, so all of them share one Reticulum identity and one path table.
 
 Transport Mode is stored as the app setting `transport_mode` with one of three values: `off`, `on`, or `auto`. The app presents these as **OFF**, **ON**, and **AUTO**. OFF is the default. ON maps to Reticulum `enable_transport = True` when the local runtime can perform forwarding. AUTO is an app policy: it enables only when there is an enabled non-LoRa interface, no enabled LoRa/RNode interface, and the current network is Wi-Fi, Ethernet, or an unknown desktop network type. Shared-instance clients do not perform local Transport Mode duties; the shared instance handles that role.
 
