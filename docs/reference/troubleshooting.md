@@ -138,7 +138,7 @@ The data was saved by a newer version of Ratspeak, for example before an older b
 
 ## "Database is locked"
 
-Only one instance of Ratspeak should run against a given data directory at a time. Quit any other copies (check the system tray and any leftover processes), then relaunch. If the error persists after a clean restart, the WAL files may be stuck — quit the app and delete `ratspeak.db-wal` and `ratspeak.db-shm` in your data directory. The main `.db` file is safe to leave alone.
+Only one copy of Ratspeak can use its data at a time; a second copy stops at the ["Ratspeak is already open"](#ratspeak-is-already-open) screen. Quit any other copies (check the system tray and any leftover processes), then relaunch. Don't delete `ratspeak.db-wal` or `ratspeak.db-shm`: they can hold recent messages that are not yet in `ratspeak.db`. If the error persists after a clean restart, collect logs as described in [Still stuck](#still-stuck).
 
 ## Peers or Network views are laggy with many nodes
 
