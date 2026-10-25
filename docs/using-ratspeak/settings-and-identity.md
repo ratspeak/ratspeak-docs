@@ -92,6 +92,8 @@ On Windows, the Bluetooth Peer advertiser/peripheral role requires the MSIX buil
 
 On Android and iOS, **Settings → Notifications** keeps Ratspeak's notification preference separate from the operating system permission. If permission has not been requested, use **Allow**; after a denial, use **Open Settings** to change it at the OS level. Turning Ratspeak notifications off hides those permission actions without changing the OS setting.
 
+**Previews** chooses what an alert shows: the sender and message, only the sender, or neither. A call alert always shows who is calling. On Android and iOS, switching to another identity, an Auto-Lock, removing the active hardware identity or a reset removes the alerts that are still shown.
+
 On Android, **Background battery access** shows the current OS battery-optimization status, not a saved Ratspeak on/off preference. Choose **Review** to open Android's battery controls. Exempting Ratspeak from battery optimization can help background connections but may increase battery use. Android or the device maker can still stop the app; this does not guarantee delivery after a force stop, reboot, or OS process termination.
 
 ## Theme

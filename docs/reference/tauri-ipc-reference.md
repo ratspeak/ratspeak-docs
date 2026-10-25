@@ -128,6 +128,8 @@ Treat unknown codes as fatal for that call but not for the session.
 
 **Keys and secrets.** `export_shared_access` takes the active identity's `passcode` when it has one, otherwise `confirmed: true`. A missing or wrong PIN answers `unauthorized`, and a missing confirmation `bad_request`.
 
+**Notifications.** `api_notification_settings` answers `{ "enabled": bool, "ios_stubbed": bool, "preview": string }`. `set_notification_preview` takes `preview`, one of `name_and_message`, `name_only` or `neither`, answers the same object and keeps the choice across restarts; any other value answers `bad_request`. Both answer while no identity is active or the active one is locked.
+
 **Bulk clears.** `api_clear_messages`, `api_clear_contacts` and `api_reset_database` act on the active identity only and keep its blocked users. A clear that waited out an identity switch answers `conflict` and deletes nothing. A finished clear first emits `identity_data_cleared` (`{ "messages": bool, "contacts": bool }`), then re-sends `contacts_update`, `unread_total` and `conversations_update`. When a clear or `delete_conversation` deletes messages whose files cannot all be removed yet, its events and lists still go out and it answers `files_not_removed`.
 
 **Attachments.** The app exposes its current message, attachment, efficient-resource, and Offline Inbox/propagation-node transfer limits through `api_lxmf_limits`. Do not hard-code UI limits; they depend on the protocol resource ceiling and, for Offline Inbox delivery, the selected propagation node's advertised transfer limit.
