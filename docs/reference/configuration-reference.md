@@ -30,6 +30,7 @@ The file is created with sensible defaults on first run. Edit, then restart the 
 | `share_instance` | `Yes` | Run as a shared instance so other tools on this host can attach to this daemon over a local socket instead of opening their own interfaces. |
 | `instance_name` | `default` | Name of the shared-instance socket. Multiple daemons on one host need distinct names. |
 | `shared_instance_port` | `37428` | Local shared-instance data port. Remote-control RPC uses separate control settings. |
+| `rpc_key` | *(derived)* | Key for the local control service that tools such as `rnstatus-rs` and `rnpath-rs` use. Without one, it is derived from the transport identity. It is an admin credential, as in Python Reticulum: whoever holds it can read this node's state, drop its paths and block identities. |
 | `enable_remote_management` | `No` | Allow remote RPC management from listed identities. |
 | `remote_management_allowed` | *(none)* | Comma-separated identity hashes permitted to manage this node. |
 | `respond_to_probes` | `No` | Reply to network probes used by `rnprobe-rs` for diagnostics. |
