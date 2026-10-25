@@ -81,7 +81,7 @@ Walk through these in order:
 
 ## My RNode doesn't show up in "Add LoRa Device"
 
-- **macOS / Linux**: serial devices need user permissions. On Linux, add yourself to the `dialout` group (`sudo usermod -aG dialout $USER`), then log out and back in. On macOS, the device should appear as `/dev/tty.usbserial-*` automatically.
+- **macOS / Linux**: serial devices need user permissions. On macOS, the device should appear as `/dev/tty.usbserial-*` automatically. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/main/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you copied an older `99-ratspeak.rules` into `/etc/udev/rules.d/`, delete it. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
 - **Windows**: install the CP210x or CH340 driver matching your RNode's USB chip. Check Device Manager for an unknown COM device.
 - **iOS**: USB radios are not supported. Use a BLE-equipped RNode from **Network → Add LoRa Device → Bluetooth**, or use the TCP tab if your RNode stream is exposed on a reachable local endpoint. Accept the OS pairing prompt for BLE when it appears.
 - Bad cables look identical to good ones. If nothing else works, try a different USB cable — many shipped with devices are charge-only.
