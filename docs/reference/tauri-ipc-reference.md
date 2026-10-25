@@ -103,7 +103,7 @@ Standard codes in use:
 - `bad_request` — argument validation failure
 - `unauthorized` / `forbidden` — capability gate refused the call
 - `not_found` — referenced row, hash, or session does not exist
-- `conflict` — state precondition violated (e.g. duplicate identity)
+- `conflict` — state precondition violated (e.g. duplicate identity, or no active identity)
 - `service_unavailable` — RNS or transport not ready yet
 - `database_unavailable` — SQLite pool exhausted or migration mid-flight
 - `lxmf_not_initialized` — LXMF stack not up; retry after `system_status` reports ready
@@ -119,7 +119,9 @@ Treat unknown codes as fatal for that call but not for the session.
 
 **Wait for readiness.** On cold start, RNS comes up before LXMF. Calls into the messaging or identity domain before LXMF is ready return `lxmf_not_initialized` or `service_unavailable`. Wait for `system_status` to report `ready`, or retry with backoff after setup.
 
-**Identity is implicit.** Commands operate against the currently loaded identity — there is no per-call identity argument. Listen for `identity_switched` to know when that context changes underneath you.
+**Identity is implicit.** Commands operate against the currently loaded identity — there is no per-call identity argument. Listen for `identity_switched` to know when that context changes underneath you. While no identity is active, a command that works on an identity's data may answer `conflict` with the message `no active identity`. The admission check in front of every command refuses such calls only once Ratspeak knows that no identity is active. App settings, setup, platform probes and identity management always answer.
+
+**Bulk clears.** `api_clear_messages`, `api_clear_contacts` and `api_reset_database` act on the active identity only and keep its blocked users. A clear that waited out an identity switch answers `conflict` and deletes nothing. A finished clear first emits `identity_data_cleared` (`{ "messages": bool, "contacts": bool }`), then re-sends `contacts_update`, `unread_total` and `conversations_update`.
 
 **Attachments.** The app exposes its current message, attachment, efficient-resource, and Offline Inbox/propagation-node transfer limits through `api_lxmf_limits`. Do not hard-code UI limits; they depend on the protocol resource ceiling and, for Offline Inbox delivery, the selected propagation node's advertised transfer limit.
 
