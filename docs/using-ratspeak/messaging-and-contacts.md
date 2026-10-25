@@ -43,7 +43,7 @@ Ratspeak sends in Auto mode by default. Auto tries live delivery first, even if 
 The underlying LXMF delivery modes are:
 
 - **Direct** uses an encrypted live link to the recipient, with Link packet or Resource confirmation. Best when both sides are online or the message is too large for one packet.
-- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, only fits messages up to **287 bytes** of content, and can return an authenticated Reticulum packet proof. If no proof returns, Ratspeak cannot distinguish non-delivery from a lost proof.
+- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, only fits messages up to **287 bytes** of content (a stamp the recipient asks for counts toward that), and can return an authenticated Reticulum packet proof. If no proof returns, Ratspeak cannot distinguish non-delivery from a lost proof.
 - **Offline Inbox** is Ratspeak's name for LXMF propagated delivery. It hands the encrypted message to a propagation node, which holds it until the recipient asks for waiting mail.
 
 Most users do not have to choose a mode by hand. The state icon reports the observable delivery result rather than the transport method.
