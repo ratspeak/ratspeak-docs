@@ -78,7 +78,7 @@ LXMF can deliver a message three ways.
 | **Opportunistic** | Send a small encrypted message as one Reticulum packet with no link setup and await its packet proof | Tiny notes, alerts, and low-overhead traffic |
 | **Propagated / Offline Inbox** | Store the encrypted message on a propagation node until the recipient asks for it | Offline recipients and delay-tolerant messaging |
 
-With default parameters, opportunistic LXMF content is about 295 bytes. Messages larger than that fall back to Direct delivery, and messages larger than a single link packet are transferred as resources over the link.
+With default parameters, opportunistic LXMF content is at most 287 bytes. Messages larger than that fall back to Direct delivery, and messages larger than a single link packet are transferred as resources over the link.
 
 ## Propagation Nodes
 

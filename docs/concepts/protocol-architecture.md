@@ -155,7 +155,7 @@ Type 2 headers are used for transported packets that need an explicit transport 
 | Encrypted Single packet payload | 383 bytes | Maximum encrypted Single destination packet payload |
 | Link packet MDU | 431 bytes | Default payload size for encrypted Link packets |
 
-LXMF messages have smaller content limits because LXMF adds destination fields, timestamps, signatures, and structured-message overhead. With default parameters, opportunistic LXMF content is about 295 bytes; larger messages use Direct link delivery or resources.
+LXMF messages have smaller content limits because LXMF adds destination fields, timestamps, signatures, and structured-message overhead. With default parameters, opportunistic LXMF content is at most 287 bytes; larger messages use Direct link delivery or resources.
 
 ## Interface Access Codes
 

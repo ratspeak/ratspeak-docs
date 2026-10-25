@@ -90,7 +90,7 @@ Walk through these in order:
 
 A few things to check:
 
-- **Length matters**. Opportunistic single-packet delivery caps at 295 bytes. Anything longer needs either Direct delivery to a recipient that is reachable at send time or an Offline Inbox/propagation node that both sides can reach.
+- **Length matters**. Opportunistic single-packet delivery caps at 287 bytes. Anything longer needs either Direct delivery to a recipient that is reachable at send time or an Offline Inbox/propagation node that both sides can reach.
 - **Recipient announce is stale**. Open the contact and tap **Request Path** or use Offline Inbox if one is reachable. If their announce is older than the network's path expiry, packets have nowhere to go.
 - **No transport coverage**. If you and the recipient share no interface and no hub between you, there's no route. Add a TCP hub or run a transport node.
 
