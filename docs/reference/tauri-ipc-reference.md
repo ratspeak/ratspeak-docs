@@ -88,7 +88,7 @@ Names the core broadcasts; subscribe to whichever your integration cares about.
 | `voice_call_update`    | Active LXST call lifecycle: status changes, profile, audio side state. Only emitted when the `lxst-voice` Cargo feature is on. |
 | `voice_incoming_call`  | A new incoming LXST call that passed the contacts-only/zero-hop policy gate.                |
 
-Other narrower events exist (`identity_reset`, `identity_switched`, `auto_announce_updated`, `propagation_update`, `ble_peer_status_update`, `hub_interfaces_update`, `transport_mode_updated`, etc.). Treat them as live; check the source if you depend on one.
+Other narrower events exist (`identity_reset`, `identity_switched`, `auto_announce_updated`, `propagation_update`, `ble_peer_status_update`, `hub_interfaces_update`, `transport_mode_updated`, etc.). Treat them as live; check the source if you depend on one. On the desktop, `download_result` (`{ "url": string, "status": "saved" | "cancelled" | "failed" }`) reports how a download the page started ended, once its save dialog and the write are done.
 
 ## Error model
 
