@@ -85,6 +85,12 @@ New and reset radio settings use **Medium Fast**. Saved presets are retained. Ma
 the peers you want to reach; a shared preset name alone does not establish a
 connection. Radio controls are in Settings.
 
+**Europe (EU868) uses 868.000 MHz (`868000000` Hz)**. With Medium Fast, use
+**250 kHz bandwidth, SF9, coding rate 4/5 (`5`), 17 dBm TX power and an
+18-symbol preamble**. The link preset does not change frequency. For all regional
+frequencies and saved-setting behavior, see the
+[handheld radio settings](../hardware/handheld-guide.md#network-and-radio-settings).
+
 For the full preset table and tuning guidance, see [LoRa Radio Interfaces](../networking/lora-and-rnode.md).
 
 ## Regions

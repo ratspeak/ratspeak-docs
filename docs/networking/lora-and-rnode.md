@@ -29,7 +29,7 @@ Keep RNode TCP on a trusted LAN, hotspot, or VPN unless the bridge itself adds a
 
 ## The 8 firmware presets
 
-These are the RNode/Ratspeak preset family exposed in the desktop and mobile dashboard and mirrored by current rsDeck/rsCardputer firmware. Smaller screens may present them differently, but the radio parameters are the same.
+These are the RNode/Ratspeak preset family exposed in the desktop and mobile dashboard and mirrored by current ratspeak-handheld standalone firmware. Smaller screens may present them differently, but the radio parameters are the same.
 
 | Preset           | SF  | BW (kHz) | CR  | TX (dBm) | Use it for                                                           |
 |------------------|-----|----------|-----|----------|----------------------------------------------------------------------|
@@ -38,19 +38,43 @@ These are the RNode/Ratspeak preset family exposed in the desktop and mobile das
 | Short Slow       | 8   | 250      | 4/5 | 14       | Slightly more reach than Short Fast at the same power budget.         |
 | Medium Fast      | 9   | 250      | 4/5 | 17       | Neighborhood-scale links with line-of-sight obstructions.             |
 | Medium Slow      | 10  | 250      | 4/5 | 17       | Suburban / rural with mild terrain. Balanced.                         |
-| Long Turbo       | 11  | 500      | 4/8 | 22       | Wide bandwidth long-haul. Higher airtime than Long Fast.              |
-| **Long Fast**    | 11  | 250      | 4/5 | 22       | The de-facto community default. Long range, reasonable throughput.    |
+| Long Turbo       | 11  | 500      | 4/8 | 22       | Wide bandwidth with stronger error correction than Long Fast.              |
+| **Long Fast**    | 11  | 250      | 4/5 | 22       | Long range, with more airtime than Medium Fast.    |
 | Long Moderate    | 11  | 125      | 4/8 | 22       | Maximum sensitivity over difficult terrain. Slow but reaches farther. |
 
-If you don't know which to pick, **Long Fast** matches what most other public LoRa mesh nodes use. Two radios can only hear each other if they share the same frequency, SF, BW, and CR — pick a preset everyone else in your area is running.
+**Medium Fast is the default** for new Ratspeak RNode interfaces and new or reset
+handheld standalone settings. Existing saved settings are retained. Two radios
+need the same frequency, SF, BW, and CR — use the settings of the peers you want
+to reach. Older rsDeck, rsPager and rsCardputer releases documented Long Fast as
+their default; those legacy READMEs do not describe current ratspeak-handheld defaults.
+
+All eight handheld standalone presets use an **18-symbol preamble**. Coding rate
+4/5 is entered as `5` in RNode configuration; 4/8 is entered as `8`. TX power
+need not match between peers.
+
+### Connecting to an EU868 handheld
+
+For a handheld using **Europe + Medium Fast**, set the host's RNode interface to:
+
+| Parameter | Value |
+|---|---|
+| Frequency | **868.000 MHz** (`868000000` Hz) |
+| Bandwidth | **250 kHz** (`250000` Hz) |
+| Spreading factor | **9** |
+| Coding rate | **4/5** (`5`) |
+
+The handheld preset also sets TX power to **17 dBm** and preamble to **18 symbols**.
+Use the handheld's saved values if they were customized. Region selection sets
+the frequency separately; changing the link preset does not change it. In RNode
+mode, the connected host controls the radio settings.
 
 ## Tunable parameters
 
 Presets are starting points. The underlying parameters Ratspeak writes to the RNode are:
 
 - **Frequency** — center frequency in Hz. Must match the regional band, stay inside any sub-band restrictions, and ideally avoid channels heavily used by other LoRa traffic in your area.
-- **Spreading factor (SF 7–12)** — higher SF = greater sensitivity / range, exponentially longer airtime. SF12 is roughly 32× the on-air time of SF7 for the same payload. Doubling SF doubles range in ideal conditions and roughly doubles airtime.
-- **Bandwidth (62.5–500 kHz)** — wider BW = faster, less sensitive, more spectrum used. Narrow BW gains sensitivity (and range) at the cost of throughput, and is more vulnerable to oscillator drift between cheap radios.
+- **Spreading factor (catalog range SF 5–12; hardware support varies)** — higher SF = greater sensitivity / range, exponentially longer airtime. SF12 is roughly 32× the on-air time of SF7 for the same payload. Each increment of SF roughly doubles symbol duration at the same bandwidth.
+- **Bandwidth (presets use 125–500 kHz; custom values depend on hardware)** — wider BW = faster, less sensitive, more spectrum used. Narrow BW gains sensitivity (and range) at the cost of throughput, and is more vulnerable to oscillator drift between cheap radios.
 - **Coding rate (4/5–4/8)** — forward error correction overhead. 4/5 is fastest, 4/8 the most resilient at ~60% the data rate.
 - **TX power (typically 14–22 dBm)** — radio output. Cap depends on regional rules and the antenna gain you're feeding.
 - **Preamble length** — symbols transmitted before each frame. Longer preambles help under heavy interference at the cost of airtime.
@@ -65,7 +89,15 @@ LoRa is unlicensed in ISM bands but the bands themselves are regional. **You are
 - **Europe** — 868 MHz (863–870 MHz EU, with sub-band duty-cycle limits)
 - **Asia** — 923 MHz (varies sharply by country; check your national regulator)
 
-Ratspeak's region picker only sets a default center frequency. It does not enforce duty cycle or power caps for you — that is on the operator.
+The exact handheld region defaults are **915000000 Hz** (Americas and Australia),
+**868000000 Hz** (Europe / EU868), and **923000000 Hz** (Asia). The desktop/mobile
+RNode picker also offers **433000000 Hz** (433 MHz / UHF); that is not a handheld
+region preset and requires suitable radio hardware.
+
+The handheld region picker sets a default center frequency without setting power
+or airtime caps. The desktop/mobile RNode picker also prefills a long-window
+airtime limit of **1%** for Europe; other regions leave it unset. These software
+defaults do not establish compliance for your installation.
 
 If you're unsure what's legal for your location, check your national regulator's ISM-band rulings before transmitting. Receive-only operation is legal essentially everywhere LoRa hardware is sold.
 
@@ -76,9 +108,9 @@ For installations where you must stay under a regulatory duty cycle (notably the
 - **Long-window limit** — percent of a long rolling window the radio is allowed to transmit.
 - **Short-window limit** — percent of a short rolling window the radio is allowed to transmit.
 
-When the limit is reached the radio stops transmitting until the window slides forward; receive is unaffected, so the node still hears its neighbors and routes paths it can't currently emit on. These are best-effort soft caps — not a substitute for understanding your region's rules. Set them per-interface in the radio's advanced config; they default to unset.
+When the limit is reached the radio stops transmitting until the window slides forward; receive is unaffected, so the node still hears its neighbors and routes paths it can't currently emit on. These are best-effort soft caps — not a substitute for understanding your region's rules. Set them per-interface in the radio's advanced config; the Europe region prefills the long-window cap to **1%**, while short-window caps and other regions' long-window caps are unset by default. These are host-managed RNode settings, not handheld standalone region settings.
 
-Pairing duty-cycle caps with a slower preset (Long Fast or Long Moderate) is usually a better way to stay legal than running fast and throttling — slow presets carry more bytes per percent of airtime.
+Slower presets consume more airtime for a given payload. Choose a preset that provides a reliable link, and configure airtime limits independently.
 
 ## Multi-radio boards
 

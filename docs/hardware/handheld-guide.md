@@ -109,7 +109,22 @@ message.
 
 ## Network and radio settings
 
-New and reset radio settings use **Medium Fast**; saved presets are retained.
+New and reset radio settings use **Medium Fast**: **250 kHz** bandwidth,
+**SF9**, **4/5** coding rate (`5` in RNode configuration), **17 dBm** TX power,
+and **18-symbol** preamble. Saved settings are retained.
+
+| Region preset | Default center frequency | Frequency in Hz |
+|---|---|---|
+| Americas | 915.000 MHz | `915000000` |
+| Europe (EU868) | **868.000 MHz** | `868000000` |
+| Australia | 915.000 MHz | `915000000` |
+| Asia | 923.000 MHz | `923000000` |
+
+Region and link presets are separate: choosing a region restores its default
+frequency; choosing Medium Fast or another link preset leaves frequency unchanged.
+A custom saved frequency takes precedence over the regional default. In RNode
+mode, the connected host client controls the radio settings.
+
 For LoRa, match the other device's frequency, bandwidth, spreading factor, coding
 rate, and preamble. Choose a region suited to your hardware and location, and
 follow your local radio regulations for frequency, transmit power and duty cycle;
