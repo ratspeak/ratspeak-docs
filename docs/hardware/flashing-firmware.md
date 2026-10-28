@@ -25,19 +25,19 @@ one can damage it.
 - **RNode** turns the handheld into a radio for a Reticulum client over USB or BLE.
 
 T-Deck, T-Pager and Cardputer offer all three packages. M9 offers Standalone;
-RNode support is coming soon. Download the ZIP for your device:
+RNode support is coming soon. Download the `.bin` for your device:
 
 | Device | Example download |
 | --- | --- |
-| T-Deck Plus | `tdeck-full.zip` |
-| T-Pager | `pager-standalone.zip` |
-| Cardputer Adv | `cardputer-rnode.zip` |
-| ThinkNode M9 | `m9-standalone.zip` |
+| T-Deck Plus | `tdeck-full.bin` |
+| T-Pager | `pager-standalone.bin` |
+| Cardputer Adv | `cardputer-rnode.bin` |
+| ThinkNode M9 | `m9-standalone.bin` |
 
-Standalone and RNode are also published as a `.bin`, such as
-`cardputer-standalone.bin`. It is the same complete image as in the matching
-ZIP, for [esptool](#esptool) or [bmorcelli's Launcher](#bmorcellis-launcher).
-Full is published only as a ZIP.
+Each `.bin` is a complete image for the [web flasher](#web-flasher) or
+[esptool](#esptool). T-Deck, T-Pager and Cardputer also have a
+`-standalone-launcher.bin` for [bmorcelli's Launcher](#bmorcellis-launcher).
+Releases up to 2.3.3 published ZIPs instead.
 
 ## Web flasher
 
@@ -52,13 +52,12 @@ Use Chrome or Edge on a computer, with a USB data cable.
    firmware automatically. An erase always requires confirmation. Keep USB
    connected until flashing finishes, then restart the device if needed.
 
-To use a ZIP you already downloaded or built, choose **Flash** under **Build
+To use a `.bin` you already downloaded or built, choose **Flash** under **Build
 your own** and upload it.
 
 ## esptool {#esptool}
 
-Download the device's `.bin`, or extract it from the ZIP into an empty
-directory. Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
+Download the device's `.bin`. Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
 with `python3 -m pip install esptool==5.2.0`, and
 [back up](#back-up-an-existing-handheld) any data you want to keep.
 
@@ -81,24 +80,29 @@ To update without losing data, use the [web flasher](#web-flasher).
 
 On T-Deck Plus, T-Pager and Cardputer Adv,
 [bmorcelli's Launcher](https://github.com/bmorcelli/Launcher) 2.8 or later can
-install the Standalone or RNode `.bin` from the SD card or through Launcher's
-web interface. M9 is not supported.
+install Ratspeak from the SD card or its web interface. Use the
+`-standalone-launcher.bin` for Standalone, or the `-rnode.bin` for RNode. M9 is
+not supported.
 
 - **Storage:** Launcher creates a 448 KB data partition for Ratspeak's internal
-  storage, and Ratspeak prepares it on first start. You can resize it in
-  Launcher without losing data. At 448 KB, about 100 text messages are kept
-  before the oldest are removed; a 1.9 MB partition keeps several hundred. See
-  [message history](./handheld-guide.md#message-history).
-- **Updates:** installing a newer `.bin` through Launcher keeps identity,
+  storage, and Ratspeak prepares it on first start. At 448 KB, about 100 text
+  messages are kept before the oldest are removed; a 1.9 MB partition keeps
+  several hundred. To keep more, enlarge the partition with **Edit Size** in
+  Launcher's **PMan**; Ratspeak keeps its data and uses the extra space on the
+  next start. See [message history](./handheld-guide.md#message-history).
+- **Updates:** installing a newer `-standalone-launcher.bin` keeps identity,
   messages and settings.
-- **Removing:** when you delete Ratspeak, Launcher offers to back up its data
-  partition to the SD card, and reinstalling offers to restore it.
+- **Removing:** Launcher does not always link the storage partition to
+  Ratspeak. Before deleting Ratspeak, back up its `littlefs` partition in PMan.
+
+To reach Launcher from Ratspeak, switch the device off and on. If Ratspeak shows
+**No storage partition was found**, it was installed from the plain
+`-standalone.bin`; install the `-standalone-launcher.bin` instead.
 
 If internal storage holds another app's files or can't be read, for example
 after an older Launcher shared its storage, Ratspeak asks before changing it:
 **X** keeps it and restarts, and **E** erases it once you confirm with
-**Enter**. The SD card is not touched. If no storage partition is found,
-install the complete `.bin` or ZIP for your device.
+**Enter**. The SD card is not touched.
 
 ## Backups
 
@@ -183,7 +187,7 @@ for interrupted resets or storage problems.
 ## Build from source
 
 Follow the [build instructions](https://github.com/ratspeak/ratspeak-handheld#build-from-source)
-for your device. Packaged ZIPs are written to `dist/`.
+for your device. Release images are written to `dist/`.
 
 ## Legacy firmware
 

@@ -7,7 +7,7 @@ sidebar_label: Cardputer Adv
 
 [**Ratspeak Handheld**](https://github.com/ratspeak/ratspeak-handheld) includes
 Cardputer Adv alongside T-Deck Plus, T-Pager and ThinkNode M9.
-This page describes **Ratspeak Handheld 2.3.3 beta**.
+This page describes **Ratspeak Handheld 2.3.4 beta**.
 
 ## Hardware
 
@@ -21,20 +21,20 @@ compact pages; full message content remains available through the reader.
 
 ## Install and modes
 
-The unified full package is `cardputer-full.zip`. It includes the launcher,
-**Standalone** messenger and **RNode** radio mode. Single-mode ZIPs install one
-mode. `cardputer-standalone.bin` and `cardputer-rnode.bin` are the same complete
-images, for esptool or
-[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher).
-Launcher gives Ratspeak's internal storage a 448 KB partition; resizing it
-keeps its data, and a larger partition keeps more message history.
+The unified full image is `cardputer-full.bin`. It includes the launcher,
+**Standalone** messenger and **RNode** radio mode; `cardputer-standalone.bin` and
+`cardputer-rnode.bin` install one mode. All are complete images for the web
+flasher or esptool. For
+[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
+`cardputer-standalone-launcher.bin`; Launcher gives internal storage a 448 KB
+partition, and enlarging it keeps its data and more message history.
 
 Use a package from the selected [Ratspeak Handheld
 release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local build
 with `DEVICE=cardputer`. Select **Cardputer** on the
-[web flasher](https://ratspeak.org/download.html), or upload a complete ZIP
+[web flasher](https://ratspeak.org/download.html), or upload a complete `.bin`
 through **Build your own**. Check that the selected firmware is
-**Ratspeak Handheld 2.3.3**.
+**Ratspeak Handheld 2.3.4**.
 
 **Back up internal flash and the SD card first.** Compatible web flasher updates
 keep your data; a factory installation erases it. See

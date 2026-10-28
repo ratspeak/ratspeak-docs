@@ -7,7 +7,7 @@ sidebar_label: T-Deck Plus
 
 The T-Deck Plus is supported by [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
 the shared successor to rsDeck, rsPager, and rsCardputer. This page describes
-**Ratspeak Handheld 2.3.3 beta**.
+**Ratspeak Handheld 2.3.4 beta**.
 The full image boots a small launcher that can start either mode:
 
 - **Standalone** — on-device Reticulum/LXMF messaging over LoRa, with local identity, contacts, messages, radio settings, Wi-Fi options, GPS time sync, and SD-card storage support.
@@ -25,10 +25,10 @@ An SD card is optional for normal messaging.
 
 ## Get the firmware on your device
 
-Use `tdeck-full.zip` from
+Use `tdeck-full.bin` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
 for a fresh installation. The [web flasher](https://ratspeak.org/download.html)
-accepts the complete ZIP through **Build your own**; check that a board preset
+accepts the complete `.bin` through **Build your own**; check that a board preset
 shows **Ratspeak Handheld** if selecting an automatic download.
 
 **Back up your identity and data first.** Compatible web flasher updates keep
@@ -43,11 +43,12 @@ If you'd rather build from source, see the bottom of this page. For recovery mod
 
 Use the full image to switch modes on-device. Choose **Standalone** for messaging
 on the T-Deck, or **RNode** to connect it to a host client. Standalone-only and
-RNode-only packages install a single mode. `tdeck-standalone.bin` and
-`tdeck-rnode.bin` are the same complete images, for esptool or
-[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher).
-Launcher gives Ratspeak's internal storage a 448 KB partition; resizing it
-keeps its data, and a larger partition keeps more message history.
+RNode-only packages install a single mode: `tdeck-full.bin`,
+`tdeck-standalone.bin` and `tdeck-rnode.bin` are complete images for the web
+flasher or esptool. For
+[bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
+`tdeck-standalone-launcher.bin`; Launcher gives internal storage a 448 KB
+partition, and enlarging it keeps its data and more message history.
 
 ## First boot
 
