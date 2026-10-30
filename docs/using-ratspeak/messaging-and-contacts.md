@@ -18,7 +18,9 @@ Press send and the message hands off to Ratspeak's transport layer. From your si
 
 The thread list shows every conversation you've had, most-recent first. Each row shows the contact name (or address, if they're not saved), a one-line preview of the last message, the time, and any unread count.
 
-Inside a thread, your messages appear on the right and theirs on the left, in classic chat layout. Long messages wrap; short ones stay short. Scroll up to read older messages. Tap and hold (or right-click on desktop) any message to copy, reply to it, or delete it from your local view.
+Inside a thread, your messages appear on the right and theirs on the left, in classic chat layout. Long messages wrap; short ones stay short. Messages can include bold, lists, code, links, and spoilers; see [Formatting messages](formatting-messages.md). Scroll up to read older messages. Tap and hold (or right-click on desktop) any message to react, reply, or copy it.
+
+To delete messages, choose **Select** from a message's menu, tap any others you want, then choose **Delete**. This removes them from this device only; the other person keeps their copy. Messages still sending can't be selected.
 
 You can hide a thread you're done with — it disappears from the list but the messages aren't deleted. If you want it back, sending or receiving a message in that conversation brings it back to the top of the list.
 

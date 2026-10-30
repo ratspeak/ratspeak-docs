@@ -95,7 +95,9 @@ Back this folder up to preserve your identity and messages. Deleting it resets R
 
 ## Updating
 
-Future versions of Ratspeak will check for updates in-app. Until that lands, install the newer public release artifact from the download page or GitHub releases over the top — your data folder is left untouched.
+Choose **Check for updates** next to the version number in Settings. Ratspeak asks before contacting GitHub, then shows the release notes if a newer version is out.
+
+Ratspeak doesn't update itself. Install the newer release from the download page or GitHub releases over the top; your data folder is left untouched. On iPhone and iPad, updates come through TestFlight.
 
 ## Next
 

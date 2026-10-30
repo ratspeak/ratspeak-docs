@@ -100,7 +100,15 @@ On Android, **Background battery access** shows the current OS battery-optimizat
 
 ## Theme
 
-**Settings → Appearance → Theme** offers **Light**, **Dark**, and **OS preference** (follows your system setting and switches automatically). The theme applies instantly to every view.
+**Settings → General → Theme** offers **Light**, **Dark**, and **OS preference** (follows your system setting and switches automatically). The theme applies instantly to every view.
+
+## Text size
+
+**Settings → General → Text size** makes text smaller or larger, from 90% to 150%. It changes the text only, not buttons or touch targets.
+
+## Trusted websites
+
+**Settings → Privacy → Trusted websites** lists the sites you chose **Don't ask again** for when opening a message link. Remove a site to be asked again. See [Opening links](formatting-messages.md#opening-links).
 
 ## Hardware keys (YubiKey)
 
