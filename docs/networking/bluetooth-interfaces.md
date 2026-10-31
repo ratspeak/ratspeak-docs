@@ -18,10 +18,17 @@ The radio still does the radio work. The bridge replaces nothing about LoRa modu
 
 1. Put the radio into BLE pairing or advertising mode. On RNode firmware with a screen this is usually a long-press of the left button until the OLED shows a 6-digit passkey. On rsDeck and rsCardputer, boot RNode mode first, then use the on-screen pairing control for a new host.
 2. In Ratspeak, open the Network view and tap **Add LoRa Device** then **Bluetooth**. Nearby radios appear within a few seconds.
-3. Select the radio. The OS surfaces the standard pairing prompt; enter the passkey if one is shown on the device.
+3. Select the radio. On Android, Ratspeak asks for the 6-digit PIN shown on the radio; enter it soon, before the radio leaves pairing mode. On desktop, the operating system shows its own pairing prompt.
 4. Set a name, region, and preset. Ratspeak brings the interface up immediately.
 
-Bonding is persistent. The next time the radio is in range, Ratspeak reconnects without prompting. Android supports one enabled BLE RNode at a time and keeps its reconnect owner outside the app screen, so going Home or recreating the Activity does not itself discard the radio session. If the same physical RNode is later plugged in over USB, the BLE side tears down automatically — the radio is never driven from two transports at once.
+Bonding is persistent. The next time the radio is in range, Ratspeak reconnects without prompting. Android supports one enabled BLE RNode at a time; to switch radios, pause the current one first (Pause stays available while it reconnects). Android keeps its reconnect owner outside the app screen, so going Home or recreating the Activity does not itself discard the radio session. If the same physical RNode is later plugged in over USB, the BLE side tears down automatically — the radio is never driven from two transports at once.
+
+When a radio is not connected, its row says why:
+
+- **PIN did not match** or **Pairing ran out of time** — put the radio in pairing mode again, choose **Retry Connection**, and enter the PIN it shows.
+- **Radio not answering** — the radio connected but did not reply. Ratspeak reconnects on its own; restart the radio if it keeps happening.
+- **Radio failed to start** — the radio reported that its LoRa chip could not start. Check the antenna and restart it.
+- **Bluetooth link too small** — the phone kept the Bluetooth packet size at its minimum, which ESP32-based RNodes such as the Heltec V3 and V4 cannot reply through. Ratspeak asks for a larger size on every connect; turning Bluetooth off and on usually clears it.
 
 If a connect fails partway through, power-cycle the radio and remove the stale pairing from the OS Bluetooth settings before retrying. Stuck bonds are the most common cause of "scans but won't connect." On Linux, make sure the user account is in the `bluetooth` group; on Android, granting the *Nearby devices* runtime permission is required before any scan returns results.
 
