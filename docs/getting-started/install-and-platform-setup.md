@@ -43,7 +43,7 @@ Use the Windows installer from the download page or GitHub release. If multiple 
 
 ## iOS
 
-There is no public iOS download yet. iOS testing is currently source builds on macOS with Xcode and developer provisioning for `org.ratspeak.apple`; TestFlight and App Store distribution will come later. See [Building from Source](../reference/building-from-source.md).
+Ratspeak for iPhone and iPad is available as a TestFlight public beta. Install Apple's TestFlight app, then open the [iOS TestFlight Public Beta](https://testflight.apple.com/join/AzzW4Jg6) link on your device and follow the prompts to install. App Store distribution will come later. To build it yourself instead, see [Building from Source](../reference/building-from-source.md).
 
 iOS does not support general USB serial from third-party apps, so LoRa on iPhone and iPad uses Bluetooth RNode hardware or an RNode TCP bridge on a reachable local network. Signed Ratspeak builds include the approved multicast capability, but users must still grant Apple's Local Network permission. Notifications require user permission, and background execution remains subject to iOS lifecycle limits.
 
@@ -71,7 +71,7 @@ Granting permission once is enough. If you deny it on the first prompt and the O
 
 Ratspeak's installers aren't yet code-signed and notarized, so each OS will ask you to confirm the first time you run it. This is a one-time prompt.
 
-- **macOS** — "Ratspeak.app cannot be opened because the developer cannot be verified." Right-click the app and choose **Open**, then click **Open** in the dialog. Subsequent launches work normally.
+- **macOS** — Open Ratspeak once; macOS blocks it and says it could not verify the app. Click **Done**, then go to **System Settings → Privacy & Security**, scroll to the Security section, and click **Open Anyway** next to the Ratspeak message. Confirm with your password, then click **Open Anyway** again. Subsequent launches work normally.
 - **Windows** — SmartScreen shows "Windows protected your PC." Click **More info**, then **Run anyway**.
 - **Linux AppImage** — needs `chmod +x` (shown above). No further prompt.
 - **Android** — "For your security, your phone is not allowed to install unknown apps from this source." Tap **Settings**, allow the source, then return and install.

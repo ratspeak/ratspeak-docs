@@ -32,13 +32,15 @@ Tap **Connect**. Ratspeak finishes setup and drops you onto the dashboard.
 
 ## Add your first interface
 
-A fresh node has an identity but no way to reach the network yet. You need at least one **interface** — a connection to other Reticulum nodes. Open the **Network** tab.
+A fresh install has an identity but no interfaces turned on, so it can't reach the network yet. You need at least one **interface** — a connection to other Reticulum nodes. Open the **Network** tab.
 
-You have three easy starting points. Pick whichever matches your situation; you can add more later.
+You have a few easy starting points. Pick whichever matches your situation; you can add more later.
 
-**AutoInterface (zero config).** If anyone else on your local WiFi or LAN is running Reticulum, AutoInterface finds them automatically. It uses UDP ports 29716 and 42671 to discover peers on the same network segment. No setup required — it's already running. If your network allows multicast, you're done.
+**Local Network.** Tap **+** next to **Local Network**, then **Enable**. If anyone else on your WiFi or LAN is running Reticulum, Local Network (Reticulum's AutoInterface) finds them automatically, using UDP ports 29716 and 42671 to discover peers on the same network segment. If your network allows multicast, you're done.
 
-**TCP Client to a public Ratspeak server.** The fastest way to reach the wider Reticulum network is over the internet. From the Network tab, add a TCP Client interface pointing at one of the public Ratspeak TCP servers:
+**Bluetooth.** Tap **+** next to **Bluetooth Peer** to reach nearby Ratspeak users over Bluetooth, with no router or internet. See [Bluetooth Peer toggle](../using-ratspeak/settings-and-identity.md#bluetooth-peer-toggle) for platform notes.
+
+**A public Ratspeak server.** The fastest way to reach the wider Reticulum network is over the internet. Tap **+** next to **Internet/TCP** to open **Connect to Network**; the **Public** tab lists the public Ratspeak TCP servers:
 
 | Name | Endpoint |
 |---|---|
@@ -50,7 +52,7 @@ These are public Ratspeak transport servers. They connect you to the broader Ret
 
 **LoRa device.** If you have an [RNode](../hardware/rnode-and-supported-boards.md), plug it into USB, pair it over BLE, or point Ratspeak at an RNode TCP bridge, then tap **Add LoRa Device** in the Network tab. The modal lists detected serial ports, nearby BLE radios, and a TCP tab for endpoints such as `192.168.1.50:7633`. If no TCP port is supplied, Ratspeak uses `7633`. Pick the preset that matches the devices around you — `medium_fast` is a sensible all-rounder; `long_fast` and `long_moderate` reach further at the cost of speed; `short_turbo` and `short_fast` are higher-throughput at shorter range. Tap **Add Radio**. Ratspeak configures new radios in Reticulum's Roaming interface mode, which fits a phone or computer carrying an RNode between radio coverage areas. Developer Mode exposes the mode selector for fixed infrastructure and other advanced layouts. Ratspeak then opens the radio and starts listening. rsDeck and rsCardputer are standalone handhelds by default; boot them into RNode mode when you want Ratspeak to drive their radio over BLE or USB.
 
-You can run all three at once. Traffic routes transparently across whatever interfaces are up — a message can travel over LoRa to a transport node, hop over TCP, and land on someone's WiFi.
+You can run all of these at once. Traffic routes transparently across whatever interfaces are up — a message can travel over LoRa to a transport node, hop over TCP, and land on someone's WiFi.
 
 ## See your first announce
 
@@ -60,7 +62,7 @@ When a Reticulum node comes online, it broadcasts an **announce** — a signed p
 
 Each row shows the peer's display name (or just their hash if they didn't set one), the destination hash itself, and the **hop count** — how many relays the announce travelled through to reach you. Lower hop counts mean closer peers.
 
-If nothing shows up after a couple of minutes, check the Network tab — your interface should be marked as connected. Public WiFi, hotel networks, and corporate firewalls often block multicast, which breaks AutoInterface; a TCP Client to Ruby, Emerald, or Diamond works through most firewalls.
+If nothing shows up after a couple of minutes, check the Network tab — your interface should be marked as connected. Public WiFi, hotel networks, and corporate firewalls often block multicast, which breaks Local Network; a connection to Ruby, Emerald, or Diamond works through most firewalls.
 
 ## Send your first message
 
