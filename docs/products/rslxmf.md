@@ -4,93 +4,55 @@ sidebar_position: 5
 
 # rsLXMF
 
-rsLXMF v0.9.2 is a public pre-release of the Rust implementation of LXMF, the message format that rides on top of Reticulum to carry chat, mail, bulletins, and machine-to-machine notifications. It ships as two crates: `lxmf-core`, the library you embed in an application, and `lxmd-rs`, a long-running propagation daemon.
+rsLXMF implements LXMF messaging in Rust. Application developers use `lxmf-core`; operators use the `lxmd-rs` daemon for a local messaging destination or propagation node. Ordinary Ratspeak users already have LXMF in the app.
 
-## Do you actually need it?
+The current standalone release is [**1.3.0**](https://github.com/ratspeak/rsLXMF/releases/tag/v1.3.0), with rsReticulum 1.3.0 as its sibling source set. Its documented compatibility floor is LXMF **1.0.1**, with **1.1.0** as the release reference. The implementation remains experimental, and compatibility must be assessed for the fields and delivery flow being used.
 
-If you already have LXMF infrastructure working, rsLXMF will not make messages travel magically faster — the format is the same and the wire is the same. What 0.9.2 gets you is a single-binary deploy, a Tokio-native API, and an `lxmd-rs` that can run a propagation node without a Python runtime on the box. If your propagation node is a Raspberry Pi or an OpenWrt router, this is the reason to switch. If you're writing a Rust client and want to avoid a subprocess for messaging, that's the other reason.
+Ratspeak 1.0.37 instead pins coordinated rsLXMF/rsReticulum commits with package version **1.4.0**. Follow the [app source manifest](../reference/building-from-source.md) when building that app.
 
-The compatibility target is LXMF 0.9.6 wire behavior where implemented. Interop with other LXMF implementations is covered by the cross-repo test suite.
+## Delivery methods
 
-## Three ways a message gets delivered
+| Method | Behavior |
+|---|---|
+| **Direct** | Send to a reachable recipient over an encrypted Reticulum Link; larger messages use Resources. |
+| **Opportunistic** | Send a small recipient-encrypted packet without establishing a Link, then await its packet proof. |
+| **Propagated** | Deposit a recipient-encrypted envelope at a propagation node for later pickup. |
 
-LXMF picks the delivery mode at send time based on what it knows about the recipient.
+The application selects a method and any fallback policy. A known path alone is not sufficient for encryption: the sender also needs the recipient's public identity or ratchet information. The default opportunistic content ceiling is 287 bytes before additional title, fields, serialization and stamp effects; it is not a fixed chat-text limit.
 
-**Direct** is the default when the recipient is reachable: the sender opens an encrypted Reticulum link to the destination and pushes the message over it. Compression is negotiated on the link, so larger messages compress before they hit the wire. This is the mode you want for anything beyond a short notification.
+A protocol proof confirms the receipt it covers, not that a person read the message. Acceptance by a propagation node also does not establish recipient delivery. Storage limits, expiry, node availability and the recipient's sync policy affect pickup. See [Links and LXMF](../concepts/links-and-lxmf.md) for the delivery model and Ratspeak's Auto behavior.
 
-**Opportunistic** is for tiny, low-overhead messages — typically status pings or short alerts. The whole message rides in a single Reticulum packet with no link setup, which means it can reach a destination that the sender has never spoken to before, just by having a known path. The recipient returns an authenticated Reticulum packet proof when the packet arrives; if that proof does not return, the sender cannot know whether the packet or only its proof was lost. The catch is size: once its content runs past 287 bytes the router downgrades the message to Direct, because a single packet cannot carry it.
+## Running a propagation node
 
-**Propagated** is store-and-forward. The sender encrypts the message to the recipient's identity and hands the wrapped blob to a propagation node. The node holds it until the recipient comes online and asks for its mail. This is how LXMF works for users who aren't on the network at the moment a message is sent — the propagation node is the offline buffer. In Ratspeak's app UI, this user-facing feature is called **Offline Inbox**.
+`lxmd-rs` can accept encrypted deposits and exchange messages with peer propagation nodes. Ratspeak calls the client-facing feature **Offline Inbox**. The propagation node does not need plaintext access to private message contents. This is a separate service from a Channels hub, which reads room messages.
 
-## lxmd-rs, the propagation daemon
-
-`lxmd-rs` is the standalone Rust propagation node. It announces itself on the mesh, accepts deposits from senders, holds messages for offline recipients, and can sync its store with configured peer propagation nodes for redundancy. It can also be run as a thin delivery-only router (no propagation store) if you just want a process that handles your local destination's inbox.
-
-```bash
-# Generate a starter LXMF config next to an isolated Reticulum config directory
-mkdir -p ~/.rsLXMF ~/.rsReticulum
-lxmd-rs --exampleconfig > ~/.rsLXMF/config
-
-# Run the daemon
-cargo run --bin lxmd-rs -- --config ~/.rsLXMF --rnsconfig ~/.rsReticulum
-
-# Or as a system service, no interactive output
-lxmd-rs --config ~/.rsLXMF --rnsconfig ~/.rsReticulum --service
-```
-
-Release builds install `lxmd-rs`, not `lxmd`, so command lookup stays
-unambiguous on systems with multiple LXMF implementations. The command name
-does not select storage; Rust defaults are `~/.rsLXMF` for LXMF and
-`~/.rsReticulum` for Reticulum. Other config directories, including existing
-interop test directories, are explicit choices passed with `--config` and
-`--rnsconfig`.
-
-State lives under `<config-dir>/storage/lxmf/`: cached stamp costs, tickets we've been issued, the local-delivery dedup set, propagation storage, ratchets, and the set of transient IDs we've already processed. Router state files are MessagePack-encoded and written atomically, so a crash mid-write won't corrupt them.
-
-There's also a one-shot mode for scripts: `lxmd-rs --send <dest_hash> "hello"` ships a single message and exits, blocking up to ~90 seconds for a delivery confirmation.
-
-## Tickets
-
-Stamps are LXMF's anti-spam mechanism: senders attach a small proof-of-work to outbound messages, and propagation nodes can require a minimum cost. PoW costs CPU on the sender. Tickets are the workaround for trusted peer pairs: a 16-byte token, valid for a fixed window, that lets the holder bypass the stamp requirement. The peer issues you a ticket, you cache it, and outbound messages tagged with that ticket skip the PoW step entirely. They auto-renew before expiry. The practical effect is that a frequent correspondent doesn't pay PoW on every message while a stranger still does — rate limiting without locking out the people you actually want to hear from.
-
-## Using lxmf-core from Rust
-
-You'd reach for the library when you're building something that needs to send or receive LXMF messages from inside a Rust process — a desktop client, a sensor that reports telemetry, an automated responder. The shape of the API is small:
-
-```rust
-use lxmf_core::constants::DeliveryMethod;
-use lxmf_core::message::LxMessage;
-use lxmf_core::router::{LxmRouter, RouterConfig};
-
-let mut router = LxmRouter::new(RouterConfig::default());
-router.set_transport(reticulum_handle.transport_tx.clone());
-
-let message = LxMessage::new(
-    destination_hash,
-    source_hash,
-    "subject",
-    "body",
-    DeliveryMethod::Direct,
-);
-
-router.send(message);
-```
-
-`LxmRouter` is the entry point for outbound dispatch, inbound callbacks, ticket management, paper-message ingest, and propagation node configuration. The host app owns the async loop that drives Reticulum, LXMF, persistence, notifications, and UI events together.
-
-The `fields` map on `LxMessage` is a `BTreeMap<u8, Vec<u8>>` keyed on field IDs from the upstream LXMF spec — geotag, telemetry, image, file attachment, and a custom range you can use for application-defined payloads. Ratspeak's gaming protocol uses the custom range to embed game frames inside ordinary LXMF messages, which is why a chess move and a chat message look the same on the wire.
-
-## Compatibility
-
-Wire format targets LXMF 0.9.6 compatibility. You can mix compatible implementations freely: Rust clients, `lxmd-rs` propagation nodes, and other LXMF peers should round-trip the same messages and propagation flows. If something doesn't interoperate, it's a bug; tell us.
-
-## Build
-
-Clone [rsLXMF](https://github.com/ratspeak/rsLXMF) next to [rsReticulum](https://github.com/ratspeak/rsReticulum), then run:
+For a running installation, use [Infrastructure and ops](../deployment/infrastructure-and-ops.md), including identity persistence, storage limits and client authorization. The following commands inspect the supplied configuration and start a node with directories you have already prepared:
 
 ```bash
-cd rsLXMF
-cargo build --release
+lxmd-rs --exampleconfig
+lxmd-rs --config ~/.rsLXMF --rnsconfig ~/.rsReticulum --propagation-node
 ```
 
-The `lxmd-rs` daemon lands in `target/release/`. Source: [github.com/ratspeak/rsLXMF](https://github.com/ratspeak/rsLXMF); release: [v0.9.2](https://github.com/ratspeak/rsLXMF/releases/tag/v0.9.2). For OS-specific prerequisites, config creation, and the Ratspeak app build that embeds rsLXMF on desktop and mobile, see [Building from Source](../reference/building-from-source.md).
+`--config` and `--rnsconfig` take directories. Their default selection depends on the platform and existing files; see [Configuration reference](../reference/configuration-reference.md). `--service` changes daemon operation but does not install an OS service for you.
+
+The standalone CLI also supports one-shot sending, delivery-method selection and authenticated propagation-control queries. Use `lxmd-rs --help` and the [versioned operator reference](https://github.com/ratspeak/rsLXMF/blob/v1.3.0/README.md#operating-lxmd-rs) for those commands. Control authorization and the propagation-client allowlist are separate policies.
+
+## Stamps and tickets
+
+Stamps attach proof-of-work to messages as spam resistance. A recipient's required cost determines the work an unknown sender must supply. Tickets allow a correspondent to bypass that work while the ticket is valid.
+
+Tickets expire and can be reissued; they are not a permanent authorization or a way around a block. Propagation admission has its own limits and policies.
+
+## Using the library
+
+Start with **`lxmf_core::message_api`** for message construction and inspection. The [1.3 API guide](https://github.com/ratspeak/rsLXMF/blob/v1.3.0/api/README.md) identifies that application boundary, and the [message example](https://github.com/ratspeak/rsLXMF/blob/v1.3.0/crates/lxmf-core/examples/message.rs) demonstrates construction, signing, packing and unpacking.
+
+Router and delivery ownership remain provisional APIs. An embedding application must drive the Reticulum/LXMF runtime, handle inbound events, persist its own user state and distinguish queue acceptance from recipient proofs. The library does not supply a conversation UI or OS notifications.
+
+LXMF fields carry typed MessagePack values. Use the matching field API for the data you are embedding. For LRGP, `set_msgpack_field` accepts the pre-encoded string/map values; treating those bytes as a generic binary field changes their wire type. See [LRGP](lrgp.md).
+
+## Build and license
+
+Standalone source builds require **Rust 1.89+** and the matching rsReticulum sibling checkout. Follow [Building from source](../reference/building-from-source.md) for the pinned standalone pair and OS prerequisites. The daemon binary is `lxmd-rs`; it does not need Python at runtime.
+
+The project is [AGPL-3.0-or-later](https://github.com/ratspeak/rsLXMF/blob/v1.3.0/LICENSE). API checks and interoperability tests provide evidence for their exercised cases; they do not establish support for every third-party client extension or deployment.

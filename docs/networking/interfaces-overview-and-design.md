@@ -4,39 +4,29 @@ sidebar_position: 1
 
 # Network interfaces
 
-An interface is a transport. Ratspeak doesn't care whether your packets ride
-TCP, BLE, or LoRa — every link looks the same to the routing layer above it.
-A node can run as many interfaces as it has hardware and network for, and
-mixing TCP with LoRa with BLE is the common case rather than the exception.
+An interface connects Reticulum to a carrier such as TCP, Bluetooth or LoRa. A node can use several interfaces, subject to platform support and hardware limits. The routing layer can then reach destinations through different media.
+
+This overview distinguishes Ratspeak 1.0.37 controls from standalone rsReticulum 1.3.0 configuration. A protocol driver existing in the library does not mean every app/platform exposes a setup form for it.
 
 ## What an interface is
 
 An interface is the lowest layer in the Reticulum stack — the thing that
 puts bytes on a wire (or radio, or socket) and reads them back. Above it,
 [Reticulum](https://reticulum.network/manual/) handles routing, addressing,
-crypto, and reliable delivery the same way regardless of the medium. An
-announce reaching you over LoRa and one reaching you over TCP look identical
-to the rest of the system. The only thing that changes per interface is
-bandwidth, latency, and how the interface presents itself to peers — which
-in turn shapes how the router treats traffic that crosses it.
+crypto, and reliable delivery the same way regardless of the medium. The packet format is shared, but interface capacity, mode, loss and platform behavior affect which traffic can be carried and when.
 
 ## Interface families
 
-Ratspeak ships interfaces in five rough families. You'll typically use one
-or two from each, not all of them.
+The library’s interfaces fall into these families. Choose the carrier you actually need.
 
 **IP-based.** TCP client/server for stable point-to-point Reticulum links over the
 internet or LAN, UDP for low-overhead local broadcasts, AutoInterface for
 zero-config LAN discovery (it speaks link-local IPv6 multicast and
 auto-discovers peers on the same subnet using UDP ports 29716 for discovery
 and 42671 for data), Backbone for high-throughput hub roles, and I2P for
-IP-hiding transport through the I2P overlay. AutoInterface is the right
-default for "two laptops on the same wifi"; TCP is the right default for
-crossing the internet.
+IP-hiding transport through the I2P overlay. AutoInterface is useful for two devices on the same Wi-Fi network; TCP connects known hosts across the internet.
 
-**Serial and packet-radio.** Generic Serial, KISS (the standard packet-radio
-TNC framing), AX.25-over-KISS for amateur-radio gateways, HDLC for raw
-HDLC-framed serial, and Pipe for pumping bytes through any subprocess that
+**Serial and packet-radio.** HDLC-framed Serial, KISS for compatible TNCs, AX.25-over-KISS, and Pipe for pumping bytes through any subprocess that
 exposes stdin/stdout. These are how you bolt Reticulum onto existing radio
 hardware that wasn't designed for it.
 
@@ -49,12 +39,10 @@ the TCP socket reaches the radio, while the Reticulum traffic still rides LoRa.
 
 **Bluetooth.** BLE-RNode is the BLE bridge for BLE-equipped RNode hardware.
 Bluetooth Peer is the phone-to-phone and laptop-to-phone transport that works
-without a radio at all — useful when two devices are nearby and you don't
+without a LoRa radio — useful when two devices are nearby and you don't
 want to share a wifi network.
 
-**Specialty.** LocalInterface for IPC between processes on the same machine
-(e.g. an app and a local rnsd), AndroidUSB for hardware attached over the
-Android USB host stack, and Weave for an experimental layered transport.
+**Local sharing.** Local interfaces connect processes on the same host to an owning Reticulum instance. The app’s Android USB path is an RNode carrier, not a general replacement for desktop serial drivers.
 
 For concrete setup details, use the interface-family pages:
 [IP, LAN & I2P](../networking/ip-internet-and-i2p.md),
@@ -64,39 +52,25 @@ For concrete setup details, use the interface-family pages:
 
 ## Interface modes
 
-Every interface runs in one mode, set in config. The mode tells the router
-how to treat traffic crossing this interface and which paths to advertise
-to peers on it.
+An interface mode changes announce and path policy; it does not independently enable forwarding or provide access control. A standalone node also needs `enable_transport = yes` to forward for others. In the app, use Transport Mode deliberately.
 
-- **full** (default) — normal participant. Announces and forwards everything.
-- **access_point** — exposes this node to client peers. Used for hub roles
-  where downstream clients connect in.
-- **roaming** — for mobile peers whose network presence is intermittent.
-- **gateway** — helps clients on this interface discover paths through the
-  rest of the node's active interfaces. Use it on the client-facing side of
-  a transport gateway.
-- **boundary** — controls and accounts for traffic crossing a network edge.
-  Use it on the side facing a wider or higher-throughput network when you
-  want to keep segments distinct.
+| Mode | Purpose |
+|---|---|
+| `full` | General interface policy; the ordinary standalone default. |
+| `access_point` | Limits relayed announces sent onto the interface; it is not simply another name for a TCP listener. |
+| `roaming` | Restricts announce relaying for mobile/intermittent paths. The app uses it for newly added RNodes. |
+| `gateway` | Allows a client-facing gateway to answer path requests through the node. |
+| `boundary` | Restricts announce propagation at a network boundary. |
 
-Picking the wrong mode mostly hurts efficiency, not correctness — but a
-transport node should put `gateway` where downstream clients ask for paths,
-and `boundary` where a wider network should not flood a constrained segment
-with unnecessary announces.
+Mode selection can affect reachability, not just efficiency. Start with the documented topology in [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) and verify path discovery in both directions before changing a working network.
 
 ## IFAC and announce caps
 
-**IFAC (Interface Authentication Codes)** are a per-interface shared secret.
-Set a passphrase and code size on both ends; without the matching IFAC,
-traffic on that interface is invisible — peers can't even see the announces.
-This is how you make a TCP listener private without firewalling it, or run
-a LoRa segment only specific nodes can join.
+**IFAC (Interface Access Codes)** authenticates packets at an interface using matching network-name/passphrase settings. Use a secret passphrase for restricted access. It does not make radio energy or TCP connections invisible, replace a firewall, or replace recipient encryption.
 
-**Announce caps** rate-limit announce traffic per interface, expressed as a
-fraction of the link's bandwidth (default 2%). On a fast TCP link you'll
-never notice; on a 1.2 kbps LoRa link this is what stops a busy mesh from
-saturating the channel with routing chatter. Tune it lower on slow links,
-leave it alone on fast ones.
+Leave the IFAC size at its class default unless you need an explicit interoperable value. Standalone rsReticulum 1.3.0 interprets `ifac_size` in **bytes**; the app’s bundled 1.4.0 source uses explicit **bits** and asks for a choice when an old value is ambiguous. See [Configuration reference](../reference/configuration-reference.md) before moving a config between implementations or versions.
+
+**Announce caps** budget announce traffic. In a config, `announce_cap = 2` means **2 percent**, not a fraction of `0.02`. The cap helps constrain routing traffic on slow links; it does not prevent interference, collisions or application congestion.
 
 ## Combining interfaces
 
@@ -108,19 +82,13 @@ and optionally Bluetooth Peer so a nearby phone can talk to the laptop without
 joining the wifi. The router decides per-destination which interface to
 use; you don't manage that by hand.
 
-**Hub with many clients.** A TCP server interface in `access_point` mode
-plus a Backbone interface to peer hubs. Set IFAC on the access_point if the
-hub is private. Hubs talk to each other over the backbone.
+**Transport server with many clients.** A TCP server or Backbone listener accepts connections. Enable transport when it should forward traffic. Select interface modes for the topology and use IFAC/firewall policy when access should be restricted. This transport role is separate from a Channels hub.
 
-**Two-network bridge.** One interface per network on a single transport
-node. In a LoRa-plus-IP gateway, put the local LoRa/RNode interface in
-`gateway` mode so nearby radios can resolve paths through the node. Put the
-wider IP/backhaul interface in `boundary` mode when you want to keep the
-radio segment from being flooded by the larger network.
+**Two-network bridge.** Use one interface per network on a transport node. Verify paths across the bridge in both directions. Interface modes and announce caps affect which announces cross it; a mode name alone does not guarantee that the slower segment is protected from excessive traffic. Check the topology and observed load before changing those policies.
 
 **Mobile node.** AutoInterface for whichever LAN it's on right now, plus
-Bluetooth Peer for ad-hoc nearby connections. `roaming` mode tells upstream
-routers this node's reachability is intermittent.
+Bluetooth Peer for ad-hoc nearby connections. `roaming` mode restricts which
+announces this node relays onto an interface, a policy intended for intermittent
+links. It does not send an upstream reachability-status signal.
 
-Every interface a node runs is just another path the router can use. Add
-interfaces as you have hardware; the rest of the stack adapts.
+Test each interface on its own before combining them. Separate interfaces can still contend for a radio, port or airtime, and a failed interface may require a new Reticulum Link rather than a seamless handoff.

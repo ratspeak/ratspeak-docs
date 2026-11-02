@@ -25,14 +25,14 @@ settings, and messages on internal flash, which keeps the newest messages; see
 ## Install
 
 Use `pager-full.bin` from
-[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
+[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
 for a fresh installation. Upload it through **Build your own** on the
 [web flasher](https://ratspeak.org/download.html), or select the T-Pager preset
 when it shows **Ratspeak Handheld**. `pager-standalone.bin` and
 `pager-rnode.bin` install one mode, also with esptool. For
 [bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
-`pager-standalone-launcher.bin`; Launcher gives internal storage a 448 KB
-partition, and enlarging it keeps its data and more message history.
+`pager-standalone-launcher.bin`. Follow the linked guide for Launcher storage
+limits and backup precautions before changing partitions.
 
 **Back up your identity and data first.** Compatible web flasher updates keep
 identity, messages and settings; a factory installation resets internal storage
@@ -72,9 +72,9 @@ actions. Back dismisses selection before leaving the conversation.
 
 ### Select a frequency without touch
 
-1. Open **Settings → LoRa**. Select **Developer Radio Controls**, then hold the
+1. Open **Settings → Device → Developer Radio Controls**, then hold the
    encoder button as prompted to unlock the custom fields.
-2. Open **Frequency** and press Enter or click to edit. Use **A/D** to choose the highlighted digit. Comma/slash also work here.
+2. Return to **Settings → LoRa → Frequency** and press Enter or click to edit. Use **A/D** to choose the highlighted digit. Comma/slash also work here.
 3. Turn the encoder up to increase that digit or down to decrease it, or type
    a digit; **Alt+Q…P** enters 1…0.
 4. Press **Enter** to save, or **Alt+Backspace** to cancel. Backspace alone moves

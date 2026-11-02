@@ -4,103 +4,89 @@ sidebar_position: 3
 
 # Antennas, range and power
 
-The antenna is the single most important factor for LoRa range. A better antenna improves both transmit distance and receive sensitivity.
+A working LoRa link depends on both radios, their antennas, the path between them
+and the radio settings. A board's advertised range is not a coverage guarantee
+for your installation. Test the route where you intend to use it.
 
-## Antenna Types
+## Choose a suitable antenna
 
-| Type | Gain | Pattern | Best For |
-|------|------|---------|----------|
-| **Stub / rubber duck** | 0-2 dBi | Omnidirectional | Included with boards, basic testing |
-| **1/4 wave ground plane** | 2-3 dBi | Omnidirectional | Fixed stations, simple to build |
-| **Collinear** | 5-8 dBi | Omnidirectional | Fixed stations, best all-around coverage |
-| **Yagi** | 8-15 dBi | Directional | Point-to-point links, maximum range |
-| **Dipole** | 2 dBi | Omnidirectional | Compact, good for indoor/portable |
+Check the antenna's specified frequency range against your operating frequency.
+A label such as “900 MHz” is not enough to establish that it works well at both
+868 and 915 MHz. The radio board must also support the chosen band.
 
-### Frequency Matching
+Check the connector on both ends, including its center contact. SMA and RP-SMA
+are different; matching threads alone do not establish a correct connection.
+For a board with a small snap-on antenna socket, use the matching cable assembly
+and avoid pulling on the cable or twisting the socket.
 
-Your antenna must be tuned for your operating frequency:
+Attach the antenna before transmitting. Do not transmit with the antenna removed
+or a damaged feed cable.
 
-| Band | Antenna Label |
-|------|--------------|
-| 433 MHz | 433 MHz antenna |
-| 868 MHz | 868 MHz or 900 MHz antenna |
-| 915 MHz | 915 MHz or 900 MHz antenna |
+| Antenna arrangement | What to consider |
+| --- | --- |
+| A short antenna fitted to a handheld | Convenient to carry; your hand, body and nearby metal can change its performance. |
+| An outdoor omnidirectional antenna | Useful for peers in several directions. Check its radiation pattern, mounting requirements and cable loss. |
+| A directional antenna | Useful for a fixed link when you can aim it at the other site. It provides less coverage in other directions. |
 
-> **Warning**: Never transmit without an antenna connected. Operating a LoRa radio with no antenna (or a mismatched antenna) can permanently damage the radio module.
+Higher gain concentrates radiation into particular directions; it does not
+improve coverage equally everywhere. Choose the pattern for the locations you
+need to reach, not just the largest dBi number. RAK's
+[antenna-gain explanation](https://news.rakwireless.com/antenna-gain-explained-what-dbi-actually-means-for-your-iot-network/)
+shows this tradeoff.
 
-### Connectors
+## Placement and range
 
-Most RNode-compatible boards use **SMA** or **U.FL/IPEX** connectors:
+Start with two devices that work at a short distance, then test the intended
+locations. Keep their radio settings matched as described in
+[LoRa and RNode](../networking/lora-and-rnode.md).
 
-- **SMA** - larger, threaded, more durable. Common on T-Beam, LoRa32.
-- **U.FL / IPEX** - tiny snap-on connector on smaller boards. Use a U.FL-to-SMA pigtail for external antennas.
+- Move antennas clear of nearby metal and obstructions. Compare a window,
+  an outdoor position and a higher position before changing radio settings.
+- Keep the antennas' orientation consistent. For ordinary vertical whips, start
+  with both upright.
+- Check both directions: receiving a peer's announce does not prove that the
+  peer can receive your messages.
+- Record the antenna, location, radio settings and delivery results. Change one
+  thing at a time so you can tell what helped.
 
-## Range by Terrain
+Hills, buildings, vegetation, interference and antenna placement can all change
+coverage. A successful test from a hilltop does not establish the range of the
+same equipment at street level. Long antenna cables also lose signal; use a
+cable specified for your frequency and account for its length.
 
-| Scenario | Typical Range | Notes |
-|----------|--------------|-------|
-| **Urban, indoor** | 0.5-2 km | Buildings absorb signal heavily |
-| **Urban, rooftop** | 2-10 km | Line-of-sight helps significantly |
-| **Suburban** | 5-15 km | Mix of clear and obstructed paths |
-| **Rural, flat terrain** | 10-30 km | Near line-of-sight |
-| **Hilltop to hilltop** | 20-50+ km | Clear line-of-sight, elevation advantage |
-| **Mountain peak** | 50-100+ km | Extreme range with directional antennas |
+For the underlying antenna principles, see STMicroelectronics'
+[antenna selection guidelines](https://www.st.com/resource/en/application_note/dm00068254-antenna-selection-guidelines-stmicroelectronics.pdf).
 
-### What Improves Range
+## Transmit power
 
-- Higher antenna placement (elevation is the single biggest factor)
-- Higher-gain antenna
-- Clear line-of-sight to target
-- Higher TX power (up to legal limits)
+Transmit power is commonly shown in dBm. These are power conversions, not
+recommended settings or permitted limits:
 
-### What Reduces Range
+| Power | Approximate milliwatts |
+| --- | --- |
+| 10 dBm | 10 mW |
+| 14 dBm | 25 mW |
+| 17 dBm | 50 mW |
+| 20 dBm | 100 mW |
+| 22 dBm | 158 mW |
 
-- Buildings, trees, and terrain between nodes
-- Indoor placement
-- Antenna mismatched to frequency
+More transmit power does not fix a mismatched antenna, an incompatible radio
+setting or a peer that cannot send a reply. It can also increase the demand on
+the power supply. Check those causes before raising it.
 
-For spreading factor and bandwidth trade-offs, see [LoRa Radio Interfaces](../networking/lora-and-rnode.md).
+Use settings permitted for your country, frequency, equipment and antenna.
+A region preset is a starting configuration, not a certification that your
+installation meets local radio rules. Check the applicable regulator's limits
+on frequency, radiated power and channel use. Antenna gain and cable loss matter
+when a limit is expressed as radiated power rather than transmitter output.
 
-## Transmit Power
+## When a link is unreliable
 
-TX power is set in dBm (decibels relative to 1 milliwatt):
+First confirm the board revision, antenna band and connections. Then compare
+frequency, bandwidth, spreading factor, coding rate and preamble at both ends.
+Test with a stable power supply and a clear path before increasing range.
 
-| dBm | Milliwatts | Use Case |
-|-----|-----------|----------|
-| 2 | 1.6 mW | Very short range, battery saving |
-| 7 | 5 mW | Short range, low power |
-| 10 | 10 mW | Moderate range |
-| 14 | 25 mW | Fast preset |
-| 17 | 50 mW | Balanced preset |
-| 20 | 100 mW | Near maximum |
-| 22 | 160 mW | Maximum for most boards |
-
-Doubling TX power adds only ~3 dB (marginally more range). Improving your antenna or raising its height is almost always more effective than increasing power.
-
-## Regulatory Compliance
-
-LoRa operates on **ISM bands** (Industrial, Scientific, Medical) - unlicensed but regulated:
-
-| Region | Band | Key Rules |
-|--------|------|-----------|
-| **US (FCC)** | 915 MHz | Power/channel rules apply (FCC Part 15.247); no duty-cycle limit |
-| **EU (ETSI)** | 868 MHz | ETSI EN 300 220-2 Table 4: 25 mW e.r.p. and 1 % duty cycle per hour in 865–868.6 MHz; 869.4–869.65 MHz allows 500 mW e.r.p. at 10 %; other sub-bands are 0.1 % |
-| **EU** | 433 MHz | ETSI EN 300 220-2 Table 4 row H: 10 mW e.r.p. and 10 % duty cycle per hour in 433.05–434.79 MHz |
-
-For the Europe region (868.0 MHz default), Ratspeak prefills the published hourly duty cycle for that sub-band:
-
-```ini
-airtime_limit_long = 1.0
-```
-
-The figure is the regulation's, not a rule of thumb: the duty cycle is the cumulative on-time over one hour (EN 300 220-2 clause 4.4.3.2). No short-term cap is prefilled because none is published; you can still set `airtime_limit_short` per interface. If you move to another sub-band (for example 869.525 MHz), adjust the cap to that sub-band's limit. Reticulum then rate-limits transmissions against the configured caps. That does not replace checking the exact sub-band, antenna gain, and power rules for your country.
-
-> **Warning**: Verify the legal frequency band and power limits for your country before transmitting. ISM bands are unlicensed but usage rules vary by jurisdiction.
-
-## Optimizing Your Setup
-
-**For maximum range:** mount a collinear or Yagi antenna as high as possible, set TX power to the maximum legal limit, and ensure clear line-of-sight. Use a long-range LoRa preset. See [LoRa Radio Interfaces](../networking/lora-and-rnode.md) for preset details.
-
-**For best throughput:** use a fast LoRa preset and accept shorter range in exchange for ~11 Kbps. Good for local networks where range is not the priority.
-
-**For battery life:** use the lowest TX power that maintains your connection, disable WiFi on rsDeck/rsCardputer when not needed, and use a balanced or fast preset to minimize airtime per packet.
+If a slower radio preset improves delivery, allow for its longer airtime and
+lower throughput. Keep messages short during testing. See
+[LoRa and RNode](../networking/lora-and-rnode.md) for settings and
+[troubleshooting](../reference/troubleshooting.md) for connection failures.

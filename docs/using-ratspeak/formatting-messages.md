@@ -4,7 +4,7 @@ sidebar_position: 1.5
 
 # Formatting messages
 
-Ratspeak messages support Markdown. There's nothing to turn on: type the symbols below and Ratspeak sends the message as Markdown. Messages without formatting are sent exactly as typed.
+Private LXMF messages in Ratspeak support Markdown. There's nothing to turn on: type the symbols below and Ratspeak sends the message as Markdown. Messages without formatting are sent exactly as typed.
 
 ## Text styles
 
@@ -50,8 +50,8 @@ Put three backticks on the lines before and after your code:
 
 ````
 ```toml
-[interfaces.lora]
-frequency = 915000000
+[station]
+name = "Hilltop"
 ```
 ````
 
@@ -68,9 +68,9 @@ The relay goes on ||the old fire lookout||.
 >! Don't tell anyone.
 ```
 
-Tap or click a spoiler to reveal it. Each one is revealed separately and stays revealed until you leave the conversation. Until then, message previews, reply quotes, notifications, and copied text show `[Spoiler]` in its place.
+Tap or click a spoiler to reveal it. Each one is revealed separately and stays revealed while that conversation remains selected. Message previews, reply quotes, and notifications show `[Spoiler]` instead of the hidden text. Copying a message includes revealed spoilers, but replaces any still-covered spoiler with `[Spoiler]`.
 
-Ratspeak sends spoilers as `>!hidden!<`, the format Sideband uses.
+Ratspeak sends spoilers in the message text as `>!hidden!<`.
 
 Spoilers only cover text on screen. They add no privacy: the hidden text is part of the message like any other.
 
@@ -92,7 +92,7 @@ The prompt shows a warning, and you choose **Open Anyway** to continue, when:
 
 - the link text names a different site than the one it opens
 - the address hides its real destination, like `bank.example@another.example`
-- the address uses international characters that imitate another site's name
+- the address uses international characters, which can resemble characters in another site's name
 
 To skip the prompt for a site you trust, tick **Don't ask again for** that site. `www.example.org` and `example.org` count as the same site. Manage the list under **Settings → Privacy → Trusted websites**. Links with a warning always ask.
 
@@ -100,7 +100,7 @@ On desktop, right-click a link to open the message menu, which has **Copy Link**
 
 ## Escaping symbols
 
-Put a backslash before a symbol to show it as typed: `\*not italic\*` shows as \*not italic\*.
+Within a Markdown message, put a backslash before a symbol to show it literally. For example, `**Literal:** \*not italic\*` displays a bold label followed by asterisks around “not italic.”
 
 A message whose only special characters are backslash escapes is sent as plain text, so `¯\_(ツ)_/¯` arrives intact.
 
@@ -118,7 +118,4 @@ These are shown exactly as typed:
 
 Ratspeak formats a message only when its sender marked it as Markdown, using LXMF's renderer field. Plain messages from other apps are never reformatted, and messages you received before updating stay as they were.
 
-Other apps decide how to show messages Ratspeak marks as Markdown:
-
-- Sideband shows the text without the symbols.
-- Apps without Markdown support show the symbols as typed.
+Other apps decide how to show messages Ratspeak marks as Markdown. Support varies by client and version; a client without Markdown support may show the formatting symbols as text.

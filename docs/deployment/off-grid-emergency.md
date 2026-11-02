@@ -4,140 +4,72 @@ sidebar_position: 4
 
 # Off-grid and emergency
 
-A LoRa-only mesh for situations where there's no internet, no cell service, and no
-shared infrastructure: disaster response, expeditions, remote worksites, off-grid
-communities. This page is the practical baseline. Everything below works on battery
-power and stays within the radio band.
+A local LoRa network can carry short messages where internet or cellular service is unavailable. Its usefulness depends on coverage, power, compatible settings and practice with the actual equipment. Treat it as one communication method in your plan, with agreed fallback procedures when messages do not arrive.
 
 ## When to use this
 
-Reach for an off-grid mesh when one of these is true:
+Use this pattern for field exercises, remote worksites, expeditions or local preparedness. Keep traffic short: status, meeting points and concise instructions. A radio path that carries text may be unsuitable for attachments, games or live voice.
 
-- Cellular and internet are down or never existed (storm, blackout, backcountry).
-- You need group messaging that survives without any provider.
-- You want a private radio channel that won't be confused by other meshes nearby.
-
-This is **messaging-grade** comms: text, position, short status. LoRa is not a
-video link. Don't plan on streaming anything. Plan on sending sentences.
+Agree in advance on who should receive a message, how they acknowledge it and when the sender should use another method. A sent indicator, a discovered peer or a propagation-node receipt is not proof that a person has read the message.
 
 ## Hardware
 
-Minimum viable off-grid kit:
+Each participant needs either:
 
-- **One handheld per person.** Either rsDeck or rsCardputer in Standalone mode
-  for LoRa messaging, or a phone/laptop running Ratspeak connected to a separate RNode
-  over BLE, USB where the platform allows it, or a local RNode TCP bridge if
-  your field kit supplies its own LAN.
-  rsDeck and rsCardputer can both boot RNode mode for BLE/USB host use.
-- **Optional always-on transport node.** A Raspberry Pi + RNode + battery + small
-  solar panel, sited high. One transport node can stitch together handhelds that
-  can't directly hear each other.
+- A supported [Ratspeak Handheld](../hardware/handheld-guide.md) device in standalone mode, with the radio hardware required by that board.
+- A phone or computer running Ratspeak, connected to a compatible RNode over USB, Bluetooth or a local TCP bridge supported by that host and radio.
 
-You don't need IP, you don't need Wi-Fi, you don't need a backbone. The only
-exception: if you want to bridge a single laptop into the mesh in the field, a
-rsDeck can run as a Wi-Fi access point and the laptop joins it. That's local-only,
-no upstream internet involved. Treat that AP bridge as experimental and test it
-before the deployment.
+For participants outside direct radio range, add a properly placed transport node with an RNode, reliable power and transport enabled. A bare RNode controlled by a host is a radio interface; forwarding is performed by the host's Reticulum stack.
+
+Do not assume every handheld has the same relay, Wi-Fi bridge or RNode modes. Check the released firmware and [supported-board guide](../hardware/rnode-and-supported-boards.md), then test the chosen mode before deployment.
 
 ## Power budget
 
-LoRa is a low-power protocol, but TX bursts still cost real current. Sensible
-numbers to plan around:
+Measure the entire kit with its intended display, radio, host and connection settings. Transmit power, message rate, screen use, Bluetooth/Wi-Fi and sleep behavior all change consumption. Battery labels alone do not establish runtime.
 
-- **RNode TX draw:** ~100-200 mA on transmit, much lower idle/RX. A handheld goes
-  a full day on its internal pack with normal use.
-- **Always-on transport node:** a 20 W solar panel + 100 Wh battery keeps a Pi +
-  RNode running 24/7 in normal weather. In persistent overcast, double the panel
-  or accept a daily downtime window.
-- **Carry a spare battery pack** for handhelds. Two cheap USB-C power banks are
-  worth more than one expensive one — redundancy beats capacity.
+For an always-on installation, estimate daily energy from measured average power: watts × 24 hours gives watt-hours per day. Allow for conversion losses, usable battery capacity, temperature and the period you must operate without charging. Size solar charging using local seasonal conditions and measured recovery after poor weather.
 
-If the transport node is on a tower or roof, mount the panel where you can reach
-it for cleaning. Snow and dust kill more solar deployments than hardware failure.
+Carry suitable charging cables and a spare power source. Test restart after an exhausted battery. Switching a relay off to save power can disconnect everyone relying on it; decide which nodes must remain available.
 
 ## Picking a LoRa preset
 
-Reticulum exposes the standard RNode presets. For an off-grid group, start here:
+Match frequency, bandwidth, spreading factor and coding rate across the group. Use the actual values in the [LoRa guide](../networking/lora-and-rnode.md) and your device's settings; a preset name alone may not mean the same thing across firmware.
 
-- **Long Fast (SF11, BW250):** good baseline. Reasonable range, tolerable
-  throughput for short messages.
-- **Long Moderate (SF11, BW125):** drop to this if signal is marginal. Narrower
-  bandwidth = more range, but every message takes noticeably longer to send.
-
-Higher spreading factor means longer range and slower throughput. Don't switch
-presets mid-deployment unless every node switches together — mismatched presets
-won't hear each other at all. Pick one preset per group and write it on the
-inside of the case if you have to.
+Test short messages at the intended locations with the expected number of users. Slower settings use more airtime and may worsen congestion even when they improve a marginal radio link. If settings change, coordinate the change across every participant and relay.
 
 ## Frequency and regs
 
-Use the right ISM band for where you are:
+Check the rules for the country and location where the radios will transmit. Hardware sold as “868 MHz” or “915 MHz” does not establish permission for every frequency, power, antenna or duty cycle. For example, the UK's [short-range device guidance](https://www.ofcom.org.uk/spectrum/radio-equipment/short-range-devices) points to the conditions that apply there; other countries have their own requirements.
 
-- **915 MHz** — Americas, Australia
-- **868 MHz** — Europe
-- **923 MHz** — most of Asia
-
-You're responsible for staying within local regulations on power, duty cycle, and
-band edges. Don't transmit on bands that need a license unless you actually have
-one. If you're crossing borders during the deployment, plan the radio config for
-each leg before you leave.
+Prepare configurations before crossing borders. Keep the permitted operating parameters with the kit, and use an antenna appropriate to the radio and band.
 
 ## Setting up a transport node
 
-A transport node is a node that relays for others. On the always-on Pi, add this to the rsReticulum config at `~/.rsReticulum/config`.
+On the host running rsReticulum, enable transport in its chosen configuration:
 
-```
+```ini
 [reticulum]
   enable_transport = yes
 ```
 
-That single setting turns the node into a relay. Without it, the node only
-handles its own traffic. With it, handhelds out of direct earshot of each other
-can still talk through the relay. Site the node high — antenna height beats
-transmit power every time.
+This is only the transport setting, not a complete configuration. Add the working RNode interface with the group's radio parameters as shown in [Community mesh](community-mesh.md#setting-up-a-gateway-node). An internet backhaul is optional; leave it out for a radio-only network.
 
-Confirm the transport node is announced and being heard before you scatter. Have
-each handheld send a test message to the others. If the message routes through
-the transport node, you're set.
+Place the antenna where the intended participants have usable paths, and test the complete route. To check that the relay contributes, compare results with it available and unavailable during a planned test. Do not infer coverage solely from its height or a signal indicator.
 
 ## Locking the mesh with IFAC
 
-Use IFAC even in emergencies. **Especially** in emergencies. IFAC stops random
-unrelated mesh nodes — somebody's hobby gateway in the next valley — from
-polluting your routing tables. Every node in your group sets the same
-`network_name` and `passphrase` on the LoRa interface in the node's Reticulum config:
+IFAC can restrict participation on an interface when all devices support and use matching settings. Decide whether the deployment needs that restriction or needs to interoperate with an open local network. Make that decision before an incident.
 
-```
-[interfaces]
-  [[Field LoRa]]
-    type = RNodeInterface
-    enabled = yes
-    port = /dev/ttyUSB0
-    network_name = your-group-name
-    passphrase = use-a-strong-shared-secret-here
-```
+On a standalone host, add the chosen `networkname` and `passphrase` to the already working RNode interface. Do not replace its frequency, bandwidth, spreading factor or other required settings with an incomplete IFAC-only block. Use the appropriate controls for each handheld's firmware and mode.
 
-Both fields must match exactly across every node. Treat the passphrase like a
-shared key: write it down, hand it out in person before deployment, don't post
-it. If somebody loses their handheld, rotate the passphrase across the group.
+Distribute the secret privately and keep a recovery plan for a forgotten or mistyped value. IFAC does not hide transmissions, prevent jamming or guarantee availability. A lost device may expose the shared secret; rotating it requires updating all affected interfaces.
 
 ## Field tips
 
-A few things that come up every real deployment:
+- Exchange and verify contact addresses before leaving. Save contacts while you have time to check a successful round trip.
+- Walk the intended area with the actual kit. Record gaps, message delays and where a relay is needed.
+- Label devices, charging cables and the agreed radio configuration.
+- Keep messages short and wait for the relevant delivery or human acknowledgment before assuming success.
+- Test restart, a lost connection and the fallback communication procedure during an exercise.
 
-- **Pre-share contacts before the emergency.** Trade announces and confirm pairs
-  while you still have power and time. In a crisis, nobody wants to debug
-  destination hashes.
-- **Test the mesh in good weather.** Walk the perimeter, check fringe coverage,
-  find the dead spots before they matter. Note where you needed to drop to Long
-  Moderate.
-- **Label every device.** A piece of tape with the node name and owner saves
-  arguments later.
-- **Don't expect interactive throughput.** Compose messages, send, move on.
-  Treating LoRa like SMS works. Treating it like chat doesn't.
-- **Keep one node off when not in use.** Rotating which handheld is powered up
-  extends collective battery life across a multi-day event.
-- **Antennas matter more than radios.** A clear sky and a good vertical antenna
-  beat a high-end RNode buried in a backpack.
-
-When the grid comes back, your mesh keeps working. That's the point.
+Use [Troubleshooting](../reference/troubleshooting.md) for failures. Preserve identities and configuration while diagnosing; resetting them does not repair a missing radio path.

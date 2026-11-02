@@ -4,66 +4,68 @@ sidebar_position: 1
 
 # Choosing your setup
 
-Ratspeak is a stack, not a single product. Before installing anything, decide how you want to talk on the mesh: through a desktop app, a phone, a handheld LoRa device, or a piece of infrastructure you run yourself. This page walks through the realistic combinations.
+Choose a device to run Ratspeak and a connection to other Reticulum users. A phone or computer can use a local network, an internet connection, Bluetooth Peer, or an attached radio. A supported handheld can run its own messenger.
 
-## Pick a Scenario
+## Pick a scenario
 
-| You want to... | What you install |
+| You want to… | Start with |
 |---|---|
-| Send LXMF messages and browse peers from a regular computer | Ratspeak desktop |
-| Same as above, but route over a TCP backhaul (public internet or your VPS) | Ratspeak desktop + TCP hub |
-| Carry Ratspeak in your pocket | Ratspeak mobile |
-| Add LoRa range to your phone or laptop | Ratspeak + an RNode, or rsDeck/rsCardputer booted into RNode mode |
-| Carry one device that does everything, no phone or laptop required | rsDeck or rsCardputer (standalone) |
-| Run infrastructure for a community or your own LAN | Self-hosted `rnsd-rs` and optionally `lxmd-rs` |
+| Send messages from a computer | Ratspeak for macOS, Linux, or Windows |
+| Send messages from a phone or tablet | Ratspeak for Android, or the iOS TestFlight beta |
+| Reach peers through the internet | Ratspeak with an Internet/TCP connection |
+| Add LoRa to a phone or computer | Ratspeak and compatible RNode hardware |
+| Carry a self-contained LoRa messenger | Ratspeak Handheld on a supported device |
+| Run a transport or propagation service | `rnsd-rs`, with `lxmd-rs` for LXMF propagation |
 
-## Just the Ratspeak Desktop App
+## Just the Ratspeak desktop app
 
-The simplest start. You install the desktop app on macOS, Linux, or Windows and you're on the mesh. With no other configuration, it discovers peers via local broadcast and any TCP transport nodes you connect to. Good for: a normal user with internet who wants to try LXMF.
+[Install Ratspeak](install-and-platform-setup.md), create or restore an identity, then enable a connection in the **Network** tab. A fresh install has no interfaces enabled. For two devices on the same Wi-Fi or LAN, enable **Local Network** on both. To reach peers through the internet, add an **Internet/TCP** connection.
 
-- See: [Install and Platform Setup](../getting-started/install-and-platform-setup.md)
-- See: [Ratspeak App](../products/ratspeak.md)
+The [first-session guide](your-first-session.md) walks through connecting and sending a message. Installing a separate Reticulum daemon is optional; the app includes its own networking runtime.
 
-## Ratspeak Desktop + a TCP Hub
+## Ratspeak desktop + a TCP server {#ratspeak-desktop--a-tcp-hub}
 
-Same client, but you bring your own backhaul. Point it at a public Ratspeak TCP server - Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), or Diamond (`3.ratspeak.org:4343`) - to join the wider Ratspeak network, or run your own VPS to host a private one. The legacy `rns.ratspeak.org:4242` endpoint is an alias for Emerald. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party. Useful when you're behind restrictive NAT, want a stable rendezvous point, or want to bridge two LANs together.
+In **Network → Internet/TCP**, choose a server from the **Public** list or enter a host and port under **Custom**. You can use an existing public server or one you operate yourself. The server provides a connection to the Reticulum destinations it can reach; it does not make every user reachable.
 
-- See: [IP, LAN & I2P](../networking/ip-internet-and-i2p.md)
-- See: [Self-Hosted Transport](../getting-started/choosing-your-setup.md#self-hosted-transport-node) below
+See [IP, LAN and I2P](../networking/ip-internet-and-i2p.md) for connection details and [Infrastructure and ops](../deployment/infrastructure-and-ops.md) for hosting.
 
-## Ratspeak Mobile
+## Ratspeak mobile
 
-iOS and Android builds of the same client. The main difference is how you talk to LoRa hardware: iOS does not expose USB to apps, so radios connect over Bluetooth LE or an RNode TCP bridge. Android supports BLE, USB-OTG, and RNode TCP. If you want a phone to drive a LoRa radio, use a BLE-capable RNode, a TCP-backed RNode bridge, or rsDeck/rsCardputer booted into RNode mode.
+Android installs from an APK; iPhone and iPad use the [public TestFlight beta](install-and-platform-setup.md#ios).
 
-- See: [Install and Platform Setup](../getting-started/install-and-platform-setup.md)
-- See: [Bluetooth Interfaces](../networking/bluetooth-interfaces.md)
+For radio connections, Android supports USB-OTG, Bluetooth LE and RNode over TCP where the device and radio support them. On iOS, use a compatible Bluetooth RNode or a reachable RNode TCP bridge. General USB serial radios are not available through the iOS app.
 
-## Ratspeak + an RNode or RNode-Mode Handheld
+Bluetooth Peer connects compatible nearby Ratspeak devices without a radio or Wi-Fi router. Its capabilities vary by platform; check [Bluetooth interfaces](../networking/bluetooth-interfaces.md) before relying on it for your setup.
 
-Add a portable LoRa node to your phone or laptop. The radio carries the long-range link; Ratspeak on your main device handles the long sessions and the screen real estate. A normal RNode connects over USB, USB-OTG on Android, BLE where the firmware supports it, or TCP when the radio's KISS stream is exposed on the local network. rsDeck and rsCardputer can boot into RNode mode for BLE or USB host use, or stay in Standalone mode as their own handheld endpoints.
+## Ratspeak + an RNode or RNode-mode handheld
 
-- See: [rsDeck](../products/rsdeck.md)
-- See: [rsCardputer](../products/rscardputer.md)
-- See: [LoRa Radio Interfaces](../networking/lora-and-rnode.md)
+An RNode supplies the LoRa radio while Ratspeak on your phone or computer provides the messaging interface. Connect it over USB, Bluetooth LE, or a TCP bridge, depending on the radio firmware and host platform.
 
-## Just an rsDeck or rsCardputer
+T-Deck Plus, T-Pager and Cardputer Adv can also run the RNode mode supplied with Ratspeak Handheld. They must be in that mode when another app controls their radio. See [LoRa and RNode](../networking/lora-and-rnode.md) for configuration and [supported boards](../hardware/rnode-and-supported-boards.md) for hardware details.
 
-A handheld-only deployment. Both devices run microReticulum and speak LXMF directly — no phone, no laptop, no desktop client involved. The rsDeck has a 4-inch touchscreen and full QWERTY; the rsCardputer is the smaller Cardputer form factor. Best for backpack carry, field operations, or anyone who wants the mesh to be a single self-contained object.
+## Standalone handhelds {#just-an-rsdeck-or-rscardputer}
 
-- See: [rsDeck](../products/rsdeck.md)
-- See: [rsCardputer](../products/rscardputer.md)
+Ratspeak Handheld is the shared firmware for these devices:
 
-## Self-Hosted Transport Node
+| Device | Available modes |
+|---|---|
+| LilyGO T-Deck Plus | Standalone messenger and RNode |
+| LilyGO T-Pager with SX1262 | Standalone messenger and RNode |
+| M5Stack Cardputer Adv | Standalone messenger and RNode; Cap LoRa-1262 required for LoRa |
+| Elecrow ThinkNode M9 | Standalone messenger |
 
-If you want to be infrastructure rather than just a client, run `rnsd-rs` on a Raspberry Pi, a VPS, or a workstation. That gives you a transport node that other peers can route through. Add `lxmd-rs` if you also want an Offline Inbox/propagation node for offline contacts. You don't need this to use Ratspeak — it's for operators who want to extend or stabilize a network.
+The firmware uses rsReticulumLite and rsLXMFLite. Older material may call the device builds rsDeck, rsPager or rsCardputer; current downloads come from the [Ratspeak Handheld release](https://github.com/ratspeak/ratspeak-handheld/releases).
 
-- See: [Infrastructure & Ops](../deployment/infrastructure-and-ops.md)
+Use the [flashing guide](../hardware/flashing-firmware.md) to choose the correct image, then the [handheld guide](../hardware/handheld-guide.md) for controls, messaging and storage. Hardware, input methods and features vary by device.
 
-## What You Actually Need
+## Self-hosted transport node
 
-You do not need a public IP, an account, an email, or a working internet connection to use Ratspeak. The mesh runs on whatever transport you give it: local network, TCP over the internet, LoRa, packet radio, I2P, or any combination. Pick the scenario that matches your situation and start there — you can layer the rest on later.
+Run `rnsd-rs` when you want to operate a Reticulum transport node. Configure transport mode and the interfaces it should connect; starting a daemon alone does not establish those connections. Add `lxmd-rs` in propagation-node mode if you also want to store messages for later pickup.
 
-## Next
+These services are useful for network operators and are not prerequisites for using the Ratspeak app. See [Infrastructure and ops](../deployment/infrastructure-and-ops.md).
 
-- [Install and Platform Setup](../getting-started/install-and-platform-setup.md)
-- [Your First Session](../getting-started/your-first-session.md)
+## What you actually need
+
+For messaging, you need an identity, a working interface and a route to the recipient or an applicable propagation node. Local-network and radio connections can work without internet access. Internet TCP servers require an internet connection. Ratspeak messaging does not require a central account or a public IP address.
+
+Continue with [Install and platform setup](install-and-platform-setup.md) or [Your first session](your-first-session.md).

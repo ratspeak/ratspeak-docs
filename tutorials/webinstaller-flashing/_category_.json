@@ -1,5 +1,5 @@
 {
   "label": "Webinstaller flashing",
   "position": 2,
-  "description": "Flash Ratspeak onto supported hardware with the in-browser installer."
+  "description": "Use the browser installer for supported RNode boards or Ratspeak Handheld."
 }

@@ -4,87 +4,69 @@ sidebar_position: 4
 
 # Serial and packet radio
 
-Wired serial links and packet-radio framers are the original Reticulum carriers. They predate IP, predate Wi-Fi, and they still work when nothing else does. If you have a USB-to-serial cable, a TNC, or a LoRa modem with KISS firmware, Ratspeak can put traffic across it.
+Serial interfaces carry Reticulum over a cable or a compatible modem/TNC. Match the framing and serial settings to both endpoints. These configuration details target **standalone rsReticulum 1.3.0**; Ratspeak 1.0.37 exposes a smaller set of radio setup controls, described below.
 
 ## Why serial interfaces matter
 
-Serial is the lowest-common-denominator transport. It runs over copper, fiber, RS-232 cables strung between buildings, AX.25 packet radio on amateur bands, LoRa modems on ISM bands, and arbitrary half-duplex links you build yourself. There is no DHCP, no router, no upstream provider — two endpoints, a wire or an antenna, and a framer in between.
+A serial connection can reach hardware that has no IP stack. The serial port is only the carrier: both ends still need to agree on frame boundaries and, for a radio, on its modulation and channel-access settings.
 
-Different framers exist because different physical layers have different needs. A clean point-to-point cable can use almost anything. A noisy radio link wants escape sequences and CRCs. An amateur band wants callsigns. Pick the interface that matches the framing your hardware actually speaks.
+Before connecting a modem, establish whether it expects Reticulum's HDLC-style framing, KISS, AX.25 inside KISS, or the RNode control protocol. A LoRa-capable board is not automatically an RNode or a generic KISS TNC.
 
 ## SerialInterface
 
-Raw serial. No framing layer of its own — Reticulum packets go straight onto the wire. Use this for direct point-to-point cables and for hardware that does not speak KISS or HDLC.
+`SerialInterface` already adds **HDLC-style framing**. It does not write unframed Reticulum packets to the port. Use it when the other endpoint implements the same framing.
 
-Configuration parameters:
+| Key | Meaning |
+|---|---|
+| `port` | Device path, such as `/dev/ttyUSB0`, `/dev/cu.usbserial-XXXX` or `COM3`. |
+| `speed` | Baud rate; the standalone default is `9600`. |
+| `databits` | Data bits; normally `8`. |
+| `parity` | `none`, `even` or `odd` (`N`, `E`, `O` also work). |
+| `stopbits` | Stop bits; normally `1`. |
 
-- `port` — device path (`/dev/ttyUSB0`, `/dev/cu.usbserial-XXXX`, `COM3`)
-- `speed` — baud rate (e.g. `115200`)
-- `databits` — typically `8`
-- `parity` — `none`, `even`, or `odd`
-- `stopbits` — typically `1`
-
-Both ends must agree on every parameter. A baud-rate mismatch produces silence; a parity mismatch produces garbage that looks like silence after the CRC fails.
-
-Choose SerialInterface when you control both ends of a clean physical link and want minimum overhead.
+Both ends must use matching settings. A mismatch can corrupt or prevent frames; this framer is not a promise of error correction or a separate CRC.
 
 ## KISSInterface (TNCs and LoRa modems)
 
-Classic KISS framing — the format every packet-radio TNC and most LoRa modem firmwares already speak. Frames are delimited by `0xC0` and escaped with `0xDB` so the delimiter never appears inside payload bytes.
+`KISSInterface` communicates with a compatible KISS TNC over serial. KISS frames use delimiter `0xC0` and escape byte `0xDB`. Confirm that the firmware supplies the framing and radio behavior you need; “LoRa modem” alone does not establish compatibility.
 
-Use KISSInterface for:
+In addition to serial settings, the interface accepts:
 
-- Hardware TNCs (Kantronics, MFJ, etc.)
-- LoRa modems running KISS-mode firmware
-- Anything labeled "KISS-compatible"
+| Key | Purpose | Standalone default |
+|---|---|---|
+| `preamble` | Transmit delay, in milliseconds. | `350` |
+| `txtail` | Transmit tail, in milliseconds. | `20` |
+| `persistence` | p-persistence channel-access value. | `64` |
+| `slottime` | CSMA slot time, in milliseconds. | `20` |
 
-In addition to the serial parameters above, KISS exposes the timing knobs that traditional TNCs need:
+Match these to the TNC and the shared channel. Defaults cannot establish that a particular radio or local channel plan is suitable.
 
-- `preamble` — milliseconds of carrier before the frame
-- `txtail` — milliseconds of carrier after the frame
-- `persistence` — p-persistence value for CSMA channel access
-- `slottime` — slot duration for CSMA backoff
-
-Defaults work for most modern modems. Tune these only if you are sharing a channel with other stations and need to play nicely with their timing.
+Automatic callsign beacons have a limitation in rsReticulum 1.3.0: when both `id_interval` and `id_callsign` are configured and the callsign is shorter than 15 bytes, traffic can arm a timer that keeps triggering beacons on later idle checks after the interval expires. Omit either key to disable this automatic feature.
 
 ## AX.25 KISS (amateur radio)
 
-AX.25 is the framing layer used on amateur packet-radio bands. AX25KISSInterface wraps Reticulum packets in AX.25 frames and ships them through a KISS TNC. Required when operating on amateur frequencies — the regulator wants to see your callsign on the air.
+`AX25KISSInterface` wraps Reticulum packets in AX.25 frames carried by a KISS TNC. Configuration includes `callsign` and `ssid` (`0`–`15`) alongside the serial/TNC settings.
 
-Configuration adds:
-
-- `callsign` — your assigned amateur callsign
-- `ssid` — secondary station identifier (`0`–`15`)
-
-You must hold a valid amateur license and use your own callsign. AX.25 framing is also useful on the air because other amateur operators can hear and identify your traffic with standard packet tools.
+A callsign header does not make encrypted traffic permissible on an amateur band, and AX.25 is not universally required for every amateur transmission. Check the rules for the service and country before transmitting. For example, US amateur rules restrict messages encoded to obscure their meaning and separately prescribe station identification: [47 CFR 97.113](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-B/section-97.113) and [97.119](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-D/part-97/subpart-B/section-97.119).
 
 ## HDLC
 
-HDLC framing for point-to-point links with a clean physical layer. Frames are delimited by `0x7E` and escape sequences XOR with `0x20`. HDLC is well-defined, simple to implement, and widely understood — making it a good choice when you are bridging two endpoints with custom or industrial hardware that does not speak KISS.
+In this release, HDLC is the shared **framing implementation**, not a separate `HDLCInterface` configuration type. Serial, TCP and Pipe interfaces use its delimiter/escaping scheme: `0x7E` marks frame boundaries, and `0x7D` escapes reserved bytes using XOR `0x20`.
 
-HDLCInterface uses the same serial parameters as SerialInterface. It assumes the link is reliable enough that you do not need the timing parameters that KISS exposes for half-duplex radio.
-
-Choose HDLC over raw Serial when you need framing — for example, when running multiple Reticulum links over a multiplexer, or when the receiving side needs explicit frame boundaries to recover from sync loss.
+Use `type = SerialInterface` for this framing over a serial cable. A custom bridge must preserve those frame boundaries and escaping; it cannot send arbitrary unframed bytes and expect the receiver to recover packets.
 
 ## PipeInterface
 
-PipeInterface spawns a subprocess and reads/writes Reticulum packets to its stdin/stdout. It is the escape hatch for non-standard transports — if you can write a small program that reads bytes from one place and writes them to another, you can carry Reticulum over it.
+`PipeInterface` starts a subprocess and exchanges HDLC-framed data over the child's stdin/stdout. It can connect Reticulum to a custom bridge without adding a new interface driver.
 
-Use cases:
+The required key is `command`; `respawn_delay` defaults to **5 seconds**. The interface attempts to restart a process that exits. Keep diagnostic output off the child's stdout, which carries protocol frames.
 
-- Tunnel through SSH or `socat`
-- Bridge to legacy radio control software
-- Wrap proprietary modem protocols
-- Test new transports without writing a Rust interface
-
-Configuration is just the command to spawn. The subprocess inherits stdin/stdout from Reticulum; everything else (arguments, environment, working directory) is up to you.
-
-PipeInterface trusts the wrapped command. If the subprocess dies, the interface goes down — restart policies are your responsibility.
+In rsReticulum 1.3.0, the command is split on whitespace and executed directly. Shell quoting, pipes, redirection and shell variable expansion are not interpreted. For complex setup, call a dedicated executable script that sets up its own arguments and environment. The command runs with the daemon's privileges, so protect its configuration as executable code.
 
 ## Platform support
 
-Serial framers (Serial, KISS, AX.25 KISS, HDLC, and USB-attached RNode) are gated behind a build feature on desktop. Default desktop builds ship with serial enabled. Custom builds that strip the feature lose all serial-based interfaces — including USB-attached LoRa modems. RNode over TCP is separate: it uses the RNode radio driver but reaches the radio through a TCP-exposed KISS stream instead of a local serial port.
+Standalone desktop Serial, KISS, AX.25 KISS and serial RNode support require the `serial` build feature. A custom build without it cannot open those serial interfaces. RNode over TCP uses its own socket path and feature support.
 
-iOS does not expose USB serial to third-party applications. Apple's policy prevents accessory apps from opening arbitrary USB devices, so serial framers are unavailable on iOS regardless of which cable you plug in. iPad and iPhone users wanting LoRa or radio connectivity should use Bluetooth-attached hardware (BLE RNode) or an RNode TCP bridge on a reachable local network.
+Ratspeak desktop's **Add LoRa Device** flow configures an RNode; it is not a generic setup wizard for every serial framer. For a standalone daemon configuration, use [Configuration reference](../reference/configuration-reference.md).
 
-Android exposes USB serial through the host APIs and can run the full set of serial framers through USB-OTG. Android can also use BLE RNode and RNode TCP. macOS, Linux, and Windows desktop builds support every framer documented above when built with the relevant features.
+Ratspeak on Android uses the USB host path for supported **USB RNodes**, with a per-device permission grant. That does not expose every desktop serial/TNC driver on Android. iOS Ratspeak has no general USB serial path. Android and iOS can also reach compatible RNodes through BLE or a protected TCP bridge; see [LoRa Radio Interfaces](lora-and-rnode.md).

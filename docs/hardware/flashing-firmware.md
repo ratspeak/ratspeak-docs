@@ -4,12 +4,14 @@ sidebar_position: 2
 
 # Flashing firmware
 
-Install Ratspeak Handheld on T-Deck Plus, T-Pager, Cardputer Adv or ThinkNode M9.
+Install **Ratspeak Handheld v2.3.4 beta** on T-Deck Plus, T-Pager (SX1262),
+Cardputer Adv or ThinkNode M9. Cardputer requires Cap LoRa-1262 for LoRa.
 Firmware is available from the [download page](https://ratspeak.org/download.html)
 and [GitHub releases](https://github.com/ratspeak/ratspeak-handheld/releases).
 
 ## Before flashing
 
+Back up an existing handheld before changing its firmware.
 **Compatible web updates preserve identity, messages and settings.** If the
 installation cannot be identified or updated safely, the flasher offers
 **Erase and install** or **Cancel**. Erasing removes all internal data; see
@@ -24,8 +26,8 @@ one can damage it.
 - **Standalone** is the on-device messenger, using LoRa or WiFi.
 - **RNode** turns the handheld into a radio for a Reticulum client over USB or BLE.
 
-T-Deck, T-Pager and Cardputer offer all three packages. M9 offers Standalone;
-RNode support is coming soon. Download the `.bin` for your device:
+T-Deck, T-Pager and Cardputer offer all three packages. M9 offers Standalone
+only in this release. Download the `.bin` for your device and intended mode:
 
 | Device | Example download |
 | --- | --- |
@@ -37,7 +39,7 @@ RNode support is coming soon. Download the `.bin` for your device:
 Each `.bin` is a complete image for the [web flasher](#web-flasher) or
 [esptool](#esptool). T-Deck, T-Pager and Cardputer also have a
 `-standalone-launcher.bin` for [bmorcelli's Launcher](#bmorcellis-launcher).
-Releases up to 2.3.3 published ZIPs instead.
+Use the files from the same release; legacy ZIP packages have their own instructions.
 
 ## Web flasher
 
@@ -57,47 +59,60 @@ your own** and upload it.
 
 ## esptool {#esptool}
 
-Download the device's `.bin`. Install [esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
-with `python3 -m pip install esptool==5.2.0`, and
-[back up](#back-up-an-existing-handheld) any data you want to keep.
+This procedure is a **factory installation**. It erases all internal data,
+including the identity, messages and settings. [Back up first](#back-up-an-existing-handheld).
+To preserve an existing compatible installation, use the [web flasher](#web-flasher).
+
+Download the complete image for the exact device and mode. Install
+[esptool](https://docs.espressif.com/projects/esptool/en/latest/esp32s3/esptool/basic-commands.html)
+in a Python virtual environment:
+
+```sh
+python3 -m venv handheld-tools
+. handheld-tools/bin/activate
+python3 -m pip install esptool==5.2.0
+```
+
+These shell commands use Linux/macOS activation. On Windows, create the
+environment with `py -m venv handheld-tools`, then use
+`handheld-tools\Scripts\python.exe` in place of `python3` below and for the pip
+installation command.
 
 Connect the device in [download mode](#recovery-download-mode). Close the web
-flasher and any serial monitor, replace `PORT` with its serial port, and run
-these commands from the folder that holds the image:
+flasher and any serial monitor. Replace `PORT` with its serial port and
+`IMAGE.bin` with the complete file you selected, such as `tdeck-full.bin` or
+`m9-standalone.bin`. Run from the folder holding that file:
 
 ```sh
 python3 -m esptool --chip esp32s3 --port PORT --baud 115200 erase-flash
-python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 cardputer-standalone.bin
+python3 -m esptool --chip esp32s3 --port PORT --baud 115200 write-flash 0x0 IMAGE.bin
 ```
 
-This is a factory installation: it removes all internal data, including the
-identity. Leave power connected until writing and verification finish. On M9,
-keep the power switch on; if no serial port appears, check the cable and your
-[WCH driver](https://learn.adafruit.com/how-to-install-drivers-for-wch-usb-to-serial-chips-ch9102f-ch9102/overview).
-To update without losing data, use the [web flasher](#web-flasher).
+Do not use `-standalone-launcher.bin` or an intermediate application binary in
+this procedure. Leave power connected until writing and verification finish.
+On M9, keep the power switch on. If no port appears, check the data cable and
+the USB-serial driver specified by the device manufacturer before retrying.
 
 ## bmorcelli's Launcher {#bmorcellis-launcher}
 
 On T-Deck Plus, T-Pager and Cardputer Adv,
-[bmorcelli's Launcher](https://github.com/bmorcelli/Launcher) 2.8 or later can
-install Ratspeak from the SD card or its web interface. Use the
-`-standalone-launcher.bin` for Standalone, or the `-rnode.bin` for RNode. M9 is
-not supported.
+[bmorcelli's Launcher](https://github.com/bmorcelli/Launcher) can install Ratspeak
+from the SD card or its web interface. Use the `-standalone-launcher.bin` for
+Standalone, or the `-rnode.bin` for RNode. There is no M9 Launcher image.
+Check Launcher's own device and version requirements before installing it.
 
-- **Storage:** Launcher creates a 448 KB data partition for Ratspeak's internal
-  storage, and Ratspeak prepares it on first start. At 448 KB, about 100 text
-  messages are kept before the oldest are removed; a 1.9 MB partition keeps
-  several hundred. To keep more, enlarge the partition with **Edit Size** in
-  Launcher's **PMan**; Ratspeak keeps its data and uses the extra space on the
-  next start. See [message history](./handheld-guide.md#message-history).
-- **Updates:** installing a newer `-standalone-launcher.bin` keeps identity,
-  messages and settings.
-- **Removing:** Launcher does not always link the storage partition to
-  Ratspeak. Before deleting Ratspeak, back up its `littlefs` partition in PMan.
+Ratspeak stores its internal data in a separate `littlefs` partition. Back up
+that partition before using Launcher's partition manager to resize or remove
+an installation. Do not format or replace it during an update if you need its
+identity, messages and settings. Message capacity depends on the partition
+size and message contents; use an SD card for longer
+[message history](./handheld-guide.md#message-history).
 
-To reach Launcher from Ratspeak, switch the device off and on. If Ratspeak shows
-**No storage partition was found**, it was installed from the plain
-`-standalone.bin`; install the `-standalone-launcher.bin` instead.
+To reach Launcher from Ratspeak, switch the device off and on. If Ratspeak
+started through Launcher shows **No storage partition was found**, install
+`-standalone-launcher.bin`. For a direct installation outside Launcher, the same
+error calls for the complete device image. Preserve any existing data before
+changing the installation.
 
 If internal storage holds another app's files or can't be read, for example
 after an older Launcher shared its storage, Ratspeak asks before changing it:
@@ -109,10 +124,11 @@ after an older Launcher shared its storage, Ratspeak asks before changing it:
 ### Back up an existing handheld
 
 1. Switch off the device and copy its SD card to your computer, if fitted.
-2. Install esptool: `python3 -m pip install esptool==5.2.0`.
+2. [Set up esptool](#esptool) if needed; do not run the erase or install commands.
 3. Connect the device in [download mode](#recovery-download-mode). Close the web
    flasher and any serial monitor. Replace `PORT` with its serial port and use a
-   new backup filename for each device:
+   new backup filename for each device and date. The example assumes
+   `handheld-backup.bin` does not already exist:
 
 ```sh
 python3 -m esptool --chip esp32s3 --port PORT --after no-reset read-flash 0 ALL handheld-backup.bin
@@ -140,7 +156,7 @@ can import it from an SD card:
 | T-Pager | `/ratpager/identity/import.identity` |
 | ThinkNode M9 | `/m9/identity/import.identity` |
 
-Insert the card, open **Settings → Identity & Device → Import Identity**, then
+Insert the card, open **Settings → Identity → Import Identity**, then
 select the imported **Identity Slot**. The device restarts with that identity.
 Check its address and remove the key file from the card.
 
@@ -151,7 +167,9 @@ existing installation.
 
 ### Return to your backup
 
-Connect the **same device** in download mode and write back its full backup:
+Restoring replaces the current firmware and internal data with the saved copy.
+Back up the current state too if you need it. Connect the **same device** in
+download mode and write back its full backup:
 
 ```sh
 python3 -m esptool --chip esp32s3 --port PORT --after no-reset write-flash 0 handheld-backup.bin
@@ -159,14 +177,15 @@ python3 -m esptool --chip esp32s3 --port PORT --after no-reset verify-flash 0 ha
 ```
 
 After both commands succeed, switch off, restore the matching SD copy and restart.
-This replaces the current installation with the saved firmware and data.
+Do not copy a full-device backup onto a different board or use it to run two
+devices with the same identity at once.
 
 ## Recovery (download mode) {#recovery-download-mode}
 
 - **T-Deck Plus:** connect USB with the main power off. Hold the trackball button,
   switch the power on, then release the button after a few seconds.
-- **T-Pager:** hold **BOOT**, tap **RST**, then release BOOT when the computer
-  detects the device. PWR is the separate power button.
+- **T-Pager:** connect USB, hold **BOOT**, tap **RST**, then release BOOT.
+  PWR is the separate power button. See [LilyGO's download-mode instructions](https://github.com/Xinyuan-LilyGO/LilyGoLib/blob/master/docs/lilygo-t-lora-pager.md#t-lora-pager-enter-download-mode).
 - **Cardputer Adv:** switch the side power off, hold **G0** while connecting USB,
   then release it.
 - **ThinkNode M9:** leave the power switch on and USB connected. Esptool enters
@@ -198,20 +217,9 @@ instructions; their firmware and partition layouts differ from Ratspeak Handheld
 
 ## RNode (rnodeconf)
 
-For boards supported by upstream RNode firmware, such as Heltec or T-Beam,
-install Reticulum and run its installer:
-
-```sh
-python3 -m pip install rns
-rnodeconf --autoinstall
-```
-
-Follow the prompts to select and install firmware. To inspect or update an
-existing RNode, replace `PORT` with its serial port:
-
-```sh
-rnodeconf PORT --info
-rnodeconf PORT --update
-```
+Upstream RNode firmware has a separate installer, `rnodeconf`, included with
+Reticulum. Follow the [Heltec/rnodeconf tutorial](/tutorials/flashing-from-source/heltec-lora32)
+for tool setup, installation and verification; select your exact supported board
+and band in the installer.
 
 For Ratspeak Handheld, use the device's **RNode** or **Full** package above.

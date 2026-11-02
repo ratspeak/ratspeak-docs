@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Configuration reference
 
-Reference for the configuration files relevant to Ratspeak users and operators: the Reticulum daemon config, the LXMF Offline Inbox/propagation node config, and where Ratspeak app settings live.
+This reference covers standalone **rsReticulum 1.3.0** and **rsLXMF 1.3.0**, plus app settings in **Ratspeak 1.0.37**. The app bundles newer protocol source than the standalone 1.3.0 downloads; their defaults are not interchangeable.
 
 ## Reticulum config (`~/.rsReticulum/config` or `~/.reticulum/config`)
 
-INI format. Common config files are read by Reticulum-compatible daemons such as `rnsd-rs`. Set `enabled = yes` on every interface you want running: an interface with neither `enabled` nor `interface_enabled` is skipped.
+The standalone `rnsd-rs` daemon reads an INI-style file with nested interface sections. Use explicit `enabled = yes` or `enabled = no` in each interface. In rsReticulum 1.3.0, an ordinary interface without either enable key defaults to enabled; do not rely on that default when moving configurations between versions or implementations.
 
 rsReticulum defaults to rsReticulum-specific paths such as `~/.rsReticulum/config`, with `/etc/rsReticulum/config` or `~/.config/rsReticulum/config` taking precedence on Unix-like systems if present. Point `--config` at another Reticulum-compatible directory only when shared local state is intentional.
 
@@ -20,21 +20,22 @@ Three top-level sections:
 | `[logging]` | `loglevel` 0-7 (0 = quiet, 7 = extreme). |
 | `[interfaces]` | One sub-block per interface (TCP, RNode, Auto, etc.). |
 
-The file is created with sensible defaults on first run. Edit, then restart the daemon.
+The daemon creates a starter file when none exists. Back up an existing configuration before editing it, then restart the daemon to apply changes.
 
 ## `[reticulum]` block
 
 | Key | Default | Description |
 |---|---|---|
-| `enable_transport` | `No` | Make this node a transport router. Forwards traffic and announces for other nodes. Required for hubs and gateways. |
+| `enable_transport` | `No` | Make this node a transport router. Forwards traffic and announces for other nodes. Enable it on a node that should forward for others; a TCP listener alone does not enable forwarding. |
 | `share_instance` | `Yes` | Run as a shared instance so other tools on this host can attach to this daemon over a local socket instead of opening their own interfaces. |
 | `instance_name` | `default` | Name of the shared-instance socket. Multiple daemons on one host need distinct names. |
-| `shared_instance_port` | `37428` | Local shared-instance data port. Remote-control RPC uses separate control settings. |
-| `rpc_key` | *(derived)* | Key for the local control service that tools such as `rnstatus-rs` and `rnpath-rs` use. Without one, it is derived from the transport identity. It is an admin credential, as in Python Reticulum: whoever holds it can read this node's state, drop its paths and block identities. |
+| `shared_instance_port` | `37428` | Local shared-instance data port when using TCP local sharing. |
+| `instance_control_port` | `37429` | Local control-service port. Unix platforms can use a named local socket instead. |
+| `rpc_key` | *(derived)* | Key for the local control service that tools such as `rnstatus-rs` and `rnpath-rs` use. Without one, it is derived from the transport identity. It is an admin credential: whoever holds it can read this node's state, drop its paths and block identities. |
 | `enable_remote_management` | `No` | Allow remote RPC management from listed identities. |
 | `remote_management_allowed` | *(none)* | Comma-separated identity hashes permitted to manage this node. |
 | `respond_to_probes` | `No` | Reply to network probes used by `rnprobe-rs` for diagnostics. |
-| `panic_on_interface_error` | `No` | Halt the daemon if an interface raises a fatal error (otherwise log and continue). |
+| `panic_on_interface_error` | `No` | Fail startup if an interface cannot be configured or started, instead of logging that failure and continuing. |
 
 ## `[interfaces]` block
 
@@ -48,18 +49,18 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
     enabled = yes
 ```
 
-### Common keys (any interface type)
+### Common interface keys
 
 | Key | Description |
 |---|---|
-| `type` | `TCPClientInterface`, `TCPServerInterface`, `UDPInterface`, `AutoInterface`, `RNodeInterface`, `RNodeMultiInterface`, `SerialInterface`, `KISSInterface`, `I2PInterface`, etc. |
-| `enabled` / `interface_enabled` | `yes` / `no` or `True` / `False`. Either set to yes starts the interface; with neither, it is skipped. This docs set uses `enabled = yes` in examples. |
+| `type` | Driver name, such as `TCPClientInterface`, `TCPServerInterface`, `UDPInterface`, `AutoInterface` or `RNodeInterface`. Serial, Bluetooth and other drivers also depend on the binary's build features. |
+| `enabled` / `interface_enabled` | `yes` / `no` or `True` / `False`. For ordinary interfaces in 1.3.0, `enabled` takes precedence over `interface_enabled`; with neither present, the default is enabled. Use one explicit key, as in these examples. |
 | `mode` | `full` (default), `access_point`, `roaming`, `boundary`, `gateway`. Controls how announces are rebroadcast. |
-| `network_name` | IFAC network name. Interfaces with different names cannot exchange traffic on this link. |
-| `passphrase` | IFAC passphrase. Combined with `network_name` to authenticate frames. |
-| `ifac_size` | Advanced IFAC tag length. Leave unset for portable configs; explicit unit handling has differed between implementations. |
+| `network_name` | IFAC network name used to derive link access credentials. Peers on that link need matching IFAC settings. |
+| `passphrase` | IFAC passphrase, combined with the network name to derive link access credentials. This is separate from end-to-end message encryption. |
+| `ifac_size` | IFAC tag length in **bytes**, from 1 to 64 in rsReticulum 1.3.0. Leave unset unless you need a specific value; check the other implementation's units before sharing a config. |
 | `announce_cap` | Max share of bandwidth used for announces. Default `2` (percent). |
-| `announce_rate_target` | Target rate for rebroadcasting received announces on this interface. |
+| `announce_rate_target` | Target interval between announces from a destination, in seconds, used by announce rate limiting. |
 | `bitrate` | Link bitrate in bps. Used for airtime accounting on lossy or rate-limited links. |
 
 ### TCP keys (`TCPClientInterface`, `TCPServerInterface`)
@@ -83,8 +84,8 @@ Ratspeak writes `mode = roaming` for a newly added RNode, matching the usual mob
 | `txpower` | Transmit power in dBm. |
 | `spreadingfactor` | LoRa SF, `5`-`12`. Higher = longer range, lower throughput. |
 | `codingrate` | LoRa coding rate, `5`-`8` (means 4/5 to 4/8). |
-| `airtime_limit_short` | Percent airtime cap over a short window. Used by RNodeMulti subinterfaces in the current Rust implementation. |
-| `airtime_limit_long` | Percent airtime cap over a long window. Used by RNodeMulti subinterfaces in the current Rust implementation. |
+| `airtime_limit_short` | Short-window airtime limit, as a percentage; supported by the RNode configuration. |
+| `airtime_limit_long` | Long-window airtime limit, as a percentage; supported by the RNode configuration. |
 
 For RNode over TCP, keep `type = RNodeInterface` and set `port` to the radio endpoint:
 
@@ -95,10 +96,12 @@ For RNode over TCP, keep `type = RNodeInterface` and set `port` to the radio end
     port = tcp://192.168.1.50:7633
     frequency = 915000000
     bandwidth = 250000
-    txpower = 22
-    spreadingfactor = 11
+    txpower = 17
+    spreadingfactor = 9
     codingrate = 5
 ```
+
+Choose a frequency and power permitted for your radio and location; the example is not a regional preset.
 
 This is different from `TCPClientInterface`. A TCP client connects to another Reticulum node or hub; an RNode TCP endpoint connects to the radio control stream and still transmits over LoRa.
 
@@ -108,7 +111,7 @@ This is different from `TCPClientInterface`. A TCP client connects to another Re
 
 ## LXMF / `lxmd-rs` config
 
-INI format. Read by `lxmd-rs`, the LXMF propagation node daemon. Ratspeak calls the client-facing feature Offline Inbox, but LXMF calls the server role a propagation node. Only operators running a propagation node need this file; client apps do not. Use `lxmd-rs --config <dir>` for an explicit config directory.
+INI format. Read by `lxmd-rs`, the LXMF propagation node daemon. Ratspeak calls the client-facing feature Offline Inbox, but LXMF calls the server role a propagation node. The daemon reads this file even with propagation disabled; Ratspeak app preferences are managed separately. Use `lxmd-rs --config <dir>` for an explicit config directory.
 
 ### `[propagation]`
 
@@ -129,9 +132,12 @@ INI format. Read by `lxmd-rs`, the LXMF propagation node daemon. Ratspeak calls 
 | `remote_peering_cost_max` | Maximum accepted remote peering cost. |
 | `max_peers` | Maximum propagation peers. |
 | `prioritise_destinations` | Comma-separated destination hashes whose messages are kept first when storage fills. |
-| `static_peers` | Comma-separated peer destination hashes to sync with on a fixed schedule. |
-| `from_static_only` | Only accept propagation from configured static peers. |
-| `auth_required` | Require authorized/control-listed peers for propagation duties. |
+| `static_peers` | Comma-separated propagation peer destination hashes to retain as static peers. |
+| `from_static_only` | Restrict incoming propagation peer transfers to configured static peers. |
+| `auth_required` | Require propagation clients to identify and appear in the `allowed` file in the LXMF config directory. This is separate from `control_allowed`. |
+| `control_allowed` | Comma-separated identity hashes authorized for node control. Treat this list as administrative access. |
+
+The `allowed` file contains one 32-character identity hash per line. With `auth_required = yes`, an empty client allowlist does not authorize retrieval. `control_allowed` grants administration and does not add clients to that file.
 
 ### `[lxmf]`
 
@@ -153,22 +159,51 @@ INI format. Read by `lxmd-rs`, the LXMF propagation node daemon. Ratspeak calls 
 
 Ratspeak does **not** use a hand-edited config file for app preferences. Display name, theme, auto-announce interval, Offline Inbox mode/manual node hash, notification preferences, and most UI state live in the SQLite database next to the app data and are managed through the Settings view.
 
-Network interface definitions are written to the app-managed Reticulum config at `.ratspeak/reticulum/config` under the Ratspeak data directory, not to the user's system-wide `~/.reticulum/config`. Set `RATSPEAK_RNS_CONFIG_DIR` only when you intentionally want Ratspeak to use a different Reticulum config directory. Every identity then uses that one directory, so all of them share one Reticulum identity and one path table.
+The active identity's network configuration normally lives at
+`<app data root>/.ratspeak/identities/<identity hash>/reticulum/config`.
+The top-level `.ratspeak/reticulum/config` is a seed/legacy location. This is
+separate from a standalone daemon's configuration. See
+[Install & Platform Setup](../getting-started/install-and-platform-setup.md)
+for the platform data root.
 
-Transport Mode is stored as the app setting `transport_mode` with one of three values: `off`, `on`, or `auto`. The app presents these as **OFF**, **ON**, and **AUTO**. OFF is the default. ON maps to Reticulum `enable_transport = True` when the local runtime can perform forwarding. AUTO is an app policy: it enables only when there is an enabled non-LoRa interface, no enabled LoRa/RNode interface, and the current network is Wi-Fi, Ethernet, or an unknown desktop network type. Shared-instance clients do not perform local Transport Mode duties; the shared instance handles that role.
+Use the app's **Network** controls to change its interfaces. Set
+`RATSPEAK_RNS_CONFIG_DIR` only when deliberately selecting another Reticulum
+configuration directory. That override applies across identities and bypasses
+the normal separate network directories; switching app identities does not
+select a new override directory.
 
-To reset, quit Ratspeak and remove the app data directory, then relaunch. The database will be recreated with defaults and a fresh identity.
+Transport Mode is stored as `transport_mode`: **OFF**, **ON** or **AUTO**.
+OFF is the fresh default. ON enables local forwarding when Ratspeak owns the
+network runtime. AUTO requires an enabled non-LoRa interface, no enabled
+LoRa/RNode interface, and Wi-Fi, Ethernet or an unknown desktop network type.
+It also stays off when more than one recognized public TCP server is enabled.
+A shared-instance client relies on its owner for forwarding.
 
-The Reticulum stack inside Ratspeak uses `.ratspeak/reticulum/config` and app-private shared-instance ports `37430`/`37431`, separate from standalone rsReticulum defaults such as `~/.rsReticulum/config` and ports `37428`/`37429`. Two daemons can coexist on one host without conflict as long as their interface ports differ.
+The app uses its own shared-instance selector and ports `37430`/`37431` when
+app-managed local sharing applies. Standalone rsReticulum uses `37428`/`37429`
+by default. Separate configuration directories alone do not prevent conflicts:
+shared-instance names, listening ports and exclusive hardware also matter.
+
+Do not delete the app profile to troubleshoot a preference. It contains the
+message database and identity material as well as settings. Use the setting's
+own control, and use the app's identity export before any deliberate reset.
 
 ## Identity files
 
-Identities are not configuration — they are 64-byte binary keys (32-byte X25519 private key + 32-byte Ed25519 seed). They cannot be edited in a text editor and must never be committed to source control or shared.
+A raw software Reticulum private key contains 64 bytes: a 32-byte X25519 private
+key and a 32-byte Ed25519 seed. Other identity formats are not interchangeable
+with that file. A PIN-protected Ratspeak identity uses an encrypted vault;
+a hardware-backed identity keeps its private key on the token.
 
-| Tool | Path |
+| Tool | Normal identity storage |
 |---|---|
-| Ratspeak app | `<OS data dir>/org.ratspeak.desktop/.ratspeak/identities/<hash>/identity` (see [Install & Platform Setup](../getting-started/install-and-platform-setup.md) for the per-OS data directory) |
-| Rust `rnsd-rs` | `~/.rsReticulum/storage/` by default, or the directory passed with `--config`. |
-| Rust `lxmd-rs` | `~/.rsLXMF/identity` by default, with legacy `.lxmf/identity` fallback in rsLXMF, or the directory passed with `--config`. |
+| Ratspeak app | `<app data root>/.ratspeak/identities/<hash>/`; the file is `identity`, `identity.enc` or a hardware descriptor `identity.hwid`, depending on the identity. |
+| Standalone `rnsd-rs` | `<config directory>/storage/transport_identity`. This is the transport identity, not an app messaging backup. |
+| Standalone `lxmd-rs` | `<config directory>/identity`; an existing legacy `<config directory>/.lxmf/identity` can be used as a fallback. |
 
-Back up the raw 64-byte file to preserve an identity across machines. Restoring is a file copy — no import step.
+For Ratspeak, use **Settings → Identity → Export Identity** and the app's import
+or restore flow. A PIN-encrypted `.rsi` backup includes identity material and
+metadata, but not message history or app settings. Raw Reticulum exports are
+unencrypted. A hardware private key cannot be exported. See
+[Settings & Identity](../using-ratspeak/settings-and-identity.md) before moving or
+recovering an identity. Never publish private keys, backup phrases or backup PINs.

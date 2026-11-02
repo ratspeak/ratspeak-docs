@@ -163,12 +163,13 @@ function MeshCanvas() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="hero-canvas" />;
+  return <canvas ref={canvasRef} className="hero-canvas" aria-hidden="true" />;
 }
 
 function HeroCycle() {
   const ref = useRef(null);
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const words = ['Connect.', 'Mesh.', 'Encrypt.', 'Deploy.'];
     let wi = 0;
     const id = setInterval(() => {
@@ -205,7 +206,7 @@ export default function Hub() {
           <div className="hero-content">
             <p className="hero-eyebrow">Documentation hub</p>
             <h1 className="hero-title">Learn. Build. <HeroCycle /></h1>
-            <p className="hero-subtitle">Everything you need to get started with Ratspeak, understand the protocols, and build on the mesh.</p>
+            <p className="hero-subtitle">Guides for getting started with Ratspeak, using the app, and building on the mesh.</p>
           </div>
         </section>
 
@@ -219,7 +220,7 @@ export default function Hub() {
                 </div>
                 <div className="card-body">
                   <h2 className="card-title">Technical docs</h2>
-                  <p className="card-desc">Architecture, configuration, protocol internals, and API reference for developers and operators.</p>
+                  <p className="card-desc">Setup, everyday use, network configuration, and protocol reference.</p>
                   <span className="card-link">Browse docs <span className="arrow">&rarr;</span></span>
                 </div>
               </div>
@@ -232,7 +233,7 @@ export default function Hub() {
                 </div>
                 <div className="card-body">
                   <h2 className="card-title">Tutorials</h2>
-                  <p className="card-desc">Step-by-step guides that walk you through setup, first messages, radio links, and common workflows.</p>
+                  <p className="card-desc">Hardware flashing walkthroughs and guides to setting up a connection.</p>
                   <span className="card-link">Start learning <span className="arrow">&rarr;</span></span>
                 </div>
               </div>

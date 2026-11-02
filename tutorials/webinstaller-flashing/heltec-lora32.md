@@ -3,67 +3,72 @@ sidebar_position: 1
 sidebar_label: Heltec LoRa32
 ---
 
-# Flashing the Heltec LoRa32
+# Flash upstream RNode on Heltec LoRa32
 
-This section provides step-by-step instructions for flashing the [Heltec LoRa32 device](https://heltec.org/product-category/lora/lrnode/esp32-lora/) with Ratspeak using the web-based installer.
+The public **RNode** option on the Ratspeak download page installs
+[upstream RNode firmware](https://github.com/markqvist/RNode_Firmware).
+Your Heltec then serves as a radio for Ratspeak or another Reticulum host.
+This procedure uses the **RNode** tab; the separately labelled **rsNode** tab
+is a private beta and has its own access and installation instructions.
 
-This guide assumes you're using the V4 device; however, the general instructions also apply to earlier versions.
+Upstream marks its Heltec firmware experimental. Check your exact board revision
+and radio band against the available variants before installing.
 
 ## Preparation
 
-To begin, you'll need:
+Use Chrome or Edge on a computer, a USB data cable, and an antenna suited to the
+board's frequency band. Attach the antenna before transmitting. Close other
+applications using the serial port.
 
-- Heltec LoRa32 device
-- USB-C data transfer cable
-- A computer with a supported browser (see below)
+Save any existing firmware's configuration and identity using its backup
+instructions. **Full Erase** deletes the device's internal contents. Do not
+turn it on simply because you are following this tutorial; use it only for a
+deliberate fresh installation or when the installer requires it and your backup
+is complete.
 
+## Choose the firmware
 
-To use the web flasher, your browser must support the Web Serial API (Chrome, Edge, Opera, or Firefox 151+) so it can detect and connect to the board.
+1. Open the [Ratspeak download page](https://ratspeak.org/download.html).
+   Under **Build your own**, select **Flash**.
+2. Connect the board by USB. Select **Select USB Device** and choose its port.
+3. In **Firmware Package**, select **RNode**. Choose a **Firmware release**,
+   the exact **Device variant**, and its **Hardware band**. If your variant is
+   absent, stop rather than selecting a nearby model.
+4. Check the selected board and band in the ready message. Leave **RNode EEPROM**
+   setup enabled so the installer can provision and verify the radio.
 
-:::warning
-If this is the first time using the Heltec LoRa32, ensure that the antenna is attached before powering it on, as using the device without it can damage the radio receiver.
-:::
+The browser setup writes an unsigned RNode device identity. If you require a
+signed device identity, use the [rnodeconf procedure](/tutorials/flashing-from-source/heltec-lora32).
+This device identity is separate from your Ratspeak messaging identity.
 
-## Getting started
+## Flash and finish setup
 
-1. Navigate over to the [Ratspeak download page](https://ratspeak.org/download.html).
+1. Select **Flash firmware**. Review any erase notice before continuing.
+   Keep the USB cable connected and the tab open.
+2. Wait for both firmware writing and RNode setup to finish. **100% written**
+   alone is not confirmation that provisioning succeeded.
+3. If the page says **Firmware installed. Reset the board, then finish RNode
+   setup**, press **RST**. When its serial port returns, choose **Finish Setup**
+   and select the port if asked.
+4. Wait for **RNode setup complete** and the message that setup was verified.
+   If setup fails, keep the log and follow its error before trying another flash.
 
-2. Scroll down to the **Build your own** section and select **Flash**.
+![Installer waiting for a reset before RNode setup can finish](./img/rs_lr1.png)
 
-![Ratspeak download page with the Flash button](./img/rs_dl.png)
+![RNode setup complete after identity and firmware-hash verification](./img/rs_lr2.png)
 
+If the board cannot enter the flasher, use
+[Heltec's bootloader instructions](https://wiki.heltec.org/docs/platform/f%26t/flash):
+hold **USER/PRG**, press and release **RST**, then release USER/PRG. The port may
+change. Use the board labels or its manual rather than assuming which button is
+on the left or right.
 
-## Connecting the Heltec LoRa32
+## Connect to Ratspeak
 
-1. With the USB-C port facing you, hold down the **left** button on the LoRa32 and plug it into the computer via a data transfer capable USB-C cable.
+Close the flasher so it releases the serial port. Add an RNode interface in
+Ratspeak, match the radio settings to a known peer, announce and exchange a
+message. Follow [LoRa and RNode](/docs/networking/lora-and-rnode) for those steps.
 
-2. You should see an orange light flash briefly. Note that the screen will remain off, but the device will now be detectable by your computer.
-
-
-## Flashing
-
-1. On the download page, click **Select USB Device**. A menu will appear prompting you to select the proper device. Select the Heltec LoRa32; depending on the system hardware, it may appear under various names.
-
-2. On the right, select **RNode**. Three dropdown menus will appear. In the second dropdown titled **Device variant**, select the Heltec LoRa32 version that corresponds with your device.
-
-3. It is recommended to also turn on **full erase** under advanced options.
-
-![RNode flash options with Device variant and full erase selected](./img/rs_v4.png)
-
-
-4. Click **Flash**. The installation process will now commence.
-
-5. A successful flash will produce the below output:
-
-![Successful flash output in the web installer](./img/rs_lr1.png)
-
-6. Press the **right** button on the device to reboot it. When the screen returns, click **Finish flashing** in the browser.
-
-7. After the device has finished flashing successfully, the following output will be shown, and you can safely disconnect the device:
-
-![Final output after flashing completes](./img/rs_lr2.png)
-
-
-:::tip[Congratulations, you're now a Ratspeak user!]
-Questions? Reach out in the **#documentation** channel on our [Discord](https://ratspeak.org/discord).
-:::
+For help, include the board revision, chosen firmware, connection method and
+error text in the **#documentation** channel on
+[Discord](https://ratspeak.org/discord). Do not include identity keys or passwords.

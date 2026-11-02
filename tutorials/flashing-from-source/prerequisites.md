@@ -3,35 +3,41 @@ sidebar_position: 1
 sidebar_label: Overview
 ---
 
-# Building from source
+# Firmware tools and source builds
 
-Prefer to compile the firmware yourself to test a patch, audit exactly what runs on your device, or work offline? Which toolchain you use **depends on the board**:
+Build Ratspeak Handheld when you need to change or inspect its source. For a
+normal installation, use a release image and the
+[flashing guide](/docs/hardware/flashing-firmware).
 
-- **rsDeck (LilyGO T-Deck) and rsCardputer** build with **PlatformIO** from their Ratspeak repositories.
-- **RNode-class boards** (Heltec LoRa32, T-Beam, generic RNode) use **`rnodeconf`**, the upstream RNode toolchain that ships with Reticulum.
+The procedures in this section use two different tools:
 
-:::note[Just want a working device?]
-Most people should use the web installer; it's faster, and requires no toolchain. See [Webinstaller flashing](/tutorials/webinstaller-flashing/heltec-lora32).
-:::
+| Task | What it does | Guide |
+| --- | --- | --- |
+| Build Ratspeak Handheld for T-Deck Plus | Compiles the released source and packages complete firmware images | [T-Deck Plus source build](/tutorials/flashing-from-source/lilygo-tdeck) |
+| Install upstream RNode on Heltec LoRa32 | Downloads, flashes and provisions a prebuilt RNode image with `rnodeconf` | [Heltec installation](/tutorials/flashing-from-source/heltec-lora32) |
 
-## Pick your board
+`rnodeconf` is an installer and configuration utility, not a compiler. Its guide
+also points source developers to upstream's build instructions.
 
-| Board | Firmware | Toolchain | Guide |
-|---|---|---|---|
-| LilyGO T-Deck Plus | rsDeck | PlatformIO | [Build rsDeck →](/tutorials/flashing-from-source/lilygo-tdeck) |
-| Heltec LoRa32 | RNode | `rnodeconf` | [Flash with rnodeconf →](/tutorials/flashing-from-source/heltec-lora32) |
+## Ratspeak Handheld build prerequisites
 
-## Common prerequisites
+The v2.3.4 source build uses **Linux or macOS**, **Git**, **Make**, **Python 3.12**
+and **Arduino CLI 1.4.1**. The repository pins the Python build dependencies,
+including PlatformIO and esptool. Follow the T-Deck tutorial to install those
+in a virtual environment.
 
-Both paths need:
+The normal build uses the Rust protocol libraries included in the repository;
+you do not need a Rust toolchain unless you change and rebuild those libraries.
+Download access is needed to fetch the build tools and dependencies.
 
-- A computer running **Linux, macOS, or Windows**
-- **[`git`](https://git-scm.com/)**
-- **Python 3.9+** with `pip` — both PlatformIO and `rns`/`rnodeconf` install through it
-- A **USB-C data transfer cable** and your board
+## Before connecting a board
 
-:::warning
-Attach an antenna matched to your frequency band before powering or testing a LoRa radio. Transmitting without one can damage the radio module.
-:::
+Use a USB data cable, identify the exact board revision and attach an antenna
+suited to its radio band before transmitting. Close other applications using
+the serial port.
 
-The canonical firmware reference is the [official flashing guide](https://docs.ratspeak.org/docs/hardware/flashing-firmware).
+Back up an existing installation before changing its firmware or partition
+layout. For a Ratspeak Handheld, follow
+[backup and recovery](/docs/hardware/flashing-firmware#back-up-an-existing-handheld).
+For a board running other firmware, use that firmware's backup instructions;
+a copy of its settings is not necessarily a backup of its identity keys.

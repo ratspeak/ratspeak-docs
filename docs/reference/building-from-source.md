@@ -4,74 +4,74 @@ sidebar_position: 3
 
 # Building from source
 
-Use this path when you want to test the current tree, package Ratspeak yourself, review the code before running it, or work on Ratspeak, rsReticulum, rsLXMF, or rsLXST directly.
-
-This page assumes you are comfortable following terminal commands but not that you already know Rust, Tauri, Android Studio, or Xcode.
+Use this guide to build **Ratspeak 1.0.37**, or the separate **rsReticulum 1.3.0** and **rsLXMF 1.3.0** command-line releases. For an ordinary installation, use [Install & Platform Setup](../getting-started/install-and-platform-setup.md). iOS users can join the [public TestFlight](https://testflight.apple.com/join/AzzW4Jg6).
 
 ## What you are building
 
-Ratspeak is the app. It embeds the protocol and support repos below:
+The shell examples use Bash on macOS/Linux, or Git Bash on Windows. The app needs five repositories in one parent directory:
 
-- **[Ratspeak](https://github.com/ratspeak/Ratspeak)** - the desktop and mobile app. Downloads are on the [Ratspeak releases page](https://github.com/ratspeak/Ratspeak/releases).
-- **[rsReticulum](https://github.com/ratspeak/rsReticulum)** - the Reticulum network stack and `*-rs` command-line tools.
-- **[rsLXMF](https://github.com/ratspeak/rsLXMF)** - the LXMF messaging layer and `lxmd-rs` propagation daemon.
-- **[lrgp-rs](https://github.com/ratspeak/lrgp-rs)** - the lightweight game protocol used by the Ratspeak app.
-- **[rsLXST](https://github.com/ratspeak/rsLXST)** - the experimental LXST telephony layer used for Ratspeak's voice calls. Required for the default Ratspeak build; skip with `--no-default-features` if you want to build without voice.
+| Repository | Role |
+|---|---|
+| [Ratspeak](https://github.com/ratspeak/Ratspeak) | Desktop/mobile app and frontend. |
+| [rsReticulum](https://github.com/ratspeak/rsReticulum) | Reticulum networking. |
+| [rsLXMF](https://github.com/ratspeak/rsLXMF) | LXMF messaging. |
+| [rsLXST](https://github.com/ratspeak/rsLXST) | Experimental voice stack, enabled by default. |
+| [lrgp-rs](https://github.com/ratspeak/lrgp-rs) | Game protocol. |
+
+Keep all four siblings even when disabling voice: Cargo still needs to resolve the declared path dependencies. The app's protocol pins are newer than the standalone 1.3.0 releases. Use a separate directory for those standalone builds.
 
 ## Select an exact source set
 
-For a released app, read `release/dependency-set.json` from that **Ratspeak release tag** and fetch each sibling's exact `commit`. A component's Cargo `version` is not a Git revision: standalone tags with the same version can lack APIs used by the app. The annotated `integrationTag` must resolve to the manifest commit. Do not mix current branch tips, standalone releases, or commits selected by date.
+For a released app, `release/dependency-set.json` at the **Ratspeak release tag** selects every sibling commit. A component's Cargo version is not its Git revision. Do not substitute a standalone tag or a branch tip for the manifest's commit.
 
-The [source-packaging guide](https://github.com/ratspeak/Ratspeak/blob/main/docs/source-packaging.md) includes a source-checkout helper, an exact-release verification command, and the Nix packaging contract. Nix packagers should derive sibling fetches from the manifest commits and update their fixed-output hashes together. Use `Ratspeak/src-tauri/Cargo.lock` for the application; do not substitute the root workspace lockfile.
-
-The following clones establish the **development folder layout**, not a verified release source set. Align their revisions with the selected app manifest before building. GitHub source archives also work when fetched at those exact revisions and extracted under these folder names; the Ratspeak archive alone does not contain its siblings.
+Install Git and Node.js first; this release uses Node **22.22.0** for its source tooling. From a directory where you want to keep the sources:
 
 ```bash
-mkdir ratspeak-src
-cd ratspeak-src
-
-git clone https://github.com/ratspeak/rsReticulum
-git clone https://github.com/ratspeak/rsLXMF
-git clone https://github.com/ratspeak/lrgp-rs
-git clone https://github.com/ratspeak/rsLXST
-git clone https://github.com/ratspeak/Ratspeak
+git clone --branch v1.0.37 https://github.com/ratspeak/Ratspeak.git Ratspeak-source-tools
+node Ratspeak-source-tools/scripts/release/checkout-release-source.mjs \
+  --tag v1.0.37 --destination ratspeak-v1.0.37-source
+cd ratspeak-v1.0.37-source
+node Ratspeak/scripts/release/source-integrity.mjs verify-tags
 ```
 
-The folder should look like this:
+The helper fetches the exact component commits and verifies their annotated integration tags. It refuses conflicting or modified destinations; choose a new destination for an existing development tree. Its `--plan` option fetches product metadata and shows the selection, but does not complete component verification.
+
+The resulting layout is:
 
 ```text
-ratspeak-src/
-|-- rsReticulum/
-|-- rsLXMF/
-|-- lrgp-rs/
-|-- rsLXST/
-`-- Ratspeak/
+ratspeak-v1.0.37-source/
+├── Ratspeak/
+├── rsReticulum/
+├── rsLXMF/
+├── rsLXST/
+└── lrgp-rs/
 ```
 
-If you clone only `Ratspeak`, Cargo will fail because it cannot find the sibling protocol crates. The `rsLXST` sibling is only strictly required for the default build, which enables the experimental `lxst-voice` Cargo feature; pass `--no-default-features` to `cargo tauri dev` / `cargo tauri build` to build Ratspeak without voice and skip that clone.
+GitHub's automatic Ratspeak source archive contains only the app repository. If packaging from archives, fetch all five exact revisions and retain these names. See the [versioned source-packaging guide](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/docs/source-packaging.md) for manual/Nix packaging and offline source verification.
+
+`Ratspeak/src-tauri` is a separate Cargo workspace. Its app build uses `src-tauri/Cargo.lock`; root workspace checks use `Ratspeak/Cargo.lock`. Keep both release lockfiles intact.
 
 ## Common prerequisites
 
-Install these first on every desktop platform:
-
-1. **Git**, or GitHub ZIP downloads renamed to the folder layout above.
-2. **Rust 1.89 or newer**, installed through [`rustup`](https://www.rust-lang.org/tools/install). Release builds use the exact `toolchains.rustRelease` in the selected manifest; the minimum supported version is not the release toolchain pin.
-3. **Tauri v2 CLI**, using the selected manifest's `toolchains.tauriCli` version. For example, the v1.0.31 source set uses:
+Install [Rust through rustup](https://www.rust-lang.org/tools/install). The minimum supported Rust version is **1.89.0**; the release toolchain is **1.96.0**. Select the release toolchain for this checkout and install its Tauri CLI:
 
 ```bash
+rustup toolchain install 1.96.0
+# Run inside ratspeak-v1.0.37-source:
+rustup override set 1.96.0
 cargo install tauri-cli --version 2.11.1 --locked
 ```
 
-Check that the tools are visible in your terminal:
+On Windows, use the MSVC Rust toolchain, such as `1.96.0-x86_64-pc-windows-msvc`, for both the installation and override. Check the tools before continuing:
 
 ```bash
 git --version
+node --version
 rustc --version
-cargo --version
 cargo tauri --version
 ```
 
-Ratspeak's frontend is plain HTML, CSS, and JavaScript bundled into the Tauri app. There is no npm install step for this repo. The release source tools additionally use Node.js (the reviewed version is recorded in the manifest).
+The frontend is plain HTML, CSS and JavaScript. There is no npm install step. Its CSS helper needs Bash; on Windows, Git Bash supplies it.
 
 ## Platform setup
 
@@ -83,296 +83,176 @@ Install Xcode Command Line Tools:
 xcode-select --install
 ```
 
-If you will also build iOS, install the full Xcode app from Apple, launch it once, and let it finish installing components.
+For iOS, install the full Xcode app, launch it and finish its component setup. Release 1.0.37 records Xcode **26.3** and iOS SDK **26.2** in its dependency manifest.
 
 ### Linux desktop
 
-Install the Tauri system packages for your distro. On Debian or Ubuntu:
+Install the Tauri prerequisites and the app's native development libraries. On Debian/Ubuntu:
 
 ```bash
 sudo apt update
-sudo apt install libwebkit2gtk-4.1-dev \
-  build-essential \
-  curl \
-  wget \
-  file \
-  libxdo-dev \
-  libssl-dev \
-  libayatana-appindicator3-dev \
-  libasound2-dev \
-  libudev-dev \
-  libpcsclite-dev \
-  libdbus-1-dev \
-  pkg-config \
-  librsvg2-dev
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev \
+  libasound2-dev libudev-dev libpcsclite-dev libdbus-1-dev pkg-config
 ```
 
-Fedora, Arch, openSUSE, Alpine, and NixOS use different package names. Use the current [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) page for your distro before building Ratspeak.
+Other distributions use different package names. Follow [Tauri's prerequisites](https://v2.tauri.app/start/prerequisites/) for the WebView/toolchain setup, and install the corresponding ALSA, udev, PC/SC and D-Bus development packages. For Nix, assemble the source set and native dependencies in the package environment; the source-packaging guide above describes the sibling/lockfile contract.
 
 ### Windows desktop
 
-Install:
+Install Git for Windows, Microsoft C++ Build Tools with **Desktop development with C++**, and the Microsoft Edge WebView2 Runtime if it is absent. Use the MSVC Rust toolchain. See [Tauri's Windows prerequisites](https://v2.tauri.app/start/prerequisites/#windows) for installer details.
 
-1. **Git for Windows**. This also gives you Git Bash, which is useful for the CSS helper script.
-2. **Microsoft C++ Build Tools** with the **Desktop development with C++** workload.
-3. **Rust with the MSVC toolchain**. If Rust is already installed, run:
-
-```powershell
-rustup default stable-msvc
-```
-
-4. **Microsoft Edge WebView2 Runtime**, if your Windows install does not already include it.
-
-Build commands can run from PowerShell. For the CSS step, use Git Bash or run the shell script through `bash`.
+PowerShell can run the build commands. Run the CSS helper through Git Bash, or make its `bash` command available to that shell.
 
 ### Android
 
-Android builds can be done from macOS, Linux, or Windows.
-
-Install Android Studio. In Android Studio's SDK Manager, install:
-
-- Android SDK Platform
-- Android SDK Platform-Tools
-- Android SDK Build-Tools
-- Android SDK Command-line Tools
-- NDK (Side by side), at the exact `toolchains.androidNdk` revision in the selected manifest
-
-Set `JAVA_HOME`, `ANDROID_HOME`, and `NDK_HOME` as described by [Tauri's Android prerequisites](https://v2.tauri.app/start/prerequisites/#android), then add the Android Rust targets:
+Install Android Studio and its SDK Manager components: Android SDK Platform **36**, Platform-Tools, Build-Tools, Command-line Tools and NDK **27.0.12077973**. The release uses Java **17**. Set `JAVA_HOME` and `ANDROID_HOME` following [Tauri's Android prerequisites](https://v2.tauri.app/start/prerequisites/#android), then add the targets you intend to build:
 
 ```bash
-rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
+rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
 ```
 
-Do not assume `NDK_HOME` alone controls Tauri's selection when several NDKs are installed. Maintainer Android builds expose only the pinned NDK through a disposable SDK view, retain it through Gradle and artifact checks, and verify Tauri's actual selection in the build log. See `scripts/release/android-sdk-view.mjs` in the current Ratspeak tooling checkout. The helper supports the Linux x86_64 and macOS build hosts; it does not delete installed SDKs. Older product tags may not contain the helper.
+Tauri 2.11.1 can choose a different NDK when several are installed, even if `NDK_HOME` is set. On macOS or Linux x86_64, the release's SDK-view helper exposes only the pinned NDK without changing the installed SDK. Run this from the Ratspeak repository, with an existing temporary directory outside the SDK as `SDK_VIEW_PARENT`:
 
-For a physical device, enable Developer Options and USB debugging. `adb devices` should show the phone before you build or install.
+```bash
+SDK_VIEW_PARENT="${TMPDIR:-/tmp}"
+node scripts/release/android-sdk-view.mjs create \
+  --sdk "$ANDROID_HOME" --ndk 27.0.12077973 --parent "$SDK_VIEW_PARENT"
+```
+
+Use the returned `view` path for `ANDROID_HOME` and `ANDROID_SDK_ROOT`, and its `ndk/27.0.12077973` subdirectory for `ANDROID_NDK_HOME` and `NDK_HOME`, in the build shell. Keep that view available through Gradle and packaging. Check the build log's **Using installed NDK** line. This helper does not support Windows; Windows source builders must establish the same NDK selection in their own SDK setup. The [Android release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/.github/workflows/release-android.yml) shows the complete release environment and validation.
+
+USB debugging and `adb devices` are needed when installing or debugging on a physical phone, not for producing an APK.
 
 ### iOS
 
-iOS builds require macOS and the full Xcode app. Command Line Tools alone are not enough.
-
-Install the Rust iOS targets:
+iOS builds require macOS, full Xcode and CocoaPods:
 
 ```bash
-rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
-```
-
-Install CocoaPods:
-
-```bash
+rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
 brew install cocoapods
 ```
 
-There is no public iOS download yet. Source builds are for local development, device testing, or later TestFlight packaging. For a physical iPhone or iPad, you also need an Apple developer team and a provisioning profile that can sign `org.ratspeak.apple` with the approved multicast networking capability. Simulator builds do not need App Store distribution signing, but they are not enough to validate Bluetooth, Local Network, notifications, or background behavior.
-
-## Build rsReticulum
-
-Use this when you want the standalone Reticulum daemon and tools:
-
-```bash
-cd ratspeak-src/rsReticulum
-cargo build --release
-```
-
-The binaries land in `target/release/`:
-
-```text
-rnsd-rs
-rnstatus-rs
-rnpath-rs
-rnid-rs
-rnprobe-rs
-rncp-rs
-rnsh-rs
-rnodeconf-rs
-```
-
-Release builds use only `*-rs` command names so they can live beside other
-Reticulum tools on `PATH` without ambiguity. Command names select the binary
-only; config storage is controlled separately by the default resolver or by
-`--config`.
-
-Create a starter config and run the daemon:
-
-```bash
-mkdir -p ~/.rsReticulum
-./target/release/rnsd-rs --exampleconfig > ~/.rsReticulum/config
-./target/release/rnsd-rs --config ~/.rsReticulum
-```
-
-Open a second terminal to check it:
-
-```bash
-cd ratspeak-src/rsReticulum
-./target/release/rnstatus-rs --config ~/.rsReticulum
-```
-
-Bare rsReticulum tools default to rsReticulum-specific config locations such as
-`~/.rsReticulum`. Use `~/.reticulum` only when you intentionally want to share
-an existing Reticulum config. If another daemon is running at the same time,
-use a distinct shared-instance port pair in the config as well.
-
-## Build rsLXMF
-
-`rsLXMF` must sit next to `rsReticulum`, because it depends on the local Reticulum crates:
-
-```bash
-cd ratspeak-src/rsLXMF
-cargo build --release
-```
-
-The `lxmd-rs` daemon lands in `target/release/`.
-
-Create a starter config:
-
-```bash
-mkdir -p ~/.rsLXMF ~/.rsReticulum
-./target/release/lxmd-rs --exampleconfig > ~/.rsLXMF/config
-```
-
-Run it:
-
-```bash
-./target/release/lxmd-rs --config ~/.rsLXMF --rnsconfig ~/.rsReticulum
-```
-
-If a Reticulum daemon using the same config is already running, `lxmd-rs` attaches to it over the shared-instance socket. If not, `lxmd-rs` starts an in-process Reticulum runtime from the directory supplied with `--rnsconfig`.
-
-To send one message from a script:
-
-```bash
-./target/release/lxmd-rs --config ~/.rsLXMF --rnsconfig ~/.rsReticulum \
-  --send <destination_hash> "hello from source"
-```
+Physical-device builds need your own Apple development team and provisioning. The source project uses `org.ratspeak.apple` and the multicast networking entitlement. Approval for Ratspeak's distribution team does not give another developer team that entitlement; configure signing and the capabilities your own profile permits. Simulator builds cannot establish Bluetooth, Local Network or background behavior on a phone. See [Tauri's iOS prerequisites](https://v2.tauri.app/start/prerequisites/#ios).
 
 ## Build Ratspeak for desktop
 
-First build the dashboard CSS:
+From the assembled source directory:
 
 ```bash
-cd ratspeak-src/Ratspeak
-bash dashboard/build-css.sh
-```
-
-Run a development build:
-
-```bash
-cd src-tauri
-cargo tauri dev
-```
-
-To build Ratspeak without the experimental voice stack (and without needing the `rsLXST` sibling checkout), add `--no-default-features`:
-
-```bash
-cargo tauri dev --no-default-features
-```
-
-Build release bundles:
-
-```bash
-cd ratspeak-src/Ratspeak
+cd Ratspeak
 bash dashboard/build-css.sh
 cd src-tauri
-cargo tauri build
+cargo tauri dev -- --locked
 ```
 
-Outputs land under:
+For release bundles, use:
 
-```text
-Ratspeak/src-tauri/target/release/bundle/
+```bash
+cargo tauri build -- --locked
 ```
 
-The bundle type depends on the OS you built on: `.app` / `.dmg` on macOS, `.msi` / `.exe` on Windows, and `.AppImage` / `.deb` / `.rpm` on Linux.
+To disable the experimental voice feature, pass the Cargo option after Tauri's `--` separator:
+
+```bash
+cargo tauri build -- --locked --no-default-features
+```
+
+Keep `rsLXST` in the source layout even for this build. Bundle output normally lands under `Ratspeak/src-tauri/target/release/bundle/` unless you override Cargo's target directory. Packaging produces the platform's `.app`/`.dmg`, `.msi`/`.exe`, or `.AppImage`/`.deb`/`.rpm`. A local build does not inherit the official release's signing credentials.
 
 ## Build Ratspeak for Android
 
-From the Ratspeak repo:
+From the assembled source directory, build an ARM64 debug APK:
 
 ```bash
-cd ratspeak-src/Ratspeak
-bash scripts/build-android-prod.sh
+cd Ratspeak
+bash dashboard/build-css.sh
+cd src-tauri
+cargo tauri android build --debug --target aarch64 --apk -- --locked
 ```
 
-That script rebuilds the CSS, clears development Tauri environment variables, and builds an APK. The debug APK path is:
+The generated APK is normally under:
 
 ```text
 Ratspeak/src-tauri/gen/android/app/build/outputs/apk/arm64/debug/app-arm64-debug.apk
 ```
 
-Install it on a connected device:
+A debug APK uses a different signing key from the official release and cannot replace it as an ordinary update. Use a development device/profile and preserve any existing identity and data before planning installation. For an interactive development run, use `cargo tauri android dev` from `src-tauri`.
 
-```bash
-adb install -r src-tauri/gen/android/app/build/outputs/apk/arm64/debug/app-arm64-debug.apk
-```
-
-For an interactive mobile development run:
-
-```bash
-cd ratspeak-src/Ratspeak/src-tauri
-cargo tauri android dev
-```
+For release packaging, the versioned Android workflow shows the ABI split and signing inputs. Supply your own signing configuration; do not expect an unsigned/local APK to be interchangeable with a published one.
 
 ## Build Ratspeak for iOS
 
-Ratspeak does not currently offer a public iOS artifact. Build from source on macOS when you are doing local development or have provisioning access for `org.ratspeak.apple`.
-
-From macOS:
+For an Apple Silicon simulator build, start in the assembled source directory:
 
 ```bash
-cd ratspeak-src/Ratspeak
-bash scripts/build-ios-prod.sh
+cd Ratspeak
+bash dashboard/build-css.sh
+cd src-tauri
+cargo tauri ios build --debug --target aarch64-sim -- --locked
 ```
 
-That script rebuilds the CSS, clears development Tauri environment variables, and builds the iOS package. The IPA path is:
+Use `cargo tauri ios dev` for interactive simulator/device development. Production IPA export additionally needs the appropriate signing/profile setup; the [iOS release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/.github/workflows/release-ios.yml) records the build and entitlement checks.
 
-```text
-Ratspeak/src-tauri/gen/apple/build/arm64/Ratspeak.ipa
-```
+If a packaged build tries to load a local development server, check for shell overrides such as `TAURI_CONFIG` and `TAURI_DEV_HOST`. A packaged app should load its bundled assets.
 
-For simulator or device development:
+For normal device use, [TestFlight](https://testflight.apple.com/join/AzzW4Jg6) avoids the source/signing setup. iOS still controls permissions and background execution; an app build is not a headless daemon. Use BLE or an RNode TCP bridge for radios: iOS does not expose general USB serial devices to Ratspeak.
+
+## Build rsReticulum
+
+Use a **separate source directory** for the standalone 1.3.0 tools:
 
 ```bash
-cd ratspeak-src/Ratspeak/src-tauri
-cargo tauri ios dev
+mkdir reticulum-v1.3.0-source
+cd reticulum-v1.3.0-source
+git clone --branch v1.3.0 https://github.com/ratspeak/rsReticulum.git
+git clone --branch v1.3.0 https://github.com/ratspeak/rsLXMF.git
+cd rsReticulum
+cargo build --release --locked
 ```
 
-If a production iOS build opens to a blank page or tries to load a local dev server, check that `TAURI_CONFIG` and `TAURI_DEV_HOST` are not set in your shell. The production app must load the bundled asset protocol.
+These releases require Rust 1.89 or newer. The tools land in `target/release/`: `rnsd-rs`, `rnstatus-rs`, `rnpath-rs`, `rnid-rs`, `rnprobe-rs`, `rncp-rs`, `rnsh-rs` and `rnodeconf-rs`. The `-rs` suffix distinguishes the executable; it does not select a configuration directory.
 
-iOS platform notes:
+Print the starter configuration to inspect it:
 
-- Local Network access is required for LAN peers, and the user must grant the normal iOS permission. Ratspeak's project enables Apple's approved multicast networking entitlement; physical-device and TestFlight profiles must include the same capability.
-- iOS apps cannot use general USB serial devices. Use Bluetooth RNode hardware or an RNode TCP bridge for LoRa on iPhone and iPad.
-- Bluetooth, notifications, and camera/photo access all require the normal iOS permission prompts.
-- Background execution is controlled by iOS. Ratspeak can use declared Bluetooth background modes, but it should not be treated as a headless always-on daemon.
+```bash
+./target/release/rnsd-rs --exampleconfig
+```
+
+Choose your configuration and interfaces using [Configuration reference](configuration-reference.md) and [Infrastructure & Ops](../deployment/infrastructure-and-ops.md). Do not redirect the example over an existing configuration. Standalone defaults such as `~/.rsReticulum` are separate from the app's identity-specific network directory.
+
+## Build rsLXMF
+
+In that same standalone source directory, rsLXMF depends on the sibling rsReticulum 1.3.0 checkout:
+
+```bash
+cd ../rsLXMF
+cargo build --release --locked
+./target/release/lxmd-rs --exampleconfig
+```
+
+The daemon is `target/release/lxmd-rs`. Configure its LXMF directory and its Reticulum directory separately; see [Infrastructure & Ops](../deployment/infrastructure-and-ops.md). It can attach to a running shared Reticulum instance, or own an in-process runtime. Distinct directories alone do not avoid conflicts over shared-instance names, ports or radio devices.
 
 ## Mobile and the protocol repos
 
-You do not separately install `rnsd-rs` or `lxmd-rs` on Android or iOS. Mobile Ratspeak embeds rsReticulum and rsLXMF as Rust libraries, then compiles them for the Android or iOS target as part of the app build.
-
-If you are debugging protocol code for mobile, make the change in `rsReticulum` or `rsLXMF`, then rebuild Ratspeak for that mobile target. The sibling checkout is what makes that loop work.
+The mobile app compiles rsReticulum and rsLXMF as Rust libraries; it does not require separate `rnsd-rs` or `lxmd-rs` installations. For protocol development, edit the matching sibling, rebuild the app for that target and record the changed source set. That development tree is no longer an unchanged release reconstruction.
 
 ## Ratspeak Handheld
 
-T-Deck Plus, T-Pager and Cardputer Adv use the unified `ratspeak-handheld`
-repository. Follow its [firmware build procedure](../hardware/flashing-firmware.md#build-from-source)
-with the matching `DEVICE`. Normal firmware builds use the included Rust archives;
-they do not need the desktop workspace layout above. The selected firmware/source
-identity is recorded in `tools/release_identity.json`.
+T-Deck Plus, T-Pager, Cardputer Adv and M9 use the unified `ratspeak-handheld` repository. Follow its [firmware build procedure](../hardware/flashing-firmware.md#build-from-source) for the selected release and board. Handheld 2.3.4 has an M9 Standalone image only; Launcher and RNode instructions apply to the other supported boards.
 
-Keep launcher, Standalone and RNode components from the same source build, and use the
-package validator before installing. Old `rsDeck`, `rsPager` and `rsCardputer`
-repositories remain references for their earlier releases.
+Normal firmware builds use the included Rust archives and do not need this desktop sibling layout. `tools/release_identity.json` records the firmware/source identity. Keep firmware components from the same build and validate the package before flashing. The earlier `rsDeck`, `rsPager` and `rsCardputer` repositories describe their historical releases.
 
 ## Common build problems
 
-**Cargo cannot find `../rsReticulum`, `../rsLXMF`, `../lrgp-rs`, or `../rsLXST`.** The repos are not checked out as siblings. Move them into the layout shown at the top of this page. If you only see the error for `../rsLXST`, either clone that sibling too or pass `--no-default-features` to `cargo tauri dev` / `cargo tauri build` to build Ratspeak without the experimental voice stack.
+**Cargo cannot find a sibling crate.** Check the five-directory layout and the manifest commits. Disabling voice does not make a missing `rsLXST` path valid.
 
-**`cargo tauri` is not found.** Install the Tauri CLI with `cargo install tauri-cli --version "^2.0.0" --locked`, then open a new terminal.
+**`cargo tauri` is missing or rejects an option.** Check `cargo tauri --version`; this release uses 2.11.1. Cargo options such as `--locked` and `--no-default-features` go after the `--` separator.
 
-**Linux fails on WebKit or appindicator packages.** Install the Tauri system dependencies for your distro. Package names changed with Tauri v2; Debian and Ubuntu need `libwebkit2gtk-4.1-dev`.
+**Linux fails while linking native libraries.** Install the matching development packages, including WebKitGTK 4.1, ALSA, PC/SC and D-Bus. Include the missing library name and distribution/version in a report.
 
-**Windows builds fail while compiling native code.** Make sure the Visual Studio Build Tools workload is **Desktop development with C++**, and that Rust is using the MSVC toolchain.
+**Windows fails while compiling native code.** Check the C++ workload and the MSVC Rust target in the build terminal.
 
-**Android builds cannot find the NDK.** Reopen the terminal after setting `ANDROID_HOME`, `NDK_HOME`, and `JAVA_HOME`, then confirm `adb devices` works.
+**Android cannot find or selects the wrong NDK.** Check the SDK paths, the installed pinned NDK and the actual Tauri selection in the build log. A working `adb` connection does not verify the build toolchain.
 
-**iOS signing fails.** Check the Xcode project signing team and provisioning profile. The current iOS bundle identifier is `org.ratspeak.apple`. The profile must be regenerated after multicast capability approval and include `com.apple.developer.networking.multicast`.
+**iOS signing fails.** Check the chosen team, bundle identifier, profile and multicast entitlement together. Use a simulator build to separate compilation problems from device provisioning problems.

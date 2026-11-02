@@ -4,93 +4,36 @@ sidebar_position: 6
 
 # rsLXST
 
-rsLXST is the experimental Rust implementation of LXST telephony for Reticulum.
-The first public target is Opus voice calling for Ratspeak and other Rust apps,
-not complete parity with Python LXST.
+rsLXST provides experimental LXST telephony and media support for Rust applications using Reticulum. If you want to make a call in Ratspeak, start with [Voice calls](../using-ratspeak/messaging-and-contacts.md#voice-calls-experimental); this page is for library users.
 
-The [Ratspeak app](../products/ratspeak.md) is the first public consumer of rsLXST,
-and uses it for peer-to-peer voice calls between contacts. Voice in Ratspeak is
-itself experimental; see [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md)
-for how the call surface behaves in the app.
+The current standalone source release is [**0.3.0**](https://github.com/ratspeak/rsLXST/releases/tag/v0.3.0), targeting the implemented LXST **0.4.5** surface. It has no standalone `rnphone-rs` application. Ratspeak 1.0.37 pins a later coordinated source commit carrying the same package version; use the app's [dependency manifest](../reference/building-from-source.md) for app builds.
 
-Python LXST remains the source of truth. rsLXST targets wire compatibility for
-the implemented telephony surface and uses live interop tests against a pinned
-Python LXST reference to keep that behavior honest.
+## Application boundary
 
-## What it supports
+Use **`lxst_telephony::TelephonyService`** to register an `lxst.telephony` destination and drive calls. Keep its typed control/event channels and run the service. The [versioned API guide](https://github.com/ratspeak/rsLXST/blob/v0.3.0/api/README.md) and [service example](https://github.com/ratspeak/rsLXST/tree/v0.3.0/crates/lxst-telephony/examples) show that integration.
 
-The supported release surface is library-first:
+The service handles call setup, answer/reject/busy outcomes, hangup, timeouts, signalling, negotiated media profiles and stream teardown. Applications still own contact policy, microphone/speaker permissions, capture/playback, resampling, device routing, audio sessions, UI and background behavior.
 
-- `lxst.telephony` Reticulum destination registration and announces.
-- Incoming and outgoing call setup over Reticulum links.
-- Answer, reject, busy, timeout, hangup, and teardown.
-- LXST signalling and media packet framing.
-- Raw audio frame encode/decode for compatibility and app plumbing.
-- Opus voice profiles for Medium Quality, High Quality, Super High Quality,
-  Low Latency, and Ultra Low Latency calls.
-- Active profile switching after a call is established.
-- Typed Rust control and event channels for apps such as Ratspeak.
+An established call uses its exact Reticulum Link interface. Interface loss can end the call; media does not automatically switch to another radio. Local queue admission and best-effort media transmission are also different from remote receipt.
 
-Applications own the platform layer: microphone and speaker permissions, audio
-session lifecycle, device routing, capture, playback, resampling, notifications,
-and user interface.
+## Crates and codecs
 
-## What is not included yet
+| Crate | Role |
+|---|---|
+| `lxst-core` | Profiles, signalling, wire values, codec/stream processing and buffers. |
+| `lxst-rns` | Reticulum Link packet boundary for LXST media and signalling. |
+| `lxst-telephony` | Host call runtime and application service. |
+| `lxst-embedded` | Bounded `no_std` protocol and media integration for constrained applications. |
+| `lxst-codec2` | Native bounded Codec2 700C, 1600 and 3200 processing without an allocator. |
 
-Features users may know from Python LXST that are not part of the first rsLXST
-release:
+The release includes Opus voice profiles and Codec2 integration, including the ULBW/VLBW/LBW profile families. That library capability does not establish that an arbitrary board has qualified audio timing, memory, transport or drivers. The embedded boundary needs application integration and device validation.
 
-- `rnphone` parity or a public `rnphone-rs` executable.
-- Codec2 low-bandwidth voice encode/decode.
-- Built-in CPAL or native microphone/speaker backends.
-- Python LXST's local audio graph: sources, sinks, pipelines, mixers, filters,
-  AGC, tones, file playback, and recording.
-- Broadcast and non-telephony streaming primitives.
-- Hardware keypad, display, and ringer integration.
+The library does not supply a general platform microphone/speaker backend or complete parity with Python LXST's local audio graph. It is also not the app's Offline Inbox or voice-message container format.
 
-Those are future parity targets, not current release promises.
+## Build and compatibility
 
-## Interoperability
+For standalone 0.3.0, use rsReticulum **1.3.0** as the sibling checkout specified by its Cargo manifest. The host workspace requires Rust **1.89+**; `lxst-codec2` and `lxst-embedded` retain separate Rust **1.87** minimums for their constrained use.
 
-The release gate covers bidirectional Python interop for implemented behavior:
+The [versioned README](https://github.com/ratspeak/rsLXST/blob/v0.3.0/README.md) lists build prerequisites and local tests. Reference-interoperability tests have additional Python/reference-source requirements; they are not runtime dependencies for an application using the Rust library.
 
-- Rust-to-Python and Python-to-Rust call establishment.
-- Answer, hangup, reject, busy, and timeout flows.
-- Raw media in both directions.
-- Opus media across the Opus voice profile matrix.
-- Profile switching initiated by Rust and by Python.
-
-If profile switching proves unreliable for a specific Python client or network
-topology, Ratspeak may accept inbound Python profile signals while limiting
-automatic outbound switching to known Rust/Ratspeak peers until the path is
-proven.
-
-## Build
-
-Clone rsLXST next to rsReticulum:
-
-```bash
-mkdir ratspeak-src
-cd ratspeak-src
-git clone https://github.com/ratspeak/rsReticulum
-git clone https://github.com/ratspeak/rsLXST
-cd rsLXST
-cargo build --release
-```
-
-Run the local gate:
-
-```bash
-cargo fmt --all -- --check
-cargo clippy --workspace -- -D warnings
-cargo test --workspace
-```
-
-Live Python interop tests need Python Reticulum/LXMF dependencies and the pinned
-LXST reference checkout used by maintainers:
-
-```bash
-python -m pip install rns lxmf numpy
-```
-
-Source: [github.com/ratspeak/rsLXST](https://github.com/ratspeak/rsLXST).
+All rsLXST packages remain experimental. Use the API guide's service boundary, pin the source/dependency set, and test the profiles and target platforms your application will use. The host crates use [AGPL-3.0-or-later](https://github.com/ratspeak/rsLXST/blob/v0.3.0/LICENSE); `lxst-codec2` declares [LGPL-2.1-only, MIT and BSD-3-Clause terms](https://github.com/ratspeak/rsLXST/blob/v0.3.0/crates/lxst-codec2/Cargo.toml).

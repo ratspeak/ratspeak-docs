@@ -6,98 +6,98 @@ sidebar_position: 4
 
 ## What is Ratspeak?
 
-Ratspeak is a desktop and mobile messaging app for the Reticulum mesh network. It sends end-to-end encrypted messages over LoRa radio, the internet, local WiFi, or any combination of those — and it does it without phone numbers, accounts, or central servers. Think of it as a chat client that treats radio links and TCP links the same way.
+Ratspeak is a desktop and mobile app for messaging over Reticulum. Private LXMF messages can travel over supported internet, local-network, Bluetooth, and radio interfaces without a phone number or a centrally registered account. The app also has hub-based channels, voice, and turn-based games.
 
 ## Do I need internet to use it?
 
-No. Ratspeak runs over any Reticulum interface, including LoRa radio, which needs no internet at all. Two people with RNode-class hardware can talk across town with nothing in between. The internet is just one transport option; Ratspeak does not depend on it.
+No. Compatible local-network, Bluetooth, or RNode radio connections can carry Reticulum traffic without internet. Both sides still need a usable path. Radio range depends on the hardware, antennas, settings, terrain, and interference; a LoRa connection does not guarantee coverage across a particular distance.
 
 ## What hardware do I need?
 
-For internet-only use: nothing special. Install Ratspeak, point it at a public Ratspeak TCP server such as Emerald (`2.ratspeak.org:4242`), and you are on the network. Ruby (`1.ratspeak.org:4141`) and Diamond (`3.ratspeak.org:4343`) are public options too; the legacy `rns.ratspeak.org:4242` endpoint is an alias for Emerald. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party. For off-grid radio use you need an RNode — a small LoRa device that handles the radio side over USB, BLE, or an RNode TCP bridge. There are commercial RNodes, DIY builds, and several Reticulum-aware handhelds. Any of them work.
+For internet or local-network use, start with a supported computer or phone. Configure a connection in **Network → Connections**; a fresh install does not automatically join a public TCP server. For LoRa, you need a compatible RNode and a supported connection between it and Ratspeak. Check [Interfaces overview](../networking/interfaces-overview-and-design.md) and the hardware guide for your exact device before buying or flashing it.
 
 ## What is Reticulum, and what is LXMF?
 
-Reticulum is the underlying networking stack — it handles routing, encryption, and link establishment across whatever interfaces you have. LXMF (Lightweight Extensible Message Format) is the messaging format that rides on top of it. Ratspeak speaks LXMF, which means it can talk to any other LXMF client: Sideband, NomadNet, MeshChat, and others. They all interoperate.
+Reticulum provides networking, routing, and encrypted links across its interfaces. LXMF (Lightweight Extensible Message Format) carries messages over Reticulum. Ratspeak can exchange LXMF messages with compatible clients such as Sideband and NomadNet. Features such as formatting, reactions, voice messages, and games depend on support in both clients; plain-message interoperability does not imply identical features.
 
 ## How is it encrypted? Who can read my messages?
 
-Every private message is end-to-end encrypted to the recipient's public key using X25519 key exchange and AES-256. Transport nodes between you and your contact forward packets without being able to decrypt them. Reticulum packets do not carry a source address, so relays get much less routing metadata than they would on IP networks. They can still observe interface activity, timing, packet size, and where they forwarded a packet next. The only people who can read the message contents are the sender and the intended recipient.
+Private LXMF messages are encrypted for their recipient. Intermediate transport and Offline Inbox nodes forward or store encrypted data rather than receiving the private-message plaintext. They can still observe traffic timing, size, and activity on their connections. Message contents are available on the sending and receiving devices, so device access, backups, and copied keys also matter.
+
+**Channels have a different boundary:** the hub can read and relay channel messages. Do not use a channel as a substitute for a private conversation. See [Messaging and contacts](../using-ratspeak/messaging-and-contacts.md) and [Security and privacy](../concepts/cryptography-and-protection.md).
 
 ## Is Ratspeak anonymous?
 
-Pseudonymous, more accurately. Your identity is a cryptographic hash, not your real name, and Reticulum minimizes routing metadata by omitting source addresses. That is not the same thing as total anonymity. Your display name is visible to your contacts, TCP peers can see the IP address you connect from, timing can still be correlated, and LoRa transmissions can be direction-found with the right equipment. If IP-level anonymity matters to you, run your TCP interfaces over I2P or another anonymity layer and read the threat model carefully.
+It is pseudonymous. Your address is derived from cryptographic keys rather than a phone number, but that does not guarantee anonymity. Announced names and profile information are visible to nodes that receive them. A TCP server can observe the IP address connecting to it, and network observers may correlate timing or radio activity. See [Security and privacy](../concepts/cryptography-and-protection.md) before relying on a particular privacy property.
 
 ## What is my identity, exactly?
 
-A Ratspeak identity is 64 bytes: a 32-byte X25519 private key for encryption and a 32-byte Ed25519 signing seed. New software identities are derived from a 12-word recovery phrase, and you can encrypt the local key and stored phrase behind a PIN. Older software identities may be raw key files with no phrase. Desktop hardware-key identities keep the private keys on a YubiKey and store only metadata locally. There is no account, no email, no phone number tied to any of these forms.
+Your identity is a set of cryptographic keys. Ratspeak derives its LXMF messaging address from that identity. New software identities have a 12-word recovery phrase; older imported keys may not. A PIN protects the stored software key and phrase, but does not encrypt the message database. Desktop hardware identities keep private-key operations on a supported YubiKey. See [Settings and identity](../using-ratspeak/settings-and-identity.md).
 
 ## How do I move my identity to a new device?
 
-For a new recoverable identity, use **Import or Restore Identity** and enter the 12-word recovery phrase. For software identities you can also export a PIN-encrypted `.rsi` backup from Identity Management and import it on the other device. Raw Reticulum identity files and Base32 keys are available for compatibility, but they are unencrypted private-key material. If you need message history and settings too, copy the whole `.ratspeak/` data directory while the app is closed.
+Use **Import or Restore Identity** with the 12-word recovery phrase, or import a PIN-encrypted `.rsi` backup exported from the old device. These restore the identity, not messages, contacts, or app settings. Raw Reticulum key exports are unencrypted and need the same protection as a recovery phrase. For full-profile backup and migration precautions, see [Backing up and migrating](../using-ratspeak/settings-and-identity.md#backing-up-and-migrating).
 
 ## What is the maximum attachment size?
 
-The protocol ceiling is much larger than most mesh links should use: Ratspeak reads the current limit from the backend and rejects files only when they exceed that protocol resource limit. In practice, keep attachments small. The app warns once a file is above the efficient single-resource size, and Offline Inbox nodes can advertise smaller transfer limits. A half-megabyte image is already noticeable on LoRa; text messages are tiny and arrive quickly on internet links.
+There is no single size that is safe for every path and recipient. Ratspeak checks its sending limit, the recipient may reject larger messages, and an Offline Inbox node can impose its own transfer limit. Ratspeak's **Limit incoming messages to 1 MB** setting is on by default. It applies to incoming messages and attachments, not just the file you select.
+
+Keep radio attachments small. For supported photos, choose a smaller size in the app before sending. See [Attachments](../using-ratspeak/messaging-and-contacts.md#attachments).
 
 ## Where are my settings stored?
 
-Inside the app's local SQLite database, not in a config file. You change them through the Settings view in the app — network connections, auto-announce interval, theme, notification preferences, and so on. There is no `.conf` file to hand-edit.
+Ratspeak stores app settings, contacts, and message history in its local SQLite database. Reticulum interface configuration is also stored in files within the app's data area. Use **Settings** and **Network** for normal changes; see [Settings and identity](../using-ratspeak/settings-and-identity.md#backing-up-and-migrating) for backups. Do not assume that copying one configuration file backs up your identity or conversations.
 
 ## What is auto-announce, and what is the default?
 
-An announce is how Ratspeak tells the network "I exist and here is my public key." Auto-announce sends one periodically so contacts can find you and Offline Inbox nodes can learn where to send waiting mail. The default interval is 30 minutes. You can change it under Settings, or disable it entirely and announce manually when you need to.
+An announce advertises your destination and public identity information so other nodes can learn a route to you. Auto-announce defaults to **30 minutes**. Change it under **Settings → Network → Auto-Announce**, or turn it off and announce manually. Offline Inbox retrieval is a separate operation: your app asks the inbox node for waiting messages.
 
 ## Can I run Ratspeak on a server or headless?
 
-Not the Ratspeak app itself — it is a desktop and mobile client with a graphical interface. If you want a headless Reticulum presence, run `rnsd-rs` as a transport node and `lxmd-rs` as an Offline Inbox/propagation node from [rsReticulum](../products/rsreticulum.md) and [rsLXMF](../products/rslxmf.md). They work fine on a Raspberry Pi or a VPS and will route traffic or hold offline mail for Ratspeak users on your network.
+The public Ratspeak app is a graphical client. For an always-on headless transport or Offline Inbox, use the `rnsd-rs` and `lxmd-rs` tools from [rsReticulum](../products/rsreticulum.md) and [rsLXMF](../products/rslxmf.md). See [Infrastructure and operations](../deployment/infrastructure-and-ops.md) for setup.
 
 ## Can I run my own Offline Inbox node?
 
-Yes. Offline Inbox is Ratspeak's name for an LXMF propagation node, and propagation nodes are part of the LXMF spec, not specific to any one client. Run `lxmd-rs` with propagation enabled on an always-on machine, publish its 32-character destination hash, and Ratspeak users can use it in Auto or Manual mode. It is useful for groups where members are not always online at the same time.
+Yes. An Offline Inbox is an LXMF propagation node. Ratspeak can host one through **Settings → Offline Inbox → Hosted Offline Inbox**, except with hardware-key identities. For an always-on server, use `lxmd-rs` with propagation enabled. Keep the device powered and reachable; mobile background restrictions can interrupt hosting. See [Offline Inbox](../using-ratspeak/network-and-peers.md#offline-inbox) and [Infrastructure and operations](../deployment/infrastructure-and-ops.md).
 
 ## What happens if the recipient is offline when I send a message?
 
-Three possibilities. An explicitly Opportunistic send retries its connectionless packet and can confirm delivery if an authenticated proof returns; without one, Ratspeak eventually reports that delivery could not be confirmed. Direct uses its Link and Packet/Resource proof machinery. Auto tries a live method first regardless of when the recipient last announced. If live delivery reaches a terminal failure and Offline Inbox is enabled with a reachable node, Auto retries once by storing the encrypted message there for later pickup. Without a ready inbox node, the message is marked failed instead of pretending it was stored.
+Auto delivery first tries to reach the recipient live. If that fails and a usable Offline Inbox is enabled, Ratspeak can store the encrypted message there for later pickup. **Stored in Offline Inbox** confirms the inbox node accepted it; it does not confirm the recipient received it. Without a usable live path or inbox, delivery fails. See [Delivery states](../using-ratspeak/messaging-and-contacts.md#delivery-states).
 
 ## Why are the public Ratspeak servers TCP addresses?
 
-Convenience. Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.ratspeak.org:4343`) are easy-to-find Reticulum transport nodes that anyone with internet access can reach. They are not servers you have accounts on, and they cannot read your traffic. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party. You can join Reticulum through any other transport node, your own included. The public Ratspeak servers are just defaults that work out of the box; `rns.ratspeak.org:4242` remains as an alias for Emerald for older configs.
+They provide an entry into Reticulum over an IP network. They are transport connections, not accounts you sign into. You can select one in **Network → Connections → Internet/TCP**, use another operator's server, or run your own. In the app, **Official** identifies a Ratspeak-operated server; it is not a guarantee of uptime or anonymity. A transport server cannot decrypt private LXMF message content, but it can observe its own connections.
 
 ## Why does my first launch warn about an unidentified developer?
 
-On macOS especially, you may see a Gatekeeper warning the first time you open Ratspeak. The app is not yet code-signed with an Apple Developer ID. Right-click the app and choose "Open" to bypass the warning once, or allow it under System Settings > Privacy & Security. On Windows, SmartScreen may show a similar prompt — click "More info" and "Run anyway." Signed builds are on the roadmap.
+macOS Gatekeeper or Windows SmartScreen may warn about an app that the operating system does not recognize. Check that the download came from the official release before allowing it to run. Follow the current platform instructions in [Installation](../getting-started/install-and-platform-setup.md); signing and packaging status can differ between releases.
 
 ## How do I get the mobile app?
 
-Mobile builds are not yet on public App Store or Play Store listings. Android is available as a sideload APK from [ratspeak.org/download.html](https://ratspeak.org/download.html) or the GitHub release. iOS still goes through TestFlight or developer provisioning. Public store releases will follow once signing, review, and release packaging are ready.
+Use the [official download page](https://ratspeak.org/download.html) for the current mobile distribution links. Android APKs are available from the public GitHub release. The download page links to TestFlight for iOS; availability there is separate from the desktop and Android release assets.
 
 ## Can I make voice calls with Ratspeak?
 
-Yes, in an experimental capacity. Public builds include a peer-to-peer voice surface built on [rsLXST](../products/rslxst.md), the Rust LXST telephony stack. Calls run as a direct Reticulum link between the two devices — no servers, no media gateway, no offline fallback. Audio uses Opus and starts at the Medium Quality profile.
+Yes. Voice calls are experimental and require a live Reticulum path between both devices. Calls are accepted from contacts or direct zero-hop peers. Voice quality and available controls depend on the path; constrained calls use **Hold to talk**.
 
-The call button lives in the conversation header on Messages and only appears when the other side is a saved contact and no other call is in progress. Inbound calls are gated to contacts or callers reachable on a direct zero-hop path; everyone else gets a polite "only accepting calls from contacts" notice and never rings the device. Persistently rejected non-contact callers are automatically blackholed after ten attempts.
-
-Treat the surface as a beta — codec quality, ringtones, platform audio routing, and feature scope are all subject to change while rsLXST stabilizes. See [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md) for the full usage walkthrough.
+You can also record and send a voice message through LXMF. Unlike a call, it can use Offline Inbox delivery. See [Voice calls](../using-ratspeak/messaging-and-contacts.md#voice-calls-experimental) and [Voice messages](../using-ratspeak/messaging-and-contacts.md#voice-messages).
 
 ## What games are there?
 
-Ratspeak ships with two: Chess and Tic-Tac-Toe. Both run over LRGP, a tiny game protocol that piggybacks on LXMF messages. Moves are roughly the size of a normal text message, so a chess game is perfectly playable even over LoRa with minutes between turns. More games will come; the protocol is built to be extended.
+**Chess**, **Tic-Tac-Toe**, and **Four in a Row**. They exchange turn-based actions over LXMF using LRGP, so the players do not need a separate game server. See [Games](../using-ratspeak/games.md) for challenges, delivery failures, and session expiry.
 
 ## Can I play games with people on Sideband or NomadNet?
 
-Not interactively. LRGP-aware moves only render correctly inside Ratspeak. Other LXMF clients see a readable text fallback like "[LRGP TTT] X plays center" but cannot make moves themselves. Plain text chat between Ratspeak and any other LXMF client works perfectly.
+Both clients need compatible LRGP game support for interactive play. A client without it may display fallback text such as `[LRGP TTT] Move 3`, but that text is not an interactive board. This is separate from exchanging ordinary LXMF messages.
 
 ## Is my YubiKey or Nitrokey supported?
 
-Desktop Ratspeak can use Ratkey-backed YubiKey/PIV identities. You can provision a new key, add an existing Ratspeak YubiKey identity, restore a recoverable identity from a 12-word phrase, unlock with a PIN once per session, change the YubiKey PIV PIN, and reset the YubiKey PIV app when necessary. The private key does not leave the hardware token and cannot be exported. This path is desktop-only and still labeled experimental; mobile uses software identities with 12-word recovery phrases. Nitrokey-style PIV support remains a lower-level Ratkey target, but the app flow is currently written around YubiKey/PIV behavior.
+Ratspeak's experimental desktop hardware-key flow is designed for supported YubiKey 5-class PIV tokens. It can provision, register, unlock, and manage those identities. Do not assume another token is supported merely because it implements PIV. Mobile uses software identities. See [Hardware keys](../using-ratspeak/settings-and-identity.md#hardware-keys-yubikey) for recovery and reset precautions.
 
 ## Is Ratspeak free and open source?
 
-Yes. Ratspeak, rsReticulum, rsLXMF, rsLXST, rsDeck, rsCardputer, Ratkey, and the website code are AGPL-3.0-or-later open source. LRGP and LXMFace are standalone MIT-licensed libraries. There are no paid tiers, no telemetry, and no plan to introduce either. The radio hardware itself (RNodes and similar) is also open source — you can build one from parts if you want.
-
-If you want to contribute, patches and bug reports through the project's repositories are the most useful place to start.
+Yes. The Ratspeak app is published under AGPL-3.0-or-later. Related libraries, documentation, and hardware designs have their own licenses; check the license in the repository you intend to use or modify. Contributions and bug reports belong in the relevant project's repository.
 
 ## Where can I get help?
 
-Start with the rest of this documentation — the Getting Started and Using Ratspeak sections cover the common questions. For live help, the Reticulum and LXMF communities are active on Matrix and have a good track record of helping new users. Bug reports and feature requests for Ratspeak itself belong on the project's issue tracker.
+Start with [Getting started](../getting-started/your-first-session.md) or [Troubleshooting](troubleshooting.md). The [support page](https://ratspeak.org/support.html) lists current help routes. For an app bug, include your Ratspeak version, operating system, and the steps that reproduce it. Do not include recovery phrases, private keys, PINs, or shared-instance control keys in a report.

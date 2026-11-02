@@ -4,71 +4,41 @@ sidebar_position: 9
 
 # Ratkey
 
-Ratkey is an experimental Rust library — the `rns-ratkey` crate — for hardware-backed Reticulum identities. The shape is simple: Ed25519 signing and X25519 ECDH keys live on a YubiKey 5-class PIV token instead of a private-key file, and private operations happen on the device, gated by a PIN. **The Ratspeak desktop app consumes this library**: you can provision a new YubiKey identity, add an existing key, restore a recoverable identity from a 12-word phrase, unlock with a PIN once per session, auto-lock after a timeout, change the YubiKey PIV PIN, and reset the PIV app when necessary.
+Hardware-backed Reticulum identities keep private-key operations on a PIV token. Desktop Ratspeak uses this through the experimental **`rns-ratkey` Rust crate**. The separate public **Ratkey Python package** provides integration with Python Reticulum and the `rnid-hw` CLI. They are different implementations with different setup and recovery flows.
 
-It is still labeled **experimental** because this is new desktop hardware-token plumbing, but the real-token path has been exercised on a YubiKey 5.7.4, including on-card signing, on-card ECDH, attestation-chain verification, PIV reset/recovery flows, and TDES management-key compatibility for older YubiKey PIV defaults. **Hardware identities are desktop-only**; on mobile you use a software identity, optionally PIN-encrypted at rest, and carry it across with a 12-word recovery phrase. A tap-to-unlock NFC model is future work. The crate also exposes the BIP-39 seed derivation and PIN-encrypted vault that back recoverable software identities on every platform.
+## Using a hardware identity in Ratspeak
 
-## Why hardware identity
+For Ratspeak **1.0.37**, follow [Settings and identity](../using-ratspeak/settings-and-identity.md). The desktop app can create a hardware identity, add an existing one, restore its recoverable form, unlock it with a PIN and manage its lock behavior. Mobile Ratspeak uses software identities.
 
-A Reticulum identity is two private keys: Ed25519 for announces and signatures, X25519 for link establishment. When those keys live in a software file, anyone with read access to the host can clone your identity and impersonate you on the network. With a hardware token, the private halves are generated inside the device firmware and never leave it. The host only ever sees public keys and signed or derived results.
+Two provisioning choices have different backup properties:
 
-Hardware-backed identities are wire-compatible with software identities. Other peers cannot tell the difference, and you do not lose access to any part of the network by switching.
+- **Hardware-only** generates private keys on the token. Losing or resetting that token loses the identity; this mode does not provide a recovery phrase.
+- **Recoverable** derives keys on the host and imports them into the token. Ratspeak's flow supplies a **12-word recovery phrase**. Anyone with that phrase can recreate the identity independently of the token PIN.
 
-## Target hardware
+The token performs Ed25519 signing and X25519 key agreement. Public identity material remains wire-compatible with Reticulum. Hardware protection does not encrypt the app's message database or prevent a compromised unlocked host from asking the connected token to perform an allowed operation.
 
-| Device | Detection | Attestation |
-|---|---|---|
-| YubiKey 5 series | PC/SC reader name match | YubiKey attestation chains bundled and verified |
-| Nitrokey 3 series | PC/SC reader name match | Library target; app UX and validation are centered on YubiKey/PIV today |
+The app stores `.hwid` metadata and public keys, not an exportable token private key. Those metadata alone cannot restore a lost hardware-only identity. A PIN is an access control, not a backup.
 
-Devices are reached through the platform PC/SC daemon — CryptoTokenKit on macOS, pcscd on Linux, WinSCard on Windows. Detection and APDU plumbing live behind the `hardware` Cargo feature so non-hardware builds do not pull in PC/SC dependencies. Mock-backed signing and ECDH are covered by tests, and the YubiKey 5 path has been validated against physical hardware.
+## Hardware and PIV scope
 
-## Use it from Rust
+The current app path is YubiKey/PIV-focused. Ed25519/X25519 support requires a compatible model and firmware; standard, non-FIPS YubiKey 5 firmware **5.7+** is the documented target. YubiKey 5 FIPS does not provide the required Ed25519/X25519 PIV pair. Check [Yubico’s algorithm table](https://docs.yubico.com/hardware/yubikey/yk-tech-manual/yk5-apps-piv.html) and [FIPS exceptions](https://docs.yubico.com/hardware/yubikey/yk-tech-manual/yk5-fips-piv.html). A detected PC/SC reader name does not establish that another token supports the required algorithms or has been qualified with Ratspeak.
 
-The shape of a typical flow looks like this:
+PIV operations use system smart-card services, including PC/SC access on desktop platforms. Linux installations may need `pcscd` and suitable permissions. Check the exact reader/error state before changing the token.
 
-```rust
-use rns_ratkey::{HardwareIdentity, HwidConfig, MockPivSession};
-use rns_ratkey::mock::TouchPolicy;
-use rns_ratkey::provision::{provision_mock, ProvisionConfig};
-use std::path::PathBuf;
+**Reset PIV** removes PIV user keys and certificates, including those used by other PIV applications, and restores the default PIV credentials. YubiKey's F9 attestation material and its other applications are unaffected. Reset is not limited to Ratspeak's signing/encryption slots. See [Yubico's reset documentation](https://docs.yubico.com/yesdk/yubikey-api/Yubico.YubiKey.Piv.PivSession.html#Yubico_YubiKey_Piv_PivSession_ResetApplication). Use the app's detailed warning and preserve a valid recovery method before choosing it.
 
-// Mock provisioning generates token-shaped keys and writes a .hwid file
-// containing only public keys and metadata. The real-device backend is
-// behind the `hardware` feature and is still being validated.
-let mut session = MockPivSession::new();
-let config = ProvisionConfig {
-    pin: "123456".to_string(),
-    nickname: "field-key".to_string(),
-    touch_signing: TouchPolicy::Always,
-    touch_encryption: TouchPolicy::Cached,
-    identities_dir: Some(PathBuf::from(".ratspeak/identities")),
-};
-let result = provision_mock(&mut session, &config)?;
+## For Rust developers
 
-// Later sessions load the .hwid and bind it to a token session; the
-// constructor fails closed if the public keys do not match the file.
-let hwid_path = result.hwid_path.as_ref().expect("identity.hwid written");
-let hwid = HwidConfig::from_file(hwid_path)?;
-let identity = HardwareIdentity::from_hwid_mock(hwid, session)?;
-```
+`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/5b38cae702a5b3984adf12a435f6d3012fcf90e1/crates/rns-ratkey). Ratspeak 1.0.37 pins that crate as part of the **1.4.0** component source set; standalone rsReticulum 1.3.0 is a separate source line.
 
-The public surface is small: `HardwareIdentity` for the bound-identity shape, `HwidConfig` for the on-disk metadata file, `ProvisionConfig` / `ProvisionResult` for first-time setup, `PinCache` for short-lived PIN caching, and `RatkeyError` for the error type. A `MockPivSession` with real Ed25519/X25519 crypto is exported for tests and dev. The real PIV-over-PC/SC backend is gated behind the `hardware` Cargo feature so that builds without system PC/SC libraries still compile.
+The crate provides bound hardware identities, `.hwid` metadata, provisioning and restore operations, seed derivation, PIN/session handling and mock transports for tests. Real PC/SC support is behind the `hardware` Cargo feature. An application must handle token removal, failed PIN checks, locking and identity changes; wire compatibility does not provide that UI or lifecycle management for it.
 
-## Status and roadmap
+Use the crate source and the [rsReticulum API guide](https://github.com/ratspeak/rsReticulum/blob/5b38cae702a5b3984adf12a435f6d3012fcf90e1/api/README.md) for the selected revision. The crate remains experimental and is not published to crates.io by this workspace.
 
-The library is useful today as the desktop Ratspeak hardware-identity backend and as an integration target for advanced users building their own Reticulum applications. The public identity shape, `.hwid` metadata, signing, ECDH, decrypt flow, PIN unlock/cache/lock, PIV reset, recoverable provisioning/restore, attestation-chain validation, and fail-closed key mismatch behavior are implemented. Real YubiKey operation has been validated; broader token coverage remains experimental.
+## The Python Ratkey tool
 
-What is not built yet:
+The separate [ratspeak/ratkey repository](https://github.com/ratspeak/ratkey) contains the **0.1.0** Python package and `rnid-hw` command. It requires Python **3.9+** and has optional hardware/backup dependencies. Its source is at [revision a06e9a5](https://github.com/ratspeak/ratkey/tree/a06e9a5cf2bcccc31c3e490e82959cf9b5b7173d).
 
-- An "Identity -> Move to hardware key" migration flow for an existing software identity. Today you provision a new hardware identity, add an existing Ratspeak YubiKey identity, or restore a recoverable phrase onto a key.
-- Mobile NFC hardware-key unlock. Mobile uses software identities and recovery phrases for now.
-- A turn-key hardware identity UX for non-Ratspeak Reticulum applications. Lower-level external-signing hooks exist, but app integration is still custom work.
-- Broad Nitrokey and cross-token physical validation. The app path is YubiKey/PIV-focused today.
-- A published `examples/` directory. The contract above is the canonical shape; copy from the unit tests until examples ship.
+Use its repository instructions for that tool's provisioning, verification and application integration. Its recoverable provisioning describes a **24-word phrase**. Do not substitute those instructions for Ratspeak's 12-word app flow or assume backup files and phrases are interchangeable without a verified import path.
 
-Ratspeak app integration is desktop-only and experimental. Treat hardware-only identities carefully: if the token is lost or reset, the identity is gone unless you chose the recoverable phrase-backed setup.
-
-## License
-
-AGPL-3.0-or-later, version 0.9.4 as part of the rsReticulum crate set. Source at [github.com/ratspeak/rsReticulum](https://github.com/ratspeak/rsReticulum) under `crates/rns-ratkey`. Not yet published to crates.io.
+The Python package is MIT-licensed. The Rust `rns-ratkey` crate is part of the AGPL-3.0-or-later rsReticulum workspace. Both need implementation-specific testing; this page makes no blanket claim that every PIV token or third-party Reticulum application is supported.

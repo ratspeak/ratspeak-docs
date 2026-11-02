@@ -4,104 +4,67 @@ sidebar_position: 4
 
 # rsReticulum
 
-rsReticulum v0.9.4 is a public pre-release of the pure-Rust [Reticulum](https://reticulum.network/) network stack — wire-compatible where implemented, with no Python runtime. The current target is Reticulum 1.2.4 for the implemented and tested release surface. It ships as a library and as Rust CLI tools for daemon, status, path, identity, probe, copy, shell, and RNode configuration work.
+rsReticulum is the Rust implementation of the Reticulum network stack. Use its standalone tools to operate a node, or embed its libraries in a Rust application. It does not need a Python runtime to carry traffic.
 
-If you already run a Reticulum network, an rsReticulum node can join it on the implemented protocol paths. If you don't, this is the core stack in one repo.
+The current standalone release is [**1.3.0**](https://github.com/ratspeak/rsReticulum/releases/tag/v1.3.0). Its release baseline is Python Reticulum **1.4.2** for the implemented surface. The project remains experimental; wire compatibility does not mean every interface, tool or public Rust item has identical support across implementations.
 
-## Tools
+Ratspeak 1.0.37 uses a different, pinned rsReticulum source set with package version **1.4.0**. If you are building the app, use its dependency manifest and [source-build guide](../reference/building-from-source.md), rather than substituting the standalone tag.
 
-The `rns-tools` crate currently produces eight Rust-namespaced `*-rs` binaries so command lookup is unambiguous on systems with multiple Reticulum implementations. The core tools use stable operator-style flags and explicit exit codes (`0` success, `1` failure, `2` packet loss, `3`/`4` specific error states):
+## For node operators
 
-- **`rnsd-rs`** — the Reticulum daemon. Run this first; everything else attaches to it over a local shared-instance socket. `rnsd-rs --exampleconfig` prints a starter config.
-- **`rnstatus-rs`** — inspect interfaces, announces, discovered peers, live links, totals, and JSON status on a local or remote daemon. Pass `-R <hash> -i <identity>` to query a remote node over MessagePack RPC.
-- **`rnpath-rs`** — view and manage the path table; locally you can edit rates and blackholes, while remote mode is read-only for table/rate and blackhole-list queries.
-- **`rnid-rs`** — create and inspect Reticulum identities, import/export public or private identity data, calculate destination hashes, encrypt/decrypt files, and sign/verify 1.2.4-style `.rsg` signatures.
-- **`rnprobe-rs`** — send PROBE packets to a destination and report RTT and packet loss. The Reticulum equivalent of `ping`.
-- **`rncp-rs`** — copy a file over Reticulum. Send mode (`rncp-rs <file> <hash>`), listen mode (`rncp-rs -l -b <seconds> -s <dir> -a <allowed_hash>` or `--no-auth`), and fetch mode (`rncp-rs -f <hash> <path>`). `-P/--phy-rates` is an explicit gap until physical transfer-rate accounting exists.
-- **`rnsh-rs`** — remote shell utility for Rust-side remote command work.
-- **`rnodeconf-rs`** — RNode inspection and safe configuration utility. Safe device inspection/configuration, EEPROM dump/backup, and trusted-key storage exist, but flashing, ROM bootstrap, firmware-hash writes, destructive EEPROM wipe, and signing-key management parity are disabled or incomplete.
+The release provides macOS, Linux x86-64 and Windows x86-64 tool archives. Select an artifact for your host and follow [Infrastructure and ops](../deployment/infrastructure-and-ops.md) for a running transport node. A listening socket alone does not enable forwarding.
 
-Deferred surfaces include `rnx`, `rnir`, `rnpkg`, `rngit`, `git-remote-rns`, full `rnodeconf-rs` flashing/signing parity, and the Weave runtime.
+| Tool | Purpose |
+|---|---|
+| `rnsd-rs` | Own interfaces, routing and shared-instance endpoints. |
+| `rnstatus-rs` | Inspect interface and transport status and counters. |
+| `rnpath-rs` | Request and inspect paths; manage path/rate/blackhole state with the applicable authorization. |
+| `rnid-rs` | Create and inspect identities, import/export, hash destinations, sign/verify and encrypt/decrypt files. |
+| `rnprobe-rs` | Probe a named destination and report loss and round-trip time. |
+| `rncp-rs` | Send, receive and fetch files over Reticulum. |
+| `rnsh-rs` | Run a remote shell listener or client. |
+| `rnodeconf-rs` | Inspect an RNode, back up EEPROM and save TNC/normal startup settings. |
 
-## rnid-rs quick reference
+Use the selected release's `--help` for flags and exit behavior. File/shell listeners need deliberate authentication and filesystem permissions. In `rnodeconf-rs` 1.3.0, firmware installation, signing/trust enrollment and Bluetooth, Wi-Fi, display and interference-avoidance changes are disabled even though their options appear in help. Use the matching [firmware guide](../hardware/flashing-firmware.md) for installation.
 
-Most identity work starts with a file you control:
-
-```bash
-rnid-rs -g ~/.rsReticulum/identities/mgmt
-rnid-rs -i ~/.rsReticulum/identities/mgmt -p
-rnid-rs -i ~/.rsReticulum/identities/mgmt -H lxmf.delivery
-```
-
-Public and private import/export are deliberately split. `-m` and `-x` are public. `-M` and `-X` are private. When you use `-w`, rnid writes a public `.pub` file unless `-X` is present:
+To inspect the starter configuration without changing a file:
 
 ```bash
-rnid-rs -i ~/.rsReticulum/identities/mgmt -w mgmt.pub
-rnid-rs -i ~/.rsReticulum/identities/mgmt -X -w mgmt.rid
-rnid-rs -m <public_identity_data> -w peer.pub
-rnid-rs -M <private_identity_data> -X -w restored_identity
+rnsd-rs --exampleconfig
 ```
 
-Signing uses Reticulum 1.2.4 `.rsg` envelopes by default. The signature can validate with its embedded signer, or against a required signer hash:
+Default path selection and app-private versus standalone shared-instance endpoints are documented in [Configuration reference](../reference/configuration-reference.md). Existing Python configs need a version-specific check: for example, standalone Rust 1.3.0 interprets `ifac_size` as **bytes**, while Python and the app's bundled 1.4.0 configuration use bits.
+
+## Identity tools
+
+`rnid-rs` distinguishes public and private material. Public exports can be shared; private exports let their holder act as the identity. Keep private keys and decrypted files out of logs, public issues and chat.
+
+For an existing identity file:
 
 ```bash
-rnid-rs -i ~/.rsReticulum/identities/mgmt -s message.txt
-rnid-rs -V message.txt.rsg
-rnid-rs -i <signer_hash> -N -V message.txt.rsg
+rnid-rs -i ./identity -p
+rnid-rs -i ./identity -H lxmf.delivery
+rnid-rs -i ./identity -w ./identity.pub
 ```
 
-For file encryption, use the recipient's public identity to encrypt and the matching private identity to decrypt:
+`-w` writes public data unless private export is explicitly requested with `-X`. Use a new output path or review the file before choosing an overwrite option. The [versioned tool reference](https://github.com/ratspeak/rsReticulum/blob/v1.3.0/README.md#tool-usage) covers generation, public/private import, `.rsg` signatures and file encryption.
 
-```bash
-rnid-rs -i mgmt.pub -e message.txt
-rnid-rs -i ~/.rsReticulum/identities/mgmt -d message.txt.rfe
-```
+## For Rust application developers
 
-## The library
+Start with **`rns_runtime::prelude`** and the [1.3 API guide](https://github.com/ratspeak/rsReticulum/blob/v1.3.0/api/README.md). The [runtime examples](https://github.com/ratspeak/rsReticulum/tree/v1.3.0/crates/rns-runtime/examples) show complete startup, destination, announce, packet-proof, Link, Channel and Resource flows.
 
-The same code that backs `rnsd-rs` is published as a 0.9.4 stack of `rns-*` crates you can pull into your own Rust app. The layering, bottom-up: cryptography (`rns-crypto`), the wire format (`rns-wire`), identities and announces (`rns-identity`), the actor-based routing engine (`rns-transport`), encrypted point-to-point links (`rns-link`), reliable channels and resource transfer (`rns-protocol`), the interface implementations (`rns-interface`), and a runtime (`rns-runtime`) that wires everything to an INI config and an RPC server. `rns-ratkey` is an optional experimental sidecar for PIV-capable hardware-token identity work (YubiKey/PIV in Ratspeak desktop).
+The workspace separates cryptography, wire format, identities, transport, links, protocol transfers, carrier interfaces and runtime ownership into `rns-*` crates. `rns-runtime` is the usual entry point for a host application; lower layers are available when you need a narrower boundary. MCU work uses the separate Lite ports and their toolchains.
 
-The split is layered rather than monolithic, so lower crates such as `rns-wire` and `rns-link` can be used without pulling in the full runtime. Higher layers intentionally depend on the lower protocol, transport, interface, and runtime pieces they need. Most embedded users start at `rns-runtime`.
+The application prelude does not make every actor, RPC, transport table or concrete driver a stable API. Package stability tiers and migration notes live with the versioned API guide. Pin a reviewed compatible dependency line or immutable source commit.
 
-## Supported interfaces
+An embedded runtime can own interfaces itself or join a shared instance. Shared-client mode does not also own those local interfaces, and two independent owners must not compete for the same ports or radio. Choose ownership deliberately rather than starting a daemon and assuming the application will attach to it.
 
-A broad set of interface modules ship in `rns-interface`. They group into:
+## Interfaces and platform limits
 
-- **IP**: `TCPInterface` (client and server, IPv4 and IPv6), `UDPInterface` (unicast and multicast), `AutoInterface` for zero-config LAN discovery over link-local IPv6, and `BackboneInterface` (HDLC-over-TCP with per-peer keepalive) for high-throughput WAN links. `I2PInterface` (SAM v3.1) lives here too.
-- **Serial and packet radio**: `SerialInterface`, `KISSInterface`, `AX25KISSInterface` (callsign framing for amateur radio), and `PipeInterface` (subprocess stdio). The serial radio paths are gated behind the `serial` feature flag.
-- **RNode (LoRa)**: `RNodeInterface` for single-radio RNode 1.x and 2.x boards over USB serial KISS or a TCP-exposed RNode/KISS stream, and `RNodeMultiInterface` for the multi-sub-interface 2.x boards.
-- **Bluetooth**: `BLERNodeInterface` bridges a LoRa RNode over BLE so a phone can drive it without a cable; `BLEPeerInterface` backs Bluetooth Peer, the phone-to-phone and laptop-to-phone link used by Ratspeak. Gated behind the `ble` feature flag, with native peripheral backends per platform. Windows needs the MSIX app capability for the Bluetooth Peer advertiser/peripheral role; Linux needs BlueZ local GATT and LE advertising support for the same role.
-- **Misc**: `LocalInterface` (Unix-socket loopback used by `rnsd-rs` shared-instance mode), `AndroidUSBInterface` (JNI host-mode serial, target-gated to Android), and `WeaveInterface` (wire constants only — runtime not yet implemented).
+Available families include TCP client/server, UDP, AutoInterface, Backbone, I2P/SAM, serial/HDLC, KISS, AX.25 KISS, Pipe, RNode and local sharing. BLE and Android USB paths have feature and target requirements. A driver existing in the library does not establish that every binary or app exposes it.
 
-`BackboneInterface` is worth a brief callout. It's HDLC framed over TCP with per-peer keepalive and large socket buffers, and it scales to thousands of concurrent connections per process — the right pick for a transport node fanning out to many clients. The Rust port runs on Linux, macOS, and Windows desktop: Tokio drives the underlying TCP loop and picks the right OS primitive (`epoll`, `kqueue`, or IOCP), with `TCP_USER_TIMEOUT` added on Linux for fast detection of stuck connections. Mobile builds gate Backbone out of the Ratspeak UI for now, so on iOS and Android the equivalent is `TCPServerInterface` / `TCPClientInterface`.
+See [Network interfaces](../networking/interfaces-overview-and-design.md) for setup boundaries, platform roles and configuration examples. Capacity and radio performance depend on the deployment; Backbone has no fixed connection-count promise here.
 
-All interface flags are off by default at the workspace level; `rns-tools` builds with `serial` so a stock `cargo build --release` produces an `rnsd-rs` that can drive a serial radio out of the box. Embedded apps can enable `rnode-tcp` when they need RNode over TCP without pulling in desktop serial support.
+## Build and license
 
-## Standalone vs embedded
-
-Use **`rnsd-rs`** as a standalone daemon when you want a Reticulum node on a host — a Pi acting as a transport router, a server bridging TCP and LoRa, a workstation participating in the network. Drop the binary in place, let fresh installs use the rsReticulum-specific `~/.rsReticulum` config, and other tools attach over the local socket. Existing Reticulum configs should work when you explicitly point `--config` at them and every requested interface and option is implemented here.
-
-Use **rsReticulum as a library** when you're writing a Rust app that needs its own embedded Reticulum stack — a custom router, a dedicated bridge, a tool that wants direct API access to identities and links without round-tripping through RPC. This is what [rsLXMF](../products/rslxmf.md) and the [Ratspeak](../products/ratspeak.md) client do: they depend on `rns-runtime` directly and never spawn `rnsd-rs`.
-
-The two modes are not exclusive. You can run `rnsd-rs` on the same host as your embedded app and have them share a network via `LocalInterface`, or run them entirely independently on separate transports.
-
-## Status and Gaps
-
-- **Wire-compatible where implemented.** Identity files, configs, pathing, link/resource behavior, utility vectors, and packet captures are exercised against Python Reticulum, with `rnid-rs` retargeted to Reticulum 1.2.4.
-- **Native runtime.** Single Rust binaries, no interpreter at runtime. Useful on Pi-class transport routers and battery-powered devices.
-- **Protocol invariants.** MTU, MDU, hop ceiling, ratchet windows, and link timers follow Reticulum behavior.
-- **Mobile throttling.** A `mobile-throttle` feature lets a host app slow long-lived loops while backgrounded, no-op on always-on machines.
-- **Adds:** Bluetooth Peer transport, BLE-bridged RNode, RNode over TCP, Android USB-OTG, cross-platform BackboneInterface, and experimental PIV hardware-identity work via [Ratkey](../products/ratkey.md).
-- **Missing or partial:** `rnx`, `rnir`, `rnpkg`, `rngit`, `git-remote-rns`, full `rnodeconf-rs` flashing/ROM/signing parity, `rnpath-rs` active path request and remote mutation parity, custom external interface loading, live I2P/hardware gates for release-grade interface claims, and a runtime for the Weave interface.
-
-## Build
-
-```
-git clone https://github.com/ratspeak/rsReticulum
-cd rsReticulum
-cargo build --release
-```
-
-Binaries land in `target/release/` with `*-rs` command names only. Config storage is selected by the Rust default resolver or by `--config`. Edition 2024, Rust 1.85+, AGPL-3.0-or-later licensed. For a starter node, create `~/.rsReticulum/config` with `target/release/rnsd-rs --exampleconfig > ~/.rsReticulum/config`, then run `target/release/rnsd-rs --config ~/.rsReticulum`. Use `~/.reticulum` only when intentionally sharing an existing Reticulum config. Source: [github.com/ratspeak/rsReticulum](https://github.com/ratspeak/rsReticulum); release: [v0.9.4](https://github.com/ratspeak/rsReticulum/releases/tag/v0.9.4).
-
-For OS-specific prerequisites and a slower step-by-step walkthrough, see [Building from Source](../reference/building-from-source.md).
+The host workspace requires **Rust 1.89+**. Build standalone 1.3.0 from its tag using the [standalone source instructions](../reference/building-from-source.md); the binaries use `*-rs` names. The source is [AGPL-3.0-or-later](https://github.com/ratspeak/rsReticulum/blob/v1.3.0/LICENSE). Use the repository API guide and local tests when changing an integration; wire compatibility and platform behavior still need their own verification.

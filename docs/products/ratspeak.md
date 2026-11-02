@@ -4,73 +4,60 @@ sidebar_position: 1
 
 # Ratspeak
 
-Ratspeak is the desktop and mobile client for the [Reticulum](https://reticulum.network/) mesh — a native app for sending end-to-end encrypted messages, placing experimental peer-to-peer voice calls, watching peers come and go, configuring your radio interfaces, and playing the occasional game with someone three hops away.
+Ratspeak is the desktop and mobile app for messaging over Reticulum. It combines private LXMF conversations, attachments, Offline Inbox, Channels, experimental voice calls and turn-based games with controls for the interfaces that carry them.
 
-It's the same app on every platform: macOS, Linux, Windows, iOS, Android. The protocol stack underneath is identical regardless of where you run it, so a Ratspeak user on a laptop, an rsDeck handheld on LoRa, and someone running Sideband on their phone can all talk to each other.
-
-## Platforms
-
-Ratspeak is built as a single Tauri v2 app from one Rust codebase. Desktop packaging targets `.dmg` for macOS, amd64/arm64 `.deb` plus amd64 `.rpm` / `.AppImage` for Linux, and MSI / NSIS for Windows. Mobile uses the same crate with platform-conditional dependencies — Android via JNI, iOS via Objective-C bindings. Desktop supports USB serial radios, BLE radios, and RNode TCP bridges; Android supports USB host, BLE, and RNode TCP; iOS supports BLE and RNode TCP for radios because Apple does not expose USB serial to third-party apps.
+Private LXMF messages are encrypted to the recipient. Channels use a different model: the hub can read and relay room messages. See [Messaging and contacts](../using-ratspeak/messaging-and-contacts.md) before choosing a room for sensitive conversations.
 
 ## Get the app
 
-Ratspeak v1.0.20 is the current public release, published as a normal GitHub release rather than a prerelease. Download desktop and Android artifacts from [ratspeak.org/download.html](https://ratspeak.org/download.html) or the [Ratspeak GitHub releases page](https://github.com/ratspeak/Ratspeak/releases). Source is AGPL-3.0-or-later at [github.com/ratspeak/Ratspeak](https://github.com/ratspeak/Ratspeak).
+The current public desktop/Android release is **1.0.37**. Use the [downloads page](https://ratspeak.org/download.html) or the [versioned GitHub release](https://github.com/ratspeak/Ratspeak/releases/tag/v1.0.37). iOS is available through the [public TestFlight channel](https://testflight.apple.com/join/AzzW4Jg6); check TestFlight for its offered build.
 
-If you'd rather build from source, see [Building from Source](../reference/building-from-source.md). Ratspeak must be checked out next to `rsReticulum`, `rsLXMF`, `lrgp-rs`, and (for the default build, which includes experimental voice calls) `rsLXST` so Cargo can resolve the local development crates.
+| Platform | Release packages | RNode connections in the app |
+|---|---|---|
+| macOS | Apple Silicon and Intel DMG | USB serial, BLE, TCP |
+| Linux | amd64/arm64 DEB; x86-64 AppImage and RPM | USB serial, BLE, TCP |
+| Windows | x64 EXE and MSI installers | USB serial, BLE, TCP |
+| Android | arm64, armv7 and x86-64 APK | Supported USB host RNodes, BLE, TCP |
+| iOS | TestFlight | BLE and TCP |
+
+Bluetooth roles, background behavior and device permissions differ by platform. For installation and first launch, follow [Install and platform setup](../getting-started/install-and-platform-setup.md). For radio requirements, use [LoRa radio interfaces](../networking/lora-and-rnode.md).
 
 ## Inside the app
 
-The app has seven primary views plus first-run Setup. Desktop exposes Home, Messages, Games, Peers, Network, and Settings in the sidebar. Mobile uses Peers, Messages, Contacts, and a More sheet for secondary views.
+The desktop sidebar and mobile navigation arrange these features differently:
 
-- **Home** — your at-a-glance dashboard. Recent messages, network health, quick actions.
-- **Messages** — LXMF conversations. Threads, attachments, images, search, replies, reactions, and delivery state per message. The conversation header also exposes the experimental voice-call button when both sides are reachable on a single Reticulum hop.
-- **Peers** — everyone the network has heard about. Tap one to start a conversation or save them as a contact.
-- **Contacts** — your saved address book, with avatars rendered from each identity's hash.
-- **Network** — interfaces, transport stats, Offline Inbox nodes, and Bluetooth Peer. This is where you add a TCP gateway, plug in an RNode, choose store-and-forward inbox behavior, or troubleshoot why a hop isn't resolving.
-- **Settings** — identity management, PIN protection, export/import, auto-announce interval, network policy, Bluetooth Peer toggle, theme.
-- **Games** — multiplayer Chess and Tic-Tac-Toe over LXMF, using the [LRGP](../products/lrgp.md) gaming protocol. Sessions ride as fields on normal LXMF messages, so any LRGP-aware client can join.
-- **Setup** — first-run identity creation, 12-word recovery phrase backup, and restore/import. You won't see this view again unless you factory-reset.
+- **Messages and Contacts** hold conversations and saved peers. Messages include delivery state, attachments, search and formatting.
+- **Channels** connect to a hub and its rooms. Joining, moderation and room access are separate from private LXMF delivery.
+- **Peers** shows discovered messaging peers. An old announce or saved contact does not establish a current path.
+- **Network** manages interfaces, paths, transport mode, Offline Inbox and Bluetooth Peer.
+- **Settings** manages identities, backups, PIN protection, appearance and app preferences.
+- [**Games**](../using-ratspeak/games.md) provides Chess, Tic-Tac-Toe and Four in a Row through [LRGP](lrgp.md).
+- **Setup** handles the initial identity and backup. Identity management also remains available after setup.
 
-There is no embedded HTTP server. The frontend is vanilla HTML/CSS/JS loaded over Tauri's asset protocol; the WebView talks to the Rust core through Tauri IPC commands and events.
+A fresh app starts without a network interface. Add a path that fits your setup: local LAN discovery, a reachable TCP server, a nearby Bluetooth Peer or an RNode radio. Start with [Choosing your setup](../getting-started/choosing-your-setup.md).
 
-## Voice calls (experimental)
+## Voice calls
 
-Ratspeak ships an experimental voice surface built on [rsLXST](../products/rslxst.md), the Rust Reticulum-LXST telephony stack. Calls run over a normal Reticulum link directly between the two devices — no relay servers, no SFU, no media gateway. Audio uses Opus and starts at the Medium Quality profile; the underlying rsLXST profile matrix supports Medium, High, Super High, Low Latency, and Ultra Low Latency.
+Calls use [rsLXST](rslxst.md) over a Reticulum Link and are experimental. A call can start from a conversation, contact or peer detail when the voice feature is available. A saved contact is not an outbound-call requirement.
 
-The call button lives in the conversation header on the Messages view, and only appears when the other side is an active LXMF contact, no other call is in progress, and the voice stack is built into the binary. Tap to dial, tap again to hang up. Incoming calls open a global call strip across the top of the app plus an answer/reject sheet on mobile; both surfaces are navigable back to the matching conversation. Outgoing rings give up automatically after about 25 seconds with no answer.
+Incoming calls are admitted for a saved contact or a direct zero-hop peer, subject to blocking and the call policy. A routed stranger cannot ring you merely because they know your address. Calls need a live path and suitable audio permissions; they are not delivered through Offline Inbox. Losing the Link's interface can end a call.
 
-The app enforces a few privacy and abuse rules independently of the protocol:
+See [Voice calls](../using-ratspeak/messaging-and-contacts.md#voice-calls-experimental) for controls, microphone permissions, caller policy and current limits. This app behavior is narrower than everything the rsLXST library can support.
 
-- **Contacts, or direct neighbors only.** Inbound calls are allowed if the caller is in your contacts, or if Reticulum can reach them on a direct (zero-hop) path — typically a peer on the same LAN, BLE link, or other local interface. Calls from non-contacts that would require routing through a transport node are dropped before any audio path opens, and the caller receives a polite "only accepting calls from contacts" notice over LXMF.
-- **Blocked contacts are blackholed.** A call from a contact you have blocked is rejected and the caller is added to the network blackhole list so further attempts are dropped at the transport layer.
-- **Auto-blackhole on persistent rejection.** A non-contact whose calls have been rejected ten times in a row is automatically blackholed for rate-limit reasons, so the device stops ringing on their behalf even if they keep dialing.
-- **Network blackhole short-circuit.** Identities already on the network blackhole list cannot ring the device at all; the call is dropped before policy evaluation.
+## Identity and local data
 
-Microphone and speaker access goes through each OS's normal permission model — `RECORD_AUDIO` plus `MODIFY_AUDIO_SETTINGS` on Android, `NSMicrophoneUsageDescription` on macOS/iOS, the system default device on Linux/Windows. The first time you place or answer a call the OS prompts; later calls reuse the granted permission.
+Back up a new software identity's **12-word recovery phrase** or export an encrypted `.rsi` identity backup. The phrase restores the identity, not its message history. A PIN protects the local software identity key and phrase; it does not encrypt the message database or attachment files.
 
-Voice is intentionally narrow: there is no voicemail, no group call, no call recording, no echo cancellation or noise suppression beyond what the OS audio stack provides, and no LXMF-routed offline-call fallback. Treat the surface as a beta — codec quality, call setup, ringtones, and platform audio routing are subject to change while rsLXST stabilizes.
+Desktop builds also provide experimental YubiKey/PIV identities through [Ratkey](ratkey.md). Hardware-only and recoverable provisioning have different backup properties. Use [Settings and identity](../using-ratspeak/settings-and-identity.md) for the app's supported flows.
 
-The `lxst-voice` Cargo feature gates the entire voice stack and is on by default. If you build Ratspeak from source without the `rsLXST` sibling checkout, pass `--no-default-features` to `cargo tauri dev` or `cargo tauri build` to skip voice entirely.
+App state lives under `.ratspeak/` in the OS app-data directory. Active Reticulum configuration normally belongs to the selected identity at `identities/<identity_hash>/reticulum/config`; `RATSPEAK_RNS_CONFIG_DIR` can override it. See [Configuration reference](../reference/configuration-reference.md) for exact platform paths and storage scope. Use the app's export/import controls for identity transfer; copying an arbitrary key file is not a history migration procedure.
 
-## Where your data lives
+## Operators and developers
 
-Ratspeak stores app state under `.ratspeak/` in the OS data directory (`~/Library/Application Support/org.ratspeak.desktop/.ratspeak/` on macOS, `~/.local/share/org.ratspeak.desktop/.ratspeak/` on Linux, `%APPDATA%\org.ratspeak.desktop\.ratspeak\` on Windows). Reticulum interface config defaults to `.ratspeak/reticulum/config` unless `RATSPEAK_RNS_CONFIG_DIR` points somewhere else.
+You do not need a separate `rnsd-rs` or `lxmd-rs` installation for ordinary app use. For an always-on transport node, Offline Inbox node or Channels hub, follow [Infrastructure and ops](../deployment/infrastructure-and-ops.md).
 
-- `ratspeak.db` — SQLite database for messages, contacts, conversations, and settings. WAL mode, single file, safe to back up while the app is closed.
-- `identities/<hash>/identity` — unprotected software private-key material. The file is 64 bytes: a 32-byte X25519 private key concatenated with a 32-byte Ed25519 seed.
-- `identities/<hash>/identity.enc` — PIN-encrypted software private-key material, used when you lock an identity at rest.
-- `identities/<hash>/identity.seed` — recovery-phrase sidecar for unprotected recoverable software identities. Once you set a PIN, the phrase is encrypted in the same vault as the key.
-- `identities/<hash>/identity.hwid` — hardware-key metadata for a YubiKey-backed identity. The private key itself stays on the token and cannot be exported.
-- `reticulum/config` — the app-private Reticulum interface config. Its shared-instance ports default to `37430`/`37431` so Ratspeak can coexist with system Reticulum tools using `37428`/`37429`.
+Ratspeak embeds its protocol libraries. Release 1.0.37 pins rsReticulum/rsLXMF sources with package version 1.4.0, which differ from the standalone 1.3.0 downloads. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
 
-If you copy the `.ratspeak/` directory to another machine and launch Ratspeak there, you keep your identity, conversation history, and app-private Reticulum interface setup. If you only need the identity, new software identities can be restored from a 12-word phrase or imported from a PIN-encrypted `.rsi` backup; raw Reticulum exports and Base32 keys are available for compatibility but are unencrypted private-key material.
+The Tauri frontend calls the Rust backend through app-internal commands and events. Those commands are a [contributor interface](../reference/tauri-ipc-reference.md), not a stable public SDK. Library consumers should start with the component APIs.
 
-## Hardware it talks to
-
-Ratspeak speaks to anything that speaks Reticulum. Out of the box that means [rsDeck](../products/rsdeck.md) and [rsCardputer](../products/rscardputer.md) handhelds on any reachable Reticulum path, [RNode-class boards](../hardware/rnode-and-supported-boards.md) over USB, BLE, or RNode TCP, and other Ratspeak / Sideband / NomadNet / MeshChat clients reachable over TCP, UDP, I2P, or Bluetooth Peer. iOS cannot use USB serial radios, but it can use BLE RNode hardware or an RNode TCP bridge.
-
-## What it isn't
-
-Ratspeak isn't a web app — there's no server you can point a browser at. It's a native binary that bundles a WebView and talks to the Rust core directly.
-
-Desktop hardware-key identities use [Ratkey](../products/ratkey.md) with YubiKey/PIV: the private key lives on the token, unlock is PIN-gated once per session, and recoverable setup can produce a 12-word phrase backup. This path is desktop-only and still experimental. Notarized macOS, code-signed Windows, and public mobile store distribution are still in progress, so builds may need to be allowed through your OS's gatekeeper.
+The app source is [AGPL-3.0-or-later](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/LICENSE).

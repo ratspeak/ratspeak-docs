@@ -4,47 +4,48 @@ sidebar_position: 1
 
 # Ratspeak ecosystem
 
-Ratspeak is both the flagship app and the umbrella for a small Reticulum/LXMF ecosystem: desktop and mobile software, Rust protocol crates, LoRa handheld firmware, turn-based games, avatar tooling, and experimental hardware-backed identity work.
+Ratspeak includes the desktop/mobile app, Rust networking and messaging libraries, and handheld firmware. Choose the app or device you want to use first; you do not need to install every layer separately.
 
-Most people should start with the [Ratspeak app](../products/ratspeak.md), [rsDeck](../products/rsdeck.md), or [rsCardputer](../products/rscardputer.md). Operators who want always-on transport or store-and-forward messaging should look at [rsReticulum](../products/rsreticulum.md) and [rsLXMF](../products/rslxmf.md). Developers can build directly on the Rust crates and standalone support libraries.
+For messaging, start with [Choosing Your Setup](../getting-started/choosing-your-setup.md). For an always-on transport or Offline Inbox node, use [Infrastructure & Ops](../deployment/infrastructure-and-ops.md).
 
 ## How the pieces stack
 
-- **rsReticulum** is the Reticulum networking layer: packets, identities, announces, paths, links, resources, interfaces, daemon, and command-line tools.
-- **rsLXMF** is the message layer above Reticulum: conversations, attachments, delivery modes, Offline Inbox/propagation nodes, stamps, and tickets.
-- **rsLXST** is the experimental Rust telephony layer above Reticulum: call signalling, link teardown, and Opus voice profiles. Ratspeak embeds it for peer-to-peer voice calls.
-- **Ratspeak** is the user-facing desktop and mobile app that embeds rsReticulum, rsLXMF, LRGP, and rsLXST.
-- **rsDeck** and **rsCardputer** are ESP32-S3 LoRa handheld firmware projects with launchers that boot Standalone or RNode modes.
-- **LRGP** rides inside LXMF custom fields to support turn-based games such as Chess and Tic-Tac-Toe.
-- **LXMFace** turns Reticulum identity hashes into deterministic avatars. It is a standalone identity-visualization library, not a network transport.
-- **Ratkey** is the experimental hardware-backed identity layer for YubiKey/PIV devices. Ratspeak desktop uses it for hardware-key setup, import, restore, PIN unlock, auto-lock, and on-card signing/ECDH; mobile uses recoverable software identities instead.
-
-The common thread is Reticulum/LXMF, not a central service. Some pieces are network endpoints, some are libraries, and some are future-facing integration targets.
+- **rsReticulum** handles packets, identities, announces, paths, links, resources and interfaces. It also supplies `rnsd-rs` and the command-line tools.
+- **rsLXMF** adds signed messages, delivery methods, propagation storage, stamps and tickets. Ratspeak provides the conversation UI above it.
+- **rsLXST** is the experimental voice/media layer over Reticulum. Ratspeak supplies the platform audio handling for its calls.
+- **Ratspeak** embeds those libraries and LRGP in one desktop/mobile app. It also offers Channels through hubs; these have a different privacy model from private LXMF conversations.
+- **Ratspeak Handheld** is the unified firmware for T-Deck Plus, T-Pager, Cardputer Adv and M9. Its protocol core uses rsReticulumLite and rsLXMFLite. The earlier rsDeck, rsPager and rsCardputer repositories are historical projects.
+- **LRGP** carries turn-based game messages in LXMF fields. Ratspeak includes Chess, Tic-Tac-Toe and Four in a Row.
+- **LXMFace** is a standalone deterministic avatar library.
+- **Hardware identities** use the `rns-ratkey` PIV integration in desktop Ratspeak. The token performs private-key operations; mobile Ratspeak uses software identities.
 
 ## Quick reference
 
-| Component | Role | Who needs it | Current status |
-|---|---|---|---|
-| [Ratspeak](../products/ratspeak.md) | Desktop and mobile LXMF client | Normal users | v1.0.20 public release; desktop and Android artifacts are on the download page and GitHub releases |
-| [rsReticulum](../products/rsreticulum.md) | Rust Reticulum stack, daemon, tools | Operators and Rust developers | v0.9.4 public pre-release; pre-1.0, wire-compatible where implemented, with documented gaps |
-| [rsLXMF](../products/rslxmf.md) | Rust LXMF library and `lxmd-rs` propagation daemon | App developers and propagation-node operators | v0.9.2 public pre-release; pre-1.0, targets LXMF interop where implemented |
-| [rsLXST](../products/rslxst.md) | Rust LXST telephony library (Opus voice over Reticulum) | App developers building voice features on Reticulum | Experimental; first public target is Ratspeak voice calls, not full Python LXST parity |
-| [rsDeck](../products/rsdeck.md) | LilyGO T-Deck Plus handheld firmware | Users who want a full T-Deck handheld or host-controlled RNode radio | Active dual-mode firmware; Standalone and RNode modes |
-| [rsCardputer](../products/rscardputer.md) | M5Stack Cardputer Adv + Cap LoRa firmware | Users who want a smaller handheld or host-controlled RNode radio | Active dual-mode firmware; Standalone and RNode modes |
-| [LRGP](../products/lrgp.md) | Game protocol over LXMF | Ratspeak users and game developers | Integrated for Chess and Tic-Tac-Toe; standalone Rust and Python packages exist |
-| [LXMFace](../products/lxmface.md) | Deterministic identity avatars | App and library developers | Stable standalone API; Ratspeak has not migrated to it yet |
-| [Ratkey](../products/ratkey.md) | Hardware-backed Reticulum identity layer | Desktop Ratspeak users and advanced Rust developers | Experimental desktop YubiKey/PIV support; software recovery remains the mobile path |
+Release versions below distinguish standalone downloads from libraries bundled in the app.
+
+| Component | Role | Start here |
+|---|---|---|
+| [Ratspeak](../products/ratspeak.md) | App; public release 1.0.37, plus the iOS TestFlight channel | [Install & Platform Setup](../getting-started/install-and-platform-setup.md) |
+| [rsReticulum](../products/rsreticulum.md) | Rust networking stack; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
+| [rsLXMF](../products/rslxmf.md) | Rust messaging library and `lxmd-rs`; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
+| [rsLXST](../products/rslxst.md) | Experimental voice/media library; standalone release 0.3.0 | Library README and API reference |
+| [Ratspeak Handheld](../hardware/handheld-guide.md) | Beta firmware 2.3.4; supported modes depend on board | [Flashing firmware](../hardware/flashing-firmware.md) |
+| [LRGP](../products/lrgp.md) | Standalone Rust/Python game protocol implementations | [Games](../using-ratspeak/games.md) |
+| [LXMFace](../products/lxmface.md) | Avatar library for application developers | Library README |
+| [Ratkey](../products/ratkey.md) | Experimental hardware identity work and the desktop PIV integration | [Settings & Identity](../using-ratspeak/settings-and-identity.md) |
+
+Ratspeak 1.0.37 bundles coordinated protocol commits with rsReticulum/rsLXMF package version 1.4.0. Those are not the standalone 1.3.0 source sets. Developers should use the selected app release's dependency manifest, as explained in [Building from source](../reference/building-from-source.md).
 
 ## For users
 
-If you want to send messages, start with [Choosing Your Setup](../getting-started/choosing-your-setup.md). That guide helps you decide between the desktop app, mobile app, LoRa handhelds, an RNode radio, or infrastructure you run yourself.
+The app manages its network and identity through its own UI. A standalone handheld can message without a phone; RNode mode instead makes supported hardware a radio for a host app. M9 has a Standalone image only in handheld 2.3.4.
 
-Ratspeak devices and apps can interoperate with other Reticulum and LXMF clients such as Sideband and NomadNet where they share the same protocol features and reachable paths.
+Ratspeak can exchange LXMF messages with other Reticulum clients such as Sideband and NomadNet when there is a path and both applications support the content being sent. App-specific games, voice or Channels are separate capabilities.
 
 ## For operators
 
-Run `rnsd-rs` when you want a Reticulum node that stays online and routes traffic. Add `lxmd-rs` when you want an Offline Inbox/propagation node for contacts who are not always online. A Raspberry Pi, VPS, or desktop machine can become useful network infrastructure without becoming a trusted message server.
+Run `rnsd-rs` with transport enabled to forward for other nodes. Add `lxmd-rs` with propagation enabled to store recipient-encrypted messages for later pickup. A Channels hub is another role: it reads and relays room messages, so do not treat it as an opaque Offline Inbox node.
 
 ## For developers
 
-Use rsReticulum when you need Reticulum networking in Rust, rsLXMF when you need LXMF messaging, rsLXST when you want LXST telephony plumbing (call setup, profile switching, Opus media) and intend to provide your own platform audio layer, LRGP when you want compact turn-based game messages, and LXMFace when you want the same deterministic avatar output across languages. Ratkey is available as an experimental integration target for hardware identity work and is already used by Ratspeak's desktop YubiKey flow.
+Use rsReticulum for networking, rsLXMF for messaging, rsLXST for voice/media plumbing, LRGP for game messages, or LXMFace for avatars. Each repository's README and API reference describe its integration boundary. The app embeds these pieces; its internal Tauri commands are not a stable replacement for the library APIs.

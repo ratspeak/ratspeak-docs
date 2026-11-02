@@ -26,7 +26,7 @@ An SD card is optional for normal messaging.
 ## Get the firmware on your device
 
 Use `tdeck-full.bin` from
-[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases)
+[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
 for a fresh installation. The [web flasher](https://ratspeak.org/download.html)
 accepts the complete `.bin` through **Build your own**; check that a board preset
 shows **Ratspeak Handheld** if selecting an automatic download.
@@ -47,8 +47,7 @@ RNode-only packages install a single mode: `tdeck-full.bin`,
 `tdeck-standalone.bin` and `tdeck-rnode.bin` are complete images for the web
 flasher or esptool. For
 [bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
-`tdeck-standalone-launcher.bin`; Launcher gives internal storage a 448 KB
-partition, and enlarging it keeps its data and more message history.
+`tdeck-standalone-launcher.bin`. Follow the linked guide for Launcher storage limits and backup precautions before changing partitions.
 
 ## First boot
 
@@ -68,11 +67,11 @@ Five tabs along the bottom, navigated with touch or the trackball:
 - **Settings** — radio config, network mode, region, and device options.
 
 To remove a saved contact, focus it with the trackball, hold the trackball button,
-then press Enter to confirm. Esc keeps the contact.
+then press Enter to confirm. Backspace keeps the contact.
 
-For a custom frequency, open **Settings → LoRa**. Select **Developer Radio
-Controls**, then hold the trackball button as prompted to unlock the custom
-fields. Open **Frequency**. Use **A/D** (or left/right) to choose a digit and
+For a custom frequency, open **Settings → Device → Developer Radio Controls**,
+then hold the trackball button as prompted to unlock the custom fields. Return
+to **Settings → LoRa → Frequency**. Use **A/D** (or left/right) to choose a digit and
 the trackball up/down to tune it. Press
 **Enter** to save; hold the trackball button or use the visible cancel control
 to discard the edit. Comma/slash also move between digits while editing.
@@ -122,12 +121,12 @@ included libraries, with C++ hardware and user-interface code.
 ## Legacy rsDeck
 
 Older microReticulum-based releases and their source remain in
-[`ratspeak/rsDeck`](https://github.com/ratspeak/rsDeck). The package names retain
-the `rsdeck-` prefix, so check the repository and version rather than the filename
-alone when choosing an image.
+[`ratspeak/rsDeck`](https://github.com/ratspeak/rsDeck). Current unified images use the `tdeck-` prefix; the `rsdeck-` names belong to
+older releases. Check the repository and version before choosing an image, and
+do not assume their partition layouts are interchangeable.
 
 ## License
 
 The standalone firmware and launcher are AGPL-3.0-or-later; bundled RNode firmware
 retains its GPLv3 license. See the repository's
-[third-party notices](https://github.com/ratspeak/ratspeak-handheld/blob/main/THIRD_PARTY_NOTICES.md).
+[third-party notices](https://github.com/ratspeak/ratspeak-handheld/blob/v2.3.4/THIRD_PARTY_NOTICES.md).

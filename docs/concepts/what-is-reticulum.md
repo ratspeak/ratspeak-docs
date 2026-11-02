@@ -16,7 +16,7 @@ When a destination wants to be reachable, it sends an **announce**. Transport no
 
 When two endpoints need a private session, Reticulum establishes a **link**: an encrypted, ephemeral channel that can span one hop or many. Larger transfers ride over links as **resources**. Messaging applications usually add **LXMF** on top, which defines message structure, signatures, direct delivery, opportunistic single-packet delivery, and store-and-forward propagation.
 
-For a Ratspeak user, that means your app can sit on a laptop, phone, LoRa handheld, or server and still participate in the same mesh as long as at least one Reticulum path connects it to the rest of the network.
+For a Ratspeak user, that means a laptop, phone, standalone handheld or server can participate in the same mesh when compatible interfaces and forwarding nodes provide a path.
 
 ## What makes it different
 
@@ -26,9 +26,9 @@ For a Ratspeak user, that means your app can sit on a laptop, phone, LoRa handhe
 
 **Routing is learned from announces.** There is no DNS zone, DHCP server, certificate authority, central directory, or required account provider. Reachability emerges from announces and transport nodes.
 
-**Private user traffic is encrypted end-to-end.** Ratspeak and LXMF use Reticulum Single destinations and Links, so messages are encrypted for the recipient before they leave the sender. Reticulum also supports Plain destinations for direct local public broadcast, but that is not how private Ratspeak messages are carried.
+**Private LXMF conversations protect content from transport nodes.** Messages travel encrypted to the recipient, directly or through an Offline Inbox node. Ratspeak Channels are different: each participant connects to a hub that can read room messages. Reticulum also supports unencrypted Plain destinations for local public traffic. See [Cryptography & Protection](cryptography-and-protection.md) for these boundaries.
 
-**It is designed for scarce links.** Reticulum assumes bandwidth can be tiny, latency can be high, and links can be intermittent. The default packet MTU is 500 bytes, and the protocol is designed to remain useful on carriers with very low throughput, down to the 5 bits-per-second class described by the reference manual.
+**It is designed for scarce links.** Reticulum assumes bandwidth can be tiny, latency can be high, and links can be intermittent. The default packet MTU is 500 bytes. Small packets help on narrow links, but application usability still depends on airtime, loss and the amount of data you send.
 
 ## What Reticulum is not
 

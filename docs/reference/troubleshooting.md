@@ -4,9 +4,13 @@ sidebar_position: 5
 
 # Troubleshooting
 
+These checks cover Ratspeak **1.0.37**. Record your version and platform before
+trying a workaround; older builds can have different behavior. Handheld advice
+is listed separately below.
+
 ## macOS says "unidentified developer" on first launch
 
-Builds aren't notarized yet. Right-click the app and choose **Open**, then confirm. macOS remembers the choice for future launches.
+Check that you downloaded the app from the [Ratspeak release page](https://github.com/ratspeak/Ratspeak/releases), and compare its checksum with the matching release file. If you trust this specific download and macOS offers an exception, use **System Settings → Privacy & Security → Open Anyway**, as described in [Apple's instructions](https://support.apple.com/en-us/102445). If macOS reports malware or a damaged download, keep the exact warning for your report rather than treating it as the same problem.
 
 ## Linux AppImage won't run
 
@@ -17,102 +21,118 @@ chmod +x Ratspeak-*.AppImage
 ./Ratspeak-*.AppImage
 ```
 
-If it still won't start, install FUSE (`sudo apt install libfuse2` on Debian/Ubuntu).
-
-If it starts but only shows a blank window with an EGL error:
-
-```bash
-LD_PRELOAD=/usr/lib64/libwayland-client.so ./Ratspeak-*.AppImage
-```
-
-Use your distro's `libwayland-client.so` path if it lives somewhere else.
+If the error names FUSE, install your distribution's FUSE 2 compatibility library. Ubuntu 24.04 calls it `libfuse2t64`; older Debian/Ubuntu releases commonly use `libfuse2`. See the [AppImage FUSE guide](https://docs.appimage.org/user-guide/troubleshooting/fuse.html).
 
 ## Gray or blank window on Linux
 
-The window opens but stays uniformly gray, with no error output and no CPU activity. Seen mostly on Wayland — niri, COSMIC, and other smithay-based compositors, and on NixOS.
-
-Ratspeak v1.0.20 through v1.0.24 always disabled WebKit's DMA-BUF renderer on Wayland as a defensive measure. On WebKitGTK 2.46 and newer that switch no longer selects a fallback renderer — it turns off hardware acceleration entirely, which on some graphics stacks renders nothing at all. Releases after v1.0.24 apply the workaround only where it still helps (WebKitGTK older than 2.46) and add `ratspeak --webview-diag`, which prints the rendering environment for bug reports.
-
-If you see a gray window, try these in order, one at a time:
+Start with the rendering diagnostic, which prints the environment and exits:
 
 ```bash
-# 1. On v1.0.20–v1.0.24: skip the app's forced renderer setting
-RATSPEAK_DISABLE_WEBKIT_DMABUF_WORKAROUND=1 ratspeak
-
-# 2. Force the WebKit renderer off (helps mostly on NVIDIA / older stacks)
-WEBKIT_DISABLE_DMABUF_RENDERER=1 ratspeak
-
-# 3. Last resort: disable accelerated compositing
-WEBKIT_DISABLE_COMPOSITING_MODE=1 ratspeak
-
-# NVIDIA Wayland with "Error 71" protocol errors
-__NV_DISABLE_EXPLICIT_SYNC=1 ratspeak
+ratspeak --webview-diag
 ```
 
-Two packaging notes:
+For an AppImage, replace `ratspeak` with the path to that AppImage. Include this
+output, your desktop/compositor and GPU in the report.
 
-- **AppImage** builds force the X11 backend, so the compositor must provide XWayland. On niri that means running `xwayland-satellite` with `DISPLAY` exported before launching.
-- **NixOS** cannot run the `.deb` build natively — it is a foreign binary that resolves graphics drivers the NixOS way only under an FHS wrapper. Launch it with `steam-run` (or nix-ld with your GL drivers in the library path), or build from source, which is the supported path on NixOS.
+Current Ratspeak applies its DMA-BUF workaround only on Wayland with WebKitGTK
+older than 2.46. Before trying a different setting, remove any renderer overrides
+you previously added to your launcher or shell. To test whether the app's own
+workaround is responsible, launch once with:
+
+```bash
+RATSPEAK_DISABLE_WEBKIT_DMABUF_WORKAROUND=1 ratspeak
+```
+
+This affects that launch only. Record whether it changes the symptom; do not
+combine several renderer overrides at once. Tauri's
+[Linux graphics troubleshooting](https://v2.tauri.app/develop/debug/linux-graphics/)
+provides further graphics-specific checks.
+
+On NixOS, use a package/build environment that supplies the required native
+libraries. A downloaded DEB is not a Nix package. See
+[Building from source](building-from-source.md) for the exact source set and
+packaging reference.
 
 ## Two title bars under Sway, Hyprland, or niri
 
-On tiling Wayland compositors, Ratspeak up to v1.0.24 draws its own title bar (a GTK client-side header) below the compositor's bar. Releases after v1.0.24 hide the app title bar automatically when a tiling Wayland compositor is detected, and **Settings → System → Window Decorations** lets you force it either way (Auto / On / Off).
+Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
 
 ## Windows SmartScreen blocks the installer
 
-SmartScreen warns on unsigned executables. Click **More info**, then **Run anyway**. Code signing is on the roadmap.
+SmartScreen checks download reputation as well as publisher information, so an unrecognized-app warning can also appear for signed software. Check the exact installer against the [official release](https://github.com/ratspeak/Ratspeak/releases) and its checksum before deciding whether to run it. Use **More info** to inspect the warning; on a managed computer, your organization may control whether an exception is available. See [Microsoft's explanation of SmartScreen reputation](https://learn.microsoft.com/windows/apps/package-and-deploy/smartscreen-reputation).
 
 ## App is slow to start the first time
 
-First launch initializes the SQLite database, builds the FTS index, and generates an identity. Subsequent launches are quick. Wait it out — it's not stuck.
+Let the startup screen finish before retrying an action. A new profile also needs identity setup; identity creation happens when you choose **Create Identity**. If the screen stops progressing, record its message and how long it has remained there. A repeated stall after reopening the app needs investigation; it is not something to ignore indefinitely.
 
 ## Messaging says service unavailable or not initialized
 
-On cold start, the Reticulum runtime comes up before LXMF. Messaging calls made during that window can return `service_unavailable`, `database_unavailable`, or `lxmf_not_initialized`. Wait until setup finishes and the app is responsive, then retry. If it persists after a restart, collect logs as described in [Still stuck](../reference/troubleshooting.md#still-stuck).
+During startup or an identity switch, messaging calls can return `service_unavailable`, `database_unavailable`, or `lxmf_not_initialized`. Wait until setup finishes and the app is responsive, then retry. If it persists after a restart, collect logs as described in [Still stuck](../reference/troubleshooting.md#still-stuck).
 
 ## I can't see any peers
 
 Walk through these in order:
 
-1. Open **Network** and confirm at least one interface is enabled and shows a green status.
+1. Open **Network** and confirm at least one interface is enabled and connected. A fresh app profile does not connect an interface for you.
 2. **AutoInterface**: both ends must be on the same LAN. Many corporate WiFi networks and guest SSIDs block multicast — try a wired connection or a different network.
 3. **TCP**: confirm you can reach the host and port (`nc -zv host port`). Check the remote side has a TCPServer interface listening on that port.
-4. **LoRa**: frequency, spreading factor, bandwidth, and coding rate must match exactly on both ends. One mismatched parameter and you hear nothing.
+4. **LoRa**: check frequency, spreading factor, bandwidth and compatible packet format. Start with matching presets; in explicit-header mode, the header communicates the payload coding rate. See [LoRa settings](../networking/lora-and-rnode.md#tunable-parameters). Also check that IFAC settings match if you use them.
 
 ## My RNode doesn't show up in "Add LoRa Device"
 
-- **macOS / Linux**: serial devices need user permissions. On macOS, the device should appear as `/dev/tty.usbserial-*` automatically. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/main/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you copied an older `99-ratspeak.rules` into `/etc/udev/rules.d/`, delete it. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
+- **macOS / Linux**: serial devices need user permissions. On macOS, check for a serial device such as `/dev/cu.usbserial-*` or `/dev/cu.usbmodem*`; the name depends on its USB interface. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you installed an older rule yourself, compare it with the current rule before changing your udev setup. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
 - **Windows**: install the CP210x or CH340 driver matching your RNode's USB chip. Check Device Manager for an unknown COM device.
-- **iOS**: USB radios are not supported. Use a BLE-equipped RNode from **Network → Add LoRa Device → Bluetooth**, or use the TCP tab if your RNode stream is exposed on a reachable local endpoint. Accept the OS pairing prompt for BLE when it appears.
+- **iOS**: USB radios are not supported. Use a BLE-equipped RNode from **Network → Add LoRa Device → Bluetooth**, or use the TCP tab if your RNode stream is exposed on a reachable local endpoint. Follow the pairing prompt shown for that connection.
 - Bad cables look identical to good ones. If nothing else works, try a different USB cable — many shipped with devices are charge-only.
+
+## Android Bluetooth RNode stays on "Initializing RNode"
+
+Update to 1.0.37 if you are on an older build. This release includes setup fixes
+for ESP32 Bluetooth RNodes on older Android versions and shows the RNode PIN
+prompt inside Ratspeak. Put the radio into pairing mode and use its PIN. Keep the
+exact failure text: pairing failures, timeouts and an unresponsive radio are
+different problems. If initialization still stalls, also record the Android
+version and radio firmware. You can pause a connecting/reconnecting radio before
+adding another. See [Bluetooth interfaces](../networking/bluetooth-interfaces.md).
 
 ## Messages aren't delivering
 
 A few things to check:
 
-- **Length matters**. Opportunistic single-packet delivery caps at 287 bytes. Anything longer needs either Direct delivery to a recipient that is reachable at send time or an Offline Inbox/propagation node that both sides can reach.
-- **Recipient announce is stale**. Open the contact and tap **Request Path** or use Offline Inbox if one is reachable. If their announce is older than the network's path expiry, packets have nowhere to go.
-- **No transport coverage**. If you and the recipient share no interface and no hub between you, there's no route. Add a TCP hub or run a transport node.
+- **Check the delivery method and status.** Direct delivery needs a reachable recipient. Propagated delivery needs a usable Offline Inbox node and later pickup by the recipient. A message deposited at a node is not the same as confirmed delivery to the recipient. See [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
+- **The current path is unknown.** A saved contact or old announce does not establish a current path. Open the contact and tap **Request Path**, or use a configured Offline Inbox node that you can reach.
+- **No connected path.** You need a Reticulum path to the recipient or the chosen propagation node. Another interface or transport node can help only if it connects to that network; an arbitrary TCP server may not.
 
 ## I lost my identity
 
-The identity file lives inside Ratspeak's per-OS data directory — `~/Library/Application Support/org.ratspeak.desktop/.ratspeak/identities/<hash>/identity` on macOS, `~/.local/share/org.ratspeak.desktop/.ratspeak/identities/<hash>/identity` on Linux, `%APPDATA%\org.ratspeak.desktop\.ratspeak\identities\<hash>\identity` on Windows. If you have a backup of that file, copy it back into place and restart the app.
+Use the app's **Import / Restore** flow if you have its recovery phrase, a
+Ratspeak identity backup, or a compatible Reticulum private key. A PIN-encrypted
+`.rsi` backup also needs its backup PIN. An identity restore does not restore
+message history or app settings.
 
-If you don't have a backup, the identity is **unrecoverable** — keys are generated client-side and never escrowed anywhere. Generate a new identity, then tell your contacts your new hash so they can update their address book.
+For a PIN-protected identity, the PIN is not recoverable from the app. A recovery
+phrase or separate exported key can restore the identity without that original
+PIN. A hardware-backed identity needs its hardware key; its private key is not
+exportable. See [Settings & Identity](../using-ratspeak/settings-and-identity.md)
+for the appropriate restore method.
+
+If no usable key material, phrase or backup remains, create a new identity and
+share its new messaging address with your contacts. Do not copy files into an
+active profile or delete the database to attempt a restore.
 
 ## Auto-Announce isn't broadcasting
 
 1. **Settings → Network → Auto-Announce** must not be set to **Off**.
 2. At least one interface must be enabled and connected. If all interfaces are red, there's nothing to announce on.
-3. Manual announces (long-press the bottom bar, or **Network → Announce**) are independent of the setting and always available — use them to confirm announce works at all before debugging the schedule.
+3. Use **Network → Announce** to test a manual announce. Check the reported status rather than assuming it was transmitted immediately; network limits and connection state still apply.
 
 ## Bluetooth Peer sees nothing
 
-- Both devices need **Bluetooth Peer** enabled in **Settings → Network**.
+- On both devices, open **Network** and use **+** beside **Bluetooth Peer** to enable it.
 - Both devices need OS-level Bluetooth permission. On iOS and recent Android, the OS prompts on first scan; if you denied, grant it under system settings.
-- BLE range is roughly 10 metres through walls, less with metal or concrete in the way. Move closer.
-- On Windows, use the MSIX build if this machine needs to advertise for Bluetooth Peer. The plain `.exe` / MSI builds do not provide the advertiser/peripheral role.
-- On Linux, the `bluetooth` service must be running (`systemctl status bluetooth`), the user must have BlueZ permissions, the adapter must support LE advertising, and some distros need `Experimental = true` in `/etc/bluetooth/main.conf` followed by `sudo systemctl restart bluetooth`.
+- Move the devices close together while testing; walls, interference and the adapters affect range.
+- Windows advertising needs a packaged Bluetooth peripheral capability. The public 1.0.37 downloads are EXE/MSI, with no MSIX download. Do not rely on that Windows installation being discoverable; test with the other device advertising, and report any peripheral-unavailable message.
+- On Linux, the `bluetooth` service must be running (`systemctl status bluetooth`), the user must have BlueZ permissions, the adapter must support LE advertising, and BlueZ must allow the requested peripheral role. Follow your distribution's BlueZ guidance if it refuses advertising.
 
 ## I can't reach a public Ratspeak TCP server
 
@@ -146,53 +166,50 @@ Filter out **Discovered** peers you have never spoken to, or narrow the interfac
 
 ## Voice call button never appears
 
-The call button only appears when:
+The call action needs a build with the `lxst-voice` feature and a running voice service. It can appear in a conversation, contact details or peer details; you do not have to save the recipient first. A call already in progress elsewhere disables another call action.
 
-- the binary you are running was built with the `lxst-voice` Cargo feature (the default for public builds — source builds invoked with `--no-default-features` compile it out entirely);
-- the active conversation is with a **saved contact** (peers and unknown addresses cannot be dialed);
-- no other call is already in progress.
-
-If you built from source and the button is missing, rebuild without `--no-default-features` and make sure you have the `rsLXST` sibling checkout next to `Ratspeak`. See [Building from Source](../reference/building-from-source.md) for the layout.
+Public builds enable voice by default. If you deliberately built without default features, rebuild with voice enabled using [Building from source](building-from-source.md). Keep the `rsLXST` sibling in the source layout for either build.
 
 ## Microphone permission was denied
 
-Voice calls need OS-level microphone access. The first call triggers the prompt; later calls reuse the granted permission.
+Voice calls need OS-level microphone access. Calling or answering checks microphone permission; later calls can reuse permission already granted.
 
 - **macOS** — System Settings → Privacy & Security → Microphone → enable Ratspeak.
-- **Windows** — Settings → Privacy & Security → Microphone → toggle on for Ratspeak.
+- **Windows** — open **Settings → Privacy & security → Microphone**, enable microphone access and **Let desktop apps access your microphone**. The EXE/MSI app may not have its own toggle. See [Microsoft’s microphone permissions guide](https://support.microsoft.com/en-us/windows/privacy/turn-on-app-permissions-for-your-microphone-in-windows).
 - **Linux** — most distros do not gate microphone access per-app at the OS level. If audio capture still fails, check your PulseAudio / PipeWire input device and that no other app holds an exclusive handle on it.
 - **Android** — Settings → Apps → Ratspeak → Permissions → enable Microphone.
 - **iOS** — Settings → Privacy & Security → Microphone → enable Ratspeak.
 
-If permission was denied on the very first prompt some OSes never prompt again. Toggle the permission off and back on in system settings, then place a fresh call.
+If the prompt does not return after a denial, grant permission in the OS settings and try again.
 
 ## Incoming call surface never opens
 
 A few things to check:
 
-- **You are not a contact yet.** Ratspeak only rings for inbound calls from saved contacts or for callers reachable on a direct zero-hop Reticulum path. Ask the caller to save you (or save them) and try again.
-- **You have rejected this caller many times.** After ten consecutive rejections a non-contact caller is automatically blackholed. Open **Network → Blackholes** and remove the entry if it was a mistake.
-- **You blocked the contact.** Blocked contacts are blackholed at the network layer; their calls never reach the call surface. Unblock the contact under **Contacts** and remove the corresponding network blackhole entry.
+- **You are not a contact yet.** Ratspeak rings for saved contacts or recognized direct peers. A recent zero-hop announce or a cached zero-hop path can establish that direct-peer status. Save the caller on the receiving device and try again.
+- **The spam guard rejected repeated unknown callers.** Ten policy-rejected calls from a non-contact/non-direct identity within the rejection window can create a blackhole; this is not a count of how often you press Decline. Open **Network → Blackholes** and remove the entry if it was a mistake.
+- **You blocked the contact.** Ratspeak rejects that contact’s incoming call and can add a network blackhole when the call arrives. If you unblock a trusted caller, also check for and remove a related blackhole that would still reject the call.
 - **The voice stack is not running.** Reopen the app — the call surface comes online once the LXST service has started.
 
 ## Call connects but there is no audio
 
 - Confirm both sides granted microphone permission (see above).
-- Check your OS default audio input and output. Ratspeak uses the OS default device and does not yet expose an in-app picker.
-- On Linux, confirm PulseAudio or PipeWire actually exposes the device you expect (`pactl info`, `pactl list short sinks/sources`).
+- Check your OS default audio input and output, and the app’s mute/speaker controls. The microphone path tries the default input first, then other available inputs if it fails.
+- On Linux, confirm PulseAudio or PipeWire actually exposes the device you expect (`pactl info`, `pactl list short sinks`, `pactl list short sources`).
 - On Android, a denied microphone permission leaves an established call in listen-only mode. Grant the permission before speaking; Ratspeak promotes microphone capture only while the active call needs it.
-- If the audio strip in the app shows a yellow warning text, that is the runtime telling you which side of the pipeline failed to start (microphone vs speaker) — copy that string when filing a bug.
+- Copy any microphone or speaker error shown in the call status when filing a report.
 
 ## High latency on LoRa
 
-This is normal, not a bug. At SF12 / 125 kHz, a single packet takes around 1.5 seconds on the air, and end-to-end delivery over multiple hops with retries can take 30 to 120 seconds. To trade range for speed, drop to SF7–SF9 and (if regulations allow) widen to 250 kHz.
+LoRa delivery time depends on radio settings, message size, hops, contention and retries. Compare both ends' settings and test a short message over one hop first. A faster preset changes the link budget and must be selected on both ends; use settings permitted for the hardware and location. Do not judge delivery solely by a fixed timeout or resend repeatedly while a message is still queued.
 
 ## Ratspeak Handheld
 
-The following applies to **Ratspeak Handheld 2.2.0 beta**.
+For **Ratspeak Handheld 2.3.4 beta**, start with the [handheld guide](../hardware/handheld-guide.md) and the page for your board. The M9 has a Standalone image only; mode and hardware instructions for other boards do not automatically apply.
 
-- **T-Pager frequency is hard to change:** open Settings → LoRa, select Developer
-  Radio Controls and hold the encoder as prompted. In Frequency, A/D selects the
+- **T-Pager frequency is hard to change:** open **Settings → Device → Developer
+  Radio Controls** and hold the encoder as prompted. Return to **Settings → LoRa
+  → Frequency**. A/D selects the
   digit, the encoder tunes it, Enter saves and Alt+Backspace cancels. See the
   [Pager controls](../products/rspager.md#select-a-frequency-without-touch).
 - **Cardputer has no LoRa:** Cardputer Adv requires the Cap LoRa-1262. Check that
@@ -215,14 +232,42 @@ For a handheld report, include the board/radio model, firmware repository/versio
 mode, displayed error and relevant serial log. Keep private identity files, whole
 flash backups and Wi-Fi passwords out of reports.
 
+## Closing the Linux window quits Ratspeak
+
+In 1.0.37, Ratspeak can run even when a tray cannot be installed. In that case,
+closing the window quits instead of hiding it. Keep the window open if you need
+Ratspeak running, and check your desktop's tray support if you expected a tray icon.
+
 ## Still stuck
 
-Open **Settings → About** and check the version. Then ask in the community channels with: your OS, the version string, what you tried, and what you saw.
+Include the Ratspeak version, OS version, device/radio model, connection type,
+exact error, steps to reproduce it, and whether reopening changes the result.
+The [issue tracker](https://github.com/ratspeak/Ratspeak/issues) is suitable for
+reproducible non-sensitive bugs. Keep private keys, backup phrases and PINs out
+of reports.
 
-Useful logs are platform-specific:
+Production process logging is off by default. On desktop, a support session can
+launch the app from a terminal with diagnostics enabled, for example on Linux:
 
-- **Desktop**: `Ratspeak/logs/ratspeak.log` under the app data directory.
-- **Android**: `adb logcat -s RatspeakRust`.
-- **iOS**: Console logs under the `org.ratspeak.ios` process.
+```bash
+RATSPEAK_DIAGNOSTICS=1 ratspeak
+```
 
-Message bodies are not intentionally logged, but hashes, filenames, interface names, paths, and errors can appear. Redact anything you do not want to share.
+This enables diagnostic output for that process. To also create a desktop log
+file, set `RATSPEAK_DIAGNOSTIC_FILE=1` for the same launch. `RUST_LOG` controls
+verbosity only after diagnostics is enabled. File logs use the local data
+location, which is different from the Windows profile's roaming directory:
+
+- macOS: `~/Library/Application Support/Ratspeak/logs/ratspeak.log`.
+- Linux: `$XDG_DATA_HOME/Ratspeak/logs/ratspeak.log`, or
+  `~/.local/share/Ratspeak/logs/ratspeak.log`.
+- Windows: `%LOCALAPPDATA%\Ratspeak\logs\ratspeak.log`.
+
+An ordinary Android or TestFlight release does not promise process logs.
+For an enabled diagnostic build, Android's Rust log tag is `RatspeakRust`
+(`adb logcat -s RatspeakRust`); iOS uses the `org.ratspeak.apple` logging subsystem.
+Coordinate mobile diagnostics with the maintainer rather than assuming a desktop
+shell variable reaches an installed phone app.
+
+Review any output before sharing it. Paths, addresses, filenames and network
+information may still be sensitive even when message bodies are not logged.

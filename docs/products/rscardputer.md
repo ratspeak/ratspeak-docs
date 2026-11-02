@@ -26,11 +26,11 @@ The unified full image is `cardputer-full.bin`. It includes the launcher,
 `cardputer-rnode.bin` install one mode. All are complete images for the web
 flasher or esptool. For
 [bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
-`cardputer-standalone-launcher.bin`; Launcher gives internal storage a 448 KB
-partition, and enlarging it keeps its data and more message history.
+`cardputer-standalone-launcher.bin`. Follow the linked guide for Launcher storage
+limits and backup precautions before changing partitions.
 
 Use a package from the selected [Ratspeak Handheld
-release](https://github.com/ratspeak/ratspeak-handheld/releases) or a local build
+release](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4) or a local build
 with `DEVICE=cardputer`. Select **Cardputer** on the
 [web flasher](https://ratspeak.org/download.html), or upload a complete `.bin`
 through **Build your own**. Check that the selected firmware is
@@ -96,4 +96,4 @@ Do not mix legacy and unified partition layouts.
 
 Unified Standalone firmware and the launcher are AGPL-3.0-or-later. Bundled RNode
 firmware retains GPLv3. See the [third-party
-notices](https://github.com/ratspeak/ratspeak-handheld/blob/main/THIRD_PARTY_NOTICES.md).
+notices](https://github.com/ratspeak/ratspeak-handheld/blob/v2.3.4/THIRD_PARTY_NOTICES.md).

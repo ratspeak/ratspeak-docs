@@ -4,51 +4,54 @@ sidebar_position: 3
 
 # Community mesh
 
-A community mesh is what you build when the radius of the network outgrows one operator. A neighborhood, a campus, a town. Several people running their own LoRa nodes, one or two of them also running an IP gateway so the radio segment doesn't live alone, and a shared agreement on radio settings so everyone can hear each other. Public or semi-public — anyone with a matching radio can join.
+A community mesh connects devices run by several people: a neighborhood, campus or local group. Agree on the radio settings, the role of each node and who maintains shared infrastructure before installing it.
 
-This page covers the deployment pattern. For radio hardware itself see [RNode & Supported Boards](../hardware/rnode-and-supported-boards.md) and [LoRa Radio Interfaces](../networking/lora-and-rnode.md); for daemon mechanics see [Infrastructure & Ops](../deployment/infrastructure-and-ops.md).
+For hardware, see [RNode and supported boards](../hardware/rnode-and-supported-boards.md). For interface setup, see [LoRa and RNode](../networking/lora-and-rnode.md).
 
 ## What this looks like
 
-A community mesh is a mix of node types:
+- **Endpoints** send and receive their own messages. These may be standalone handhelds or Ratspeak clients with an attached RNode.
+- **Transport nodes** forward traffic for others. They need transport enabled, suitable interfaces and reliable power.
+- **IP gateways** connect the local radio segment to another Reticulum segment over IP. An RNode's TCP radio-control socket is a different connection: it lets a host control that radio.
 
-- **Edge nodes.** Operator-run RNodes, rsDeck devices, rsCardputer devices, laptops with a LoRa stick. They speak only over the air and rely on the rest of the mesh to reach anyone past their radio horizon.
-- **Transport routers.** Always-on nodes — usually a Raspberry Pi or small SBC with an RNode bolted on — that forward packets between LoRa neighbors and announce paths on behalf of edge devices that come and go.
-- **IP gateways.** A subset of transport routers that also have an IP uplink. They bridge the local LoRa segment to wider Reticulum over TCP, AutoInterface, or Backbone. Without at least one gateway, the mesh is isolated to its radio footprint.
-
-A healthy community mesh has more than one gateway and more than one operator. That's the point — no single person owns the network.
+A radio network can operate without an IP gateway when the participants have working radio paths between them. An internet gateway extends its reach; it also adds bandwidth, availability and privacy decisions for the operators.
 
 ## Coordinating on radio settings
 
-LoRa is unforgiving about parameter mismatch. Two RNodes on the same frequency but different spreading factors will not see each other at all. Before anyone deploys, the operators have to agree on five numbers and write them down somewhere everyone can find:
+Record the actual values, not only a preset name:
 
-- **Frequency.** Region-dependent. 915 MHz in the Americas, 868 MHz in Europe. Pick a clear band and stick to it.
-- **Bandwidth.** 125 kHz or 250 kHz are the common choices. Wider is faster but shorter range.
-- **Spreading factor.** SF7 through SF12. Higher is slower and longer range. SF11 is the community sweet spot.
-- **Coding rate.** 5 through 8. Higher is more robust but uses more airtime. 5 is the default.
-- **Preset.** The Ratspeak/RNode presets bundle these into a single label: Short, Medium, Long Turbo, Long Fast, Long Moderate. Long Fast (SF11, BW250) is the most-common community baseline — solid range, usable throughput, decent battery life.
+| Setting | What operators must agree on |
+|---|---|
+| Frequency | A frequency supported by every radio and permitted at the deployment location |
+| Bandwidth | The same LoRa channel bandwidth |
+| Spreading factor | The same spreading factor; higher values consume more airtime |
+| Coding rate | The same coding-rate setting |
+| IFAC | Whether it is used, and the matching name, passphrase and any explicit size |
 
-Pick a preset, document it, and make every operator match. A mesh that drifts on parameters is a mesh that quietly stops working.
+Preset names can differ between firmware or versions. Do not assume a label matches another device's parameters. The [LoRa guide](../networking/lora-and-rnode.md) lists the app's presets and configuration controls.
+
+Choose settings from a measured coverage and traffic test. There is no universally best preset, and a regional band label is not permission to use every frequency or power level in that band. Check the local regulator's conditions, including antenna gain, radiated power and any airtime requirements.
 
 ## Setting up a gateway node
 
-A gateway is a transport router with two interfaces: one LoRa, one IP. It runs `rnsd-rs` with `enable_transport = yes` so it forwards on behalf of others. Minimal config:
+Install `rnsd-rs` and configure one working RNode interface plus an IP connection. This template uses explicit placeholders for the locally chosen radio values; replace them before starting the daemon:
 
-```
+```ini
 [reticulum]
   enable_transport = yes
   share_instance = yes
+  instance_control_socket = yes
 
 [interfaces]
   [[Local LoRa]]
     type = RNodeInterface
     enabled = yes
-    port = /dev/ttyACM0
-    frequency = 915000000
-    bandwidth = 250000
-    txpower = 22
-    spreadingfactor = 11
-    codingrate = 5
+    port = /dev/serial/by-id/REPLACE_WITH_RADIO
+    frequency = REPLACE_WITH_FREQUENCY_HZ
+    bandwidth = REPLACE_WITH_BANDWIDTH_HZ
+    txpower = REPLACE_WITH_POWER_DBM
+    spreadingfactor = REPLACE_WITH_SF
+    codingrate = REPLACE_WITH_CR
     mode = gateway
 
   [[Backhaul]]
@@ -59,39 +62,39 @@ A gateway is a transport router with two interfaces: one LoRa, one IP. It runs `
     mode = boundary
 ```
 
-Match the LoRa parameters to whatever the operator group agreed on. Point the backhaul at any reachable Reticulum TCP server — another operator's VPS, a public TCP server, whatever the group standardized on. Run it as a service with systemd or Docker; see [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) for unit files.
+Use a serial-enabled build for a USB RNode. For a radio reached through a TCP bridge, use its actual endpoint, such as `port = tcp://radio-lan-host:7633`, and confirm that the bridge supports RNode control. That socket is still the radio interface, not the wider-network backhaul.
 
-If the gateway reaches the radio through an RNode TCP bridge instead of a local USB cable, keep `type = RNodeInterface` and replace the serial `port` with the TCP endpoint, for example `port = tcp://radio-lan-host:7633`. The TCP socket only reaches the radio; this is still the LoRa side of the gateway, not the IP backhaul.
+Test the radio side and IP side separately, then test a message across the gateway in both directions. Use an explicit config directory and the service/diagnostic procedures in [Infrastructure and ops](infrastructure-and-ops.md).
 
 ## Boundary vs gateway mode
 
-Interface modes shape how Reticulum treats traffic crossing between segments. Two modes matter here:
+Interface modes affect how a transport handles announces and path requests at a segment boundary. In the example, **gateway** faces local radio clients and **boundary** faces the wider IP network. They do not enable transport, add bandwidth or guarantee a working route by themselves.
 
-- **`mode = gateway`** on the LoRa side. Gateway mode belongs on the interface facing the clients that need help resolving paths beyond their own segment. In a community mesh, those clients are the edge radios on the local LoRa network.
-- **`mode = boundary`** on the IP side. Boundary mode is useful on the interface facing the wider or higher-throughput network. It keeps the backhaul from dumping unnecessary announce traffic into the radio segment while still allowing useful paths to cross.
-
-The pairing matters. Gateway faces the local radio clients; boundary faces the uplink. That combination keeps the LoRa segment efficient while still letting the gateway pull its weight in the wider routing table.
+Use the pairing where those roles match the topology. Keep the initial deployment small enough to observe its announce queues and message latency before adding more links. See [Interface modes](../networking/interfaces-overview-and-design.md) for the detailed behavior.
 
 ## IFAC or open mesh
 
-IFAC lets you wrap an interface in a pre-shared key. Only nodes that know the key can join. Use it on the LoRa interface if you want a closed mesh — invite-only, no random scanners showing up. The cost is coordination: every operator has to load the same key, and rotating it means rotating it everywhere.
+For an open community segment, publish the radio parameters and participation expectations. For a restricted interface, distribute the IFAC secret privately and configure matching values on all participants that need that interface.
 
-For a public community mesh, skip IFAC. Anyone with a matching radio configuration can join — that's the point. Authentication happens at the application layer (LXMF identity hashes), not radio access.
-
-A common middle ground: open LoRa, IFAC on a private TCP segment used by operators for management.
+IFAC does not hide radio transmissions or prevent interference. It also does not stop an authorized node from bridging to another interface. If the group needs a restricted network, agree on those bridges and on how shared secrets will be changed.
 
 ## Multiple gateways
 
-Reticulum handles redundant paths automatically. Two gateways on the same LoRa segment, both backhauling to wider Reticulum, will both announce — and edge nodes will reach the wider mesh through whichever path the routing table prefers. If one gateway drops, the other takes over without manual reconfiguration.
+Redundant gateways can improve availability when they offer usable alternative paths. They do not guarantee immediate failover: path discovery, stale routes, radio collisions and shared uplink or power failures still matter.
 
-Operational notes:
+Test the loss of each gateway while sending messages. Also test loss of the internet backhaul while local radio communication remains available. Record how long recovery takes in your actual network.
 
-- **Announce caps.** Each interface limits how much bandwidth announces are allowed to use. Default is 2% of the interface's airtime. Tune `announce_cap` per interface if your mesh has unusual traffic patterns, but the default is the right answer for almost everyone.
-- **Don't synchronize gateways.** Two gateways announcing the same paths at the same instant waste airtime. Reticulum naturally jitters announces, but if you're tuning intervals manually, stagger them.
-- **Plan for partition.** If the IP backhaul cuts, the LoRa segment keeps working — that's the whole point of a mesh. Make sure operators know this and don't panic-reboot gateways when the internet flickers.
+The default announce bandwidth cap is 2%. In a standalone config, `announce_cap = 2` means two percent. It is an announce-traffic control, not a substitute for radio duty-cycle compliance or a cap on all transmitted traffic. Watch queues and measured airtime before changing it.
 
 ## Monitoring
 
-Run `rnstatus-rs` on each gateway to see which interfaces are up, how much traffic each is carrying, and how many paths are known. `rnpath-rs <destination_hash>` shows the route Reticulum would use to reach a given node — useful when an edge user reports they can't reach someone and you want to know whether the path is even known. `rnprobe-rs <destination>` sends a probe and prints round-trip time.
+On each gateway:
 
-For the community as a whole, the simplest health check is whether operators can reach each other's destinations. Designate an Offline Inbox/propagation node (any gateway can run one) and have operators set it as their Manual Offline Inbox node in Ratspeak. If messages flow through it, the mesh is alive.
+```bash
+rnstatus-rs --config ~/.rsReticulum
+rnpath-rs --config ~/.rsReticulum --table
+```
+
+Use the actual service config directory if different. For a particular destination, `rnpath-rs --config ~/.rsReticulum DESTINATION_HASH` requests or inspects its path. A path alone does not prove that an application is responding.
+
+Keep a test contact on each segment and verify messages in both directions. If using Offline Inbox delivery, test storage and later retrieval separately. For active probes, use the full destination name and hash described in [Infrastructure and ops](infrastructure-and-ops.md#monitoring-with-rnstatus-rs-rnpath-rs-rnprobe-rs).

@@ -4,21 +4,21 @@ sidebar_position: 1
 
 # Messaging and contacts
 
-Ratspeak's Messages tab is a full conversation view: threaded chats, search, attachments, and per-message delivery state. This page walks through day-to-day messaging, how to manage your address book, and what the small details on each message mean.
+Use **Messages** for private LXMF conversations and **Channels** for shared conversations through a hub. This page covers sending messages, delivery status, contacts, voice messages, and calls.
 
 ## Sending a message
 
 Open the Messages tab. If you have an existing conversation, tap the thread to open it and start typing in the composer at the bottom. To start a new conversation, tap the new-message button and either pick a saved contact or paste an LXMF address (the long hex hash that uniquely identifies a destination on the network).
 
-A faster path: open the Peers tab. Anyone the network has heard about shows up there. Tap a peer to open their detail panel — from there you can start a conversation immediately, or save them as a contact for later.
+A faster path: open the Peers tab. It lists peers this device has learned about. Tap a peer to open their detail panel — from there you can start a conversation immediately, or save them as a contact for later.
 
-Press send and the message hands off to Ratspeak's transport layer. From your side, that's it — the rest is automatic.
+Press send, then check the delivery indicator. A message can be waiting for a path, stored for later pickup, or delivered; these states mean different things.
 
 ## Conversations
 
-The thread list shows every conversation you've had, most-recent first. Each row shows the contact name (or address, if they're not saved), a one-line preview of the last message, the time, and any unread count.
+The thread list shows your visible conversations, most-recent first. Each row shows the contact name (or address, if they're not saved), a one-line preview of the last message, the time, and any unread count.
 
-Inside a thread, your messages appear on the right and theirs on the left, in classic chat layout. Long messages wrap; short ones stay short. Messages can include bold, lists, code, links, and spoilers; see [Formatting messages](formatting-messages.md). Scroll up to read older messages. Tap and hold (or right-click on desktop) any message to react, reply, or copy it.
+Inside a thread, your messages appear on the right and theirs on the left. Messages can include bold, lists, code, links, and spoilers; see [Formatting messages](formatting-messages.md). Scroll up to read older messages. Tap and hold (or right-click on desktop) any message to react, reply, or copy it.
 
 To delete messages, choose **Select** from a message's menu, tap any others you want, then choose **Delete**. This removes them from this device only; the other person keeps their copy. Messages still sending can't be selected.
 
@@ -26,26 +26,30 @@ You can hide a thread you're done with — it disappears from the list but the m
 
 ## Attachments
 
-Use the paperclip icon in the composer to attach a file. Ratspeak supports any file type and asks the backend for the current protocol limit before sending. If a file is too large, the app shows the file size and asks you to pick something smaller. Large attachments may take a long time, and Offline Inbox delivery can be limited by the propagation node you use, so keep files small when the path might include LoRa or another slow link.
+Use the paperclip icon in the composer to attach a file. Ratspeak checks the attachment size before sending. If a file is too large, the app shows the file size and asks you to pick something smaller. Large attachments may take a long time, and Offline Inbox delivery can be limited by the propagation node you use, so keep files small when the path might include LoRa or another slow link.
 
-For images specifically, Ratspeak shows an inline preview in the message bubble. Other attachments appear as a download chip with the filename and size.
+The recipient can impose a smaller incoming-message limit; Ratspeak defaults to **1 MB** for incoming messages and attachments. A file passing your sending check does not guarantee the recipient can accept it.
+
+For supported photos, the **Photo size** dialog offers smaller versions before sending. Smaller images travel faster over slow links. Ratspeak shows received images inline; other attachments appear with their filename and size.
 
 ## Delivery states
 
 Every outgoing message gets a small status indicator that tells you what happened to it.
 
-- **Sending** — the message is in flight. Ratspeak is actively trying to reach the recipient.
+- **Sending** — Ratspeak is preparing, routing, or transmitting the message.
 - **Delivered** — the orange check means Ratspeak received an authenticated delivery proof from the recipient's destination.
 - **Sent** — the gray check means the message left your node, but no delivery proof has come back yet.
 - **Stored in Offline Inbox** — the message was accepted by an LXMF propagation node for later pickup. This proves the inbox node received the encrypted message; it is not the same as end-to-end recipient delivery.
-- **Failed** — delivery did not succeed. The most common cause is that the destination is currently unreachable. You can resend.
+- **Sending cancelled** — you stopped the remaining local delivery work. This does not recall data already transmitted.
+- **Rejected** — the recipient rejected the message.
+- **Failed** — delivery did not succeed. The destination may be unreachable, or the transfer may have failed. You can resend.
 
-Ratspeak sends in Auto mode by default. Auto tries live delivery first, even if the recipient has not announced recently: a quiet device can still be online and listening. Normal messages, attachments, and game actions start with Direct delivery and its Link/Resource retry machinery. For compatibility, a short message to a peer that explicitly reports no compression support can start Opportunistic instead. If that live method reaches a terminal failure and Offline Inbox is enabled with a reachable node, Auto retries once by storing the encrypted message there. If no inbox node is ready, the message fails instead of claiming it was stored.
+Ratspeak sends in Auto mode by default. Auto tries live delivery first, even if the recipient has not announced recently: a quiet device can still be online and listening. The app chooses the live delivery method using its current link and recipient-key information. Attachments and game actions start with Direct delivery; ordinary text can use Opportunistic delivery when suitable recipient-key information is available. If that live method reaches a terminal failure and Offline Inbox is enabled with a reachable node, Auto retries once by storing the encrypted message there. If no inbox node is ready, the message fails instead of claiming it was stored.
 
 The underlying LXMF delivery modes are:
 
 - **Direct** uses an encrypted live link to the recipient, with Link packet or Resource confirmation. Best when both sides are online or the message is too large for one packet.
-- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, only fits messages up to **287 bytes** of content (a stamp the recipient asks for counts toward that), and can return an authenticated Reticulum packet proof. If no proof returns, Ratspeak cannot distinguish non-delivery from a lost proof.
+- **Opportunistic** sends the message as a single packet without setting up a link. It's lightweight and works well over slow radios, has a small single-packet size limit (message fields and stamps also take space), and can return an authenticated Reticulum packet proof. If no proof returns, Ratspeak cannot distinguish non-delivery from a lost proof.
 - **Offline Inbox** is Ratspeak's name for LXMF propagated delivery. It hands the encrypted message to a propagation node, which holds it until the recipient asks for waiting mail.
 
 Most users do not have to choose a mode by hand. The state icon reports the observable delivery result rather than the transport method.
@@ -59,7 +63,7 @@ delivery result.
 
 ## Searching your messages
 
-The search box at the top of the Messages tab does a full-text search across every message you've ever sent or received, in every conversation. Type a word or phrase and matching messages surface immediately, grouped by conversation. Tap a result to jump straight to that message in its thread, with the matched text briefly highlighted.
+The search box at the top of the Messages tab searches the message history stored for your active identity on this device. Type a word or phrase to see matches grouped by conversation. Tap a result to jump straight to that message in its thread, with the matched text briefly highlighted.
 
 Search is local — it runs against the database on your own device. Nothing is sent to a server, and there's no network round-trip.
 
@@ -69,61 +73,88 @@ The Contacts tab is your address book. Each contact has a name (or nickname) you
 
 There are three ways to add a contact:
 
-- **From the Peers tab** — open any peer's detail panel and tap "Save as contact." Their address fills in automatically; just give them a name.
-- **From a conversation** — open a thread with someone unsaved and use the "Save to contacts" action.
+- **From the Peers tab** — open any peer's detail panel and use the add-contact action. Their address fills in automatically; just give them a name.
+- **From a conversation** — open a thread with someone unsaved and use the add-contact action.
 - **Manually** — tap the add button in the Contacts tab and paste an address.
 
 Names are local to your device. The other side has no idea what you've named them, and they can name you whatever they like on their end.
 
 ## Avatars
 
-Every Ratspeak identity has an automatic, deterministic avatar called an identicon, derived from the cryptographic hash of the identity itself. The same identity always produces the same avatar — on every device, for every observer — so you can recognize a contact at a glance even before you've named them.
+Ratspeak generates an identicon from each LXMF address. The same address produces the same pattern in Ratspeak, which can help you recognize a contact.
 
-The pattern is generated by an algorithm called LXMFace. Two different identities will essentially never produce the same identicon, which makes them a useful sanity check: if a contact's avatar suddenly changes, the address you're talking to has changed too. That's worth noticing.
+An identicon is a visual aid, not proof of identity. Different addresses can produce similar patterns, and display names can be copied. Before sharing sensitive information with a new contact, compare the **full LXMF address** through a channel you already trust. Do the same if someone says they have changed addresses.
 
-You can't upload a custom avatar, and that's by design. Identicons can't be spoofed and don't require any trust in a profile-picture server. Your visual identity is your cryptographic identity.
+## Channels
+
+Channels are shared text conversations hosted by a hub. **The hub can read and relay channel messages.** The private-message encryption described above does not protect messages from the hub operator or other channel participants. A private channel's access key restricts joining; it does not make the conversation end-to-end encrypted.
+
+### Connect and join
+
+1. Open **Channels**, then **Find a hub** or **Connect to a hub**. Choose an available or saved hub, or enter the hub's 32-character address.
+2. Read the **Public channels** notice. On first use, the app requires acknowledgement of its age requirement and community terms before continuing.
+3. Review the hub and your nickname, then connect. Use a hub whose operator you trust. A familiar name alone does not verify its address.
+4. Choose an advertised channel, or select **Join** and enter a channel name supplied by the operator. Under **Private channel?**, enter an access key if required. **Remember for reconnect** saves the key after membership is confirmed; clear it to use the key only for this session.
+5. Wait until the channel says **Live**, then type a message and send it. On desktop, Enter sends and Shift+Enter adds a line break.
+
+A hub can require an invitation, access key, or other admission rules. Private or secret channels may be absent from its public list. If joining fails, read the error and ask the operator for the correct channel name and access details.
+
+Only one hub is live at a time. Switching hubs ends your current live channel sessions. Your local history stays on this device.
+
+### Messages, people, and moderation
+
+The composer is available while you are connected and have joined the channel. It shows a byte counter near the hub's message-size limit; some characters use more than one byte. A disabled composer or **Connection recovering…** means the session is not ready to send. Wait for **Live** before trying again.
+
+Channels are live conversations, not LXMF Offline Inboxes. Local history contains messages this device received; reconnecting does not fetch a backlog of everything you missed.
+
+Open **Members** to see participants reported by the hub and people seen locally. The list can be incomplete. Channel permissions and moderation belong to the hub: an operator can restrict who may join or speak. Use a participant's actions to block them, or a message's **Report** action to prepare a report email. Review and send that email yourself; opening the report form does not submit it. Independent hub operators control moderation on their own hubs. Blocking in your app does not remove the person's messages from everyone else's device.
+
+### Leave or reconnect
+
+Use **Channel options → Leave channel** to end membership in one channel. Use the hub menu's **Disconnect** to end all live sessions on that hub. Both retain local history. From a history-only channel, use **Rejoin channel** or **Connect to hub** when you want to return. You may need a new invitation or access key if the operator has changed access.
+
+Hosting is a separate task. See [Infrastructure and operations](../deployment/infrastructure-and-ops.md) for running a channel hub.
+
+## Voice messages
+
+To send a recording instead of a live call:
+
+1. Open a conversation and leave the text composer empty, with no attachment selected. Tap the microphone button.
+2. Grant microphone permission if prompted. Record your message; you can pause and resume.
+3. Tap stop to review the recording. Play it back, discard it, or send it.
+
+The app chooses the audio format using information announced by the recipient and shows the recording limit. Standard recordings allow up to five minutes; compact recordings allow up to 15 seconds. Keep recordings short on slow radio links.
+
+A voice message uses LXMF delivery, so check its delivery state just as you would for text. Recording is unavailable during a call. Finish or discard your recording before switching conversations or leaving the app: an unsent recording is not a saved draft. If sending fails and the review controls remain, retry there; if the app says the send status is unavailable, check the conversation before recording and sending a duplicate.
 
 ## Voice calls (experimental)
 
-Ratspeak ships an experimental voice surface built on [rsLXST](../products/rslxst.md), the Rust LXST telephony stack. Calls run as a peer-to-peer Reticulum link directly between the two devices — no relay servers, no media gateway, no fallback through propagation nodes. Treat the feature as a beta while the rsLXST stack stabilizes.
+Ratspeak's experimental voice calls use [rsLXST](../products/rslxst.md) over a live Reticulum link. Both devices need a working path at the same time. Calls do not use Offline Inbox delivery, and the Reticulum path may pass through transport nodes.
 
 ### Placing a call
 
-Open the conversation with the contact you want to call. The call button sits in the conversation header on Messages and only appears when:
+Open a conversation, contact, or peer and choose **Call**. The control is available in builds with voice support, and another active call prevents starting a second one.
 
-- the binary you are running was built with the `lxst-voice` Cargo feature (the default for public builds);
-- the other side is a saved contact;
-- no other call is currently in progress.
+Grant microphone access if prompted. The call strip shows the connection state. **Calling** or **Ringing** does not mean audio is connected; wait for **In call**. If the call fails or times out, check that the other person is reachable and accepts calls from you.
 
-Tap the call button to dial. The first time, your OS will prompt for microphone access — grant it. While the call is ringing, an outgoing call strip appears at the top of the app with the contact's name and status. If the other side does not pick up within roughly 25 seconds, the ring gives up automatically and a short timeout cue plays.
-
-Tap the same button (now styled as a hang-up button) at any time to end the call.
+Use **Hang up** to end the call. Before connection, the same action cancels the attempt.
 
 ### Receiving a call
 
-Incoming calls open a global call strip across the top of every view, plus a dedicated incoming-call sheet on mobile, with the caller's contact name (or LXMF address if they are not saved) and Answer / Reject buttons. Both surfaces are tappable — tapping the strip navigates you straight to that conversation.
-
-Tap **Answer** to pick up. The OS prompts for microphone access on first use, then audio starts as soon as the link finishes negotiating. Tap **Reject** to drop the call without ringing further. Tap **Hang up** during an active call to end it.
+Incoming calls appear in the call strip, with an incoming-call sheet on mobile. Choose **Answer** or **Reject**. Answering may request microphone permission; audio starts after the live link is established.
 
 ### Who can ring you
 
-The app enforces a few privacy rules on top of the Reticulum link layer:
+Incoming calls are accepted from saved contacts or recognized direct peers. Ratspeak recognizes a direct peer from a recent zero-hop announce or a cached zero-hop path. Other non-contacts are rejected. If you expect a routed call, save the caller as a contact first.
 
-- **Contacts, or direct neighbors only.** Inbound calls are allowed if the caller is in your contacts, or if Reticulum currently has a zero-hop path to them — typically a peer on the same LAN, BLE link, or other local interface. Calls from non-contacts that would require routing through a transport node are dropped before any audio path opens. The caller receives a short "only accepting calls from contacts" notice over LXMF.
-- **Blocked contacts are blackholed.** A call from a contact you have blocked is rejected and the caller is added to the network blackhole list so further attempts are dropped at the transport layer.
-- **Auto-blackhole on persistent rejection.** A non-contact whose calls have been rejected ten times in a row is automatically blackholed for rate-limit reasons. The device stops ringing on their behalf even if they keep dialing.
-- **Network blackhole short-circuit.** Identities already on the network blackhole list cannot ring the device at all; the call is dropped before any policy evaluation runs.
-
-You do not configure any of this — it is on by default and applies to every voice call.
+Blocked contacts and identities on the network blackhole list cannot ring you. Repeated rejected calls from a non-contact can also trigger automatic network blocking. These rules are enabled by default.
 
 ### Audio details
 
-Voice uses the Opus codec and starts at the Medium Quality profile. The underlying rsLXST profile matrix supports Medium, High, Super High, Low Latency, and Ultra Low Latency, with active profile switching while the call is established.
+Use **Mute** to stop sending microphone audio. On supported mobile audio routes, the speaker control switches between the phone's call output and speakerphone. Other input and output selection follows the operating system's audio settings.
 
-Microphone and speaker access goes through the normal OS permission model: `RECORD_AUDIO` plus `MODIFY_AUDIO_SETTINGS` on Android, `NSMicrophoneUsageDescription` on macOS and iOS, the system default audio device on Linux and Windows. There is no in-app device picker yet — the call uses your OS default input and output.
+Ratspeak selects and adjusts audio quality for the path. On constrained calls, a **Hold to talk** control replaces continuous microphone transmission: hold it while speaking and release it to listen. Each burst is limited to ten seconds. A slow or unstable radio path can still be unsuitable for live conversation; a short voice message may be more useful.
 
 ### What is not in voice yet
 
-Voice is intentionally narrow in the first release. There is no group call, no voicemail, no Offline Inbox fallback for missed calls, no call recording, no in-app device switching, and no echo cancellation or noise suppression beyond what the platform audio stack provides. Codec quality, ringtones, and platform audio routing are subject to change as rsLXST stabilizes.
-
-If you need to opt out entirely — for example because you are building Ratspeak from source on a machine without the `rsLXST` sibling checkout — build with `cargo tauri dev --no-default-features`. The whole voice surface compiles out and the call button never appears.
+Calls are one-to-one and require a live connection. There is no group call or Offline Inbox fallback for a missed call. Voice messages are separate recordings you choose to send, not an automatic answering service.

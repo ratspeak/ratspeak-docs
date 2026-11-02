@@ -1,5 +1,5 @@
 {
-  "label": "Flashing from source",
+  "label": "Firmware tools and source builds",
   "position": 3,
-  "description": "Compile and flash device firmware yourself — the developer path."
+  "description": "Build Ratspeak Handheld or install upstream RNode with the appropriate tools."
 }

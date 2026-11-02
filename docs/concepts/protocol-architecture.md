@@ -4,13 +4,13 @@ sidebar_position: 4
 
 # Protocol architecture
 
-This page explains how Reticulum addresses, discovers, and forwards traffic. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
+This page explains how Reticulum addresses, discovers, and forwards traffic. Packet constants below match the Reticulum source bundled with Ratspeak 1.0.37; standalone configuration examples target rsReticulum 1.3.0. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
 
 ## Destination-Based Addressing
 
 Reticulum does not route to hosts, subnets, ports, or DNS names. It routes to **destination hashes**.
 
-A destination is created from an application name, optional aspects, and, for Single destinations, an identity. Reticulum hashes that material down to a 16-byte address:
+A destination is created from an application name, optional aspects, and, for Single or Group destinations, an identity. Reticulum hashes that material down to a 16-byte address:
 
 ```text
 name_hash        = SHA-256("lxmf.delivery")[:10]
@@ -20,7 +20,7 @@ destination_hash = SHA-256(name_hash + identity_hash)[:16]
 
 That final 16-byte value is displayed as 32 hex characters. It is the address you share when you share a Reticulum destination.
 
-Two people can both run an `lxmf.delivery` destination without colliding because each identity produces a different identity hash. Plain and Group destinations are different: they are not identity-bound, so every node using the same application name and aspects shares the same destination hash.
+Two people can both run an `lxmf.delivery` destination without colliding because each identity produces a different identity hash. Plain destinations omit the identity from their hash, so the same application name and aspects produce the same Plain address. Group destinations still include an identity hash; sharing only a destination name and a symmetric key is not enough to make separately created Group destinations use the same address.
 
 ## Destination Types
 
@@ -68,8 +68,8 @@ Reticulum's announce behavior is designed to keep slow networks useful instead o
 | Rule | Effect |
 |------|--------|
 | Duplicate filtering | Already-seen announces are ignored |
-| Hop limit | Announces stop after the configured maximum, 128 by default |
-| Bandwidth cap | Announces use at most the configured announce share, 2% by default |
+| Hop limit | The default maximum announce depth is 128 hops |
+| Bandwidth cap | Scheduled announces are limited by a bandwidth budget, 2% by default |
 | Randomized delay | Re-broadcasts are delayed to avoid synchronized floods |
 | Locality priority | Lower-hop announces are sent before distant ones when bandwidth is scarce |
 | Replacement | Newer application data can replace a queued older announce |
@@ -91,9 +91,9 @@ If no path exists, the sender can request a path or wait for the destination to 
 
 ## Transport Nodes and Metadata
 
-Transport nodes forward packets without plaintext access. For encrypted Reticulum and LXMF traffic, they do not receive message bodies or application payloads.
+Transport nodes forward encrypted private LXMF message bodies and application payloads without decrypting them.
 
-They do still see transport metadata needed for forwarding: interface activity, timing, packet sizes, hop counts, and destination hashes. Reticulum packets do not carry source addresses, which improves initiator privacy, but it does not make traffic analysis impossible. Treat routing privacy as strong minimization, not magic invisibility.
+They do still see transport metadata needed for forwarding: interface activity, timing, packet sizes, hop counts, and destination hashes. Reticulum packets do not carry source addresses, which improves initiator privacy, but it does not make traffic analysis impossible. The carrier can expose additional metadata: a TCP peer sees the connection’s IP address, and a radio observer can detect transmissions. A Ratspeak Channels hub is also an application endpoint and can read room messages.
 
 ## Network Identities
 
@@ -107,14 +107,14 @@ Example:
 [reticulum]
   network_identity = <reticulum-config-dir>/storage/identities/community_mesh
   discover_interfaces = yes
-  interface_discovery_sources = 521c87a83afb8f29e4455e77930b973b
+  interface_discovery_sources = 0123456789abcdef0123456789abcdef
 ```
 
 The identity file is sensitive. If you share the full keyset, the recipient can act as that Network Identity.
 
 ## Wire Format
 
-Every Reticulum packet starts with a compact fixed structure:
+The base Reticulum packet structure, before an optional interface authentication field, is:
 
 ```text
 [HEADER: 2 bytes] [ADDRESSES: 16 or 32 bytes] [CONTEXT: 1 byte] [DATA]
@@ -155,11 +155,13 @@ Type 2 headers are used for transported packets that need an explicit transport 
 | Encrypted Single packet payload | 383 bytes | Maximum encrypted Single destination packet payload |
 | Link packet MDU | 431 bytes | Default payload size for encrypted Link packets |
 
-LXMF messages have smaller content limits because LXMF adds destination fields, timestamps, signatures, and structured-message overhead. With default parameters, opportunistic LXMF content is at most 287 bytes; larger messages use Direct link delivery or resources.
+These are default protocol budgets, not guaranteed application payload sizes on every interface. IFAC overhead and interface/link capacity can reduce the usable budget.
+
+LXMF messages have smaller content limits because LXMF adds destination fields, timestamps, signatures, and structured-message overhead. The default LXMF opportunistic content ceiling is 287 bytes before additional title/fields/stamp effects. It is not a fixed app text limit; larger messages use Direct link delivery or resources.
 
 ## Interface Access Codes
 
-When IFAC is enabled, an interface derives signing material from the interface name or passphrase. Outbound packets receive an interface authentication code, which may be a full or truncated Ed25519 signature depending on interface configuration.
+When IFAC is enabled, an interface derives signing material from the configured `network_name` and/or passphrase. Outbound packets receive an interface authentication code, which may be a full or truncated Ed25519 signature depending on interface configuration. IFAC also masks the packet header and payload with material derived from the shared interface key.
 
 Receivers verify that code before passing the packet to Reticulum. Invalid packets are dropped silently. IFAC is useful for private segments over shared carriers, but it is not a substitute for Reticulum identity encryption.
 
@@ -167,8 +169,8 @@ Receivers verify that code before passing the packet to Reticulum. Invalid packe
 
 Packet receipt proofs are cryptographic. A destination can prove receipt by signing the hash of the received packet with its Ed25519 signing key. The proof can travel back through the network, and the sender verifies it against the destination's known public key.
 
-Only the destination identity can produce a valid proof.
+For Single-destination packet receipts, verification uses the destination’s signing key. Link packet proofs instead use the proof sender’s signing key: the initiator’s temporary link key or the responder’s destination key. The peer that received the packet creates this proof; the original packet sender verifies it. A proof confirms the protocol receipt it covers; it does not prove that a person read a message.
 
 ## Traffic Handling
 
-Reticulum is priority-agnostic for general traffic: packets are handled first-come, first-served. Announce re-transmission and maintenance traffic are the exception; they are governed by announce timing, bandwidth caps, and the locality priority described above.
+Routing does not guarantee application-level delivery order or priority. Use a Reticulum Channel when ordered delivery is needed, or a Resource for a larger reliable transfer. Interface queues, airtime limits and announce scheduling affect when traffic can leave a node.

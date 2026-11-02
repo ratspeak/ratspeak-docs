@@ -6,11 +6,13 @@ sidebar_position: 5
 
 Reticulum is built around cryptographic identities instead of accounts, servers, or certificate authorities. For Ratspeak users, the practical result is that private messages are encrypted to the recipient before they leave the sender, and intermediate transport nodes forward ciphertext.
 
-There is one important nuance: Reticulum also supports **Plain** destinations for direct local public broadcast. Plain destinations are intentionally unencrypted and are not transported over multiple hops. They are not used for private Ratspeak or LXMF messages.
+Ratspeak Channels use encrypted participant-to-hub links, but the hub can read and relay room messages. A private room, password or invite controls access; it does not make the room end-to-end encrypted between participants. See [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
+
+Reticulum also supports **Plain** destinations for direct local public broadcast. Plain destinations are intentionally unencrypted and are not transported over multiple hops. They are not used for private Ratspeak or LXMF messages.
 
 ## Identity Keys
 
-A Reticulum identity is a 64-byte private keyset:
+A software Reticulum identity has a 64-byte private keyset:
 
 | Bytes | Purpose | Algorithm |
 |------:|---------|-----------|
@@ -25,7 +27,9 @@ The private key material is a bearer credential. If someone else copies it, they
 
 New Ratspeak software identities are recoverable: the 64-byte keyset is derived from a 12-word BIP-39 recovery phrase. That phrase is a second copy of the identity, so it must be protected like the key itself. Ratspeak can encrypt the local software key and stored phrase behind a PIN using Argon2id-derived authenticated encryption. The PIN protects this material at rest and is required to unlock the identity. Software identities with a passcode can use Auto-Lock: the timeout counts time since unlock, including time the device slept; using the app does not reset it. Switching identities or restarting Ratspeak requires another unlock. Closing or reopening the screen does not itself lock an unlocked session. On Android, that runtime can continue in the background after task removal, subject to Auto-Lock.
 
-Desktop hardware-key identities use the same Reticulum identity shape on the wire, but the private operations happen on a YubiKey/PIV token instead of an extractable file. The token signs announces and performs ECDH locally after PIN unlock. Peers cannot tell whether an identity is software-backed or hardware-backed.
+The PIN protects the stored identity key and recovery phrase, not the SQLite message history or attachment files. Use the device’s storage and account protections for that data. Identity backups do not include message history.
+
+Desktop hardware-key identities use the same Reticulum identity shape on the wire, but the private operations happen on a YubiKey/PIV token instead of an extractable file. The token signs announces and performs ECDH locally after PIN unlock. Its public keys use the normal Reticulum format.
 
 ## Destination Hashes Are Not Secrets
 
@@ -51,7 +55,7 @@ The simplified flow is:
 4. Encrypt the payload and authenticate the ciphertext.
 5. Include the sender's ephemeral public key in the encrypted token so the recipient can derive the same shared secret.
 
-Every packet uses fresh ephemeral key material. If a packet fails authentication, it is dropped before application code sees it.
+This Single-destination packet flow uses fresh ephemeral key material for each encryption. If a packet fails authentication, it is dropped before application code sees it.
 
 ## Links and Forward Secrecy
 
@@ -63,9 +67,9 @@ This is why links are the right substrate for larger or stateful work: they are 
 
 Ratchets provide forward secrecy for link-less Single destination packets.
 
-When a destination has ratchets enabled, its announces include a rotating X25519 ratchet public key signed by the long-term identity. Senders that know the current ratchet encrypt to that ratchet key instead of the static identity encryption key. When old ratchet private keys are discarded, old captured link-less packets become harder to decrypt even if the long-term identity is later compromised.
+When a destination has ratchets enabled, its announces include a rotating X25519 ratchet public key signed by the long-term identity. Senders that know the current ratchet encrypt to that ratchet key instead of the static identity encryption key. Once an old ratchet private key has been discarded, the long-term identity key alone cannot decrypt packets encrypted to that ratchet. Keeping copies of old ratchet keys defeats that protection.
 
-Default parameters:
+Defaults in the Reticulum source bundled with Ratspeak 1.0.37:
 
 | Parameter | Default |
 |-----------|---------|
@@ -86,7 +90,7 @@ The Reticulum protocol primitives are:
 - HMAC-SHA-256 for message authentication.
 - SHA-256 and SHA-512 for hashing.
 
-The Python reference implementation uses PyCA/OpenSSL for the main public-key and AES primitives in normal installations, with internal implementations for HKDF, HMAC, token framing, and PKCS7 padding. Ratspeak's Rust implementation uses Rust crypto crates while preserving the same protocol behavior and wire compatibility.
+Ratspeak uses the Rust implementations in rsReticulum. Protocol interoperability does not mean every application feature or platform behavior is identical to another client.
 
 ## LXMF Stamps and Tickets
 
@@ -96,15 +100,15 @@ LXMF adds spam resistance with stamps and tickets.
 
 **Stamps** are proof-of-work tokens attached to messages. The recipient publishes a required cost, and an unknown sender must spend CPU to produce a stamp that meets that cost.
 
-**Tickets** are a trusted fast path. A recipient can issue a ticket to a sender, and messages carrying a valid ticket bypass the stamp requirement until the ticket expires or rotates.
+**Tickets** are a trusted fast path. A recipient can issue a ticket to a sender, and messages carrying a valid ticket bypass the stamp requirement until the ticket expires.
 
-This keeps first contact permissionless without making repeated conversation expensive.
+A valid stamp or ticket does not override a block or a service’s access policy.
 
 ## Ingress Control
 
 Reticulum also protects scarce interfaces at the routing layer.
 
-**Announce caps** limit how much bandwidth an interface can spend on announces. The default is 2% of interface bandwidth.
+**Announce caps** limit how much bandwidth an interface can spend on announces. The default announce bandwidth budget is 2%.
 
 **Announce queues** hold excess announces and drain them according to available bandwidth, prioritizing lower-hop destinations first.
 
@@ -116,11 +120,11 @@ These controls are not encryption. They decide whether packets and announces are
 
 Blackholing lets an operator block an identity locally at the transport layer. It can stop announces from that identity from propagating through your node and prevent your node from carrying traffic toward it.
 
-Blackholing is local policy. There is no global block switch in Reticulum, and there should not be one. Operators decide what their own nodes and infrastructure will carry.
+Blackholing is local policy. There is no global block switch in Reticulum. Operators decide what their own nodes and infrastructure will carry.
 
 ## IFAC Private Segments
 
-Interface Access Codes add a shared-secret gate to an interface. When IFAC is configured, outbound packets include an authentication code derived from the interface's IFAC material. Receivers without matching material drop the packets before they enter the Reticulum stack.
+Interface Access Codes add authentication at an interface. Use a secret passphrase when the segment needs restricted access; a public network name alone is not a secret. When IFAC is configured, outbound packets include an authentication code derived from the interface's IFAC material. Receivers without matching material drop the packets before they enter the Reticulum stack.
 
 IFAC is useful when you want a private segment on a shared carrier, such as a public TCP listener or a radio channel used by multiple groups.
 

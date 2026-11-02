@@ -4,85 +4,77 @@ sidebar_position: 3
 
 # Bluetooth interfaces
 
-Ratspeak speaks two different Bluetooth dialects, and they are not interchangeable. The **BLE RNode bridge** connects a phone to a LoRa radio over Bluetooth so you can carry a transceiver in your pocket without a USB cable. **Bluetooth Peer** connects two phones (or laptops) directly to each other so they form a Reticulum link with no radio, no router, and no internet between them.
+Ratspeak 1.0.37 has two Bluetooth paths:
 
-There is no Python runtime in either path. Desktop Bluetooth uses Ratspeak's Rust Bluetooth stack. On Android, a native application-scoped supervisor owns the radio connection while Rust continues to own the RNode protocol and message queues. This lets a configured BLE RNode remain registered across Activity recreation and reconnect after the physical radio returns. Bluetooth support is gated behind the `ble` build feature; mobile builds turn it on by default.
+- **Bluetooth RNode** connects the app to a compatible LoRa radio. Bluetooth replaces the USB cable; the radio still sends over LoRa.
+- **Bluetooth Peer** connects nearby Ratspeak devices directly, without a LoRa radio or shared Wi-Fi network.
+
+A Bluetooth connection is a carrier interface. A Reticulum Link is an encrypted session carried over that interface; the two are not the same thing.
 
 ## BLE RNode bridge
 
-The BLE RNode bridge is the wireless equivalent of plugging a radio into a USB port. The phone or laptop is the BLE central; the peripheral is a BLE-equipped RNode or a Ratspeak handheld booted into RNode mode, such as rsDeck or rsCardputer. Standalone mode remains its own handheld endpoint. KISS frames — the same byte stream that runs over USB serial — are tunneled through a GATT characteristic instead of a UART. The result is point-to-point: one phone, one radio.
+The phone or computer acts as the BLE central and the RNode as the peripheral. Use firmware that exposes a compatible RNode BLE service. A supported Ratspeak handheld must be in **RNode** mode; Standalone is a separate messenger. Handheld 2.3.4 provides RNode images for T-Deck Plus, T-Pager and Cardputer Adv, not M9.
 
-The radio still does the radio work. The bridge replaces nothing about LoRa modulation, presets, or regional bands; it only changes how the phone talks to the modem. Throughput, latency, and on-air behavior match a USB-tethered radio of the same model.
+The bridge carries the RNode control/data stream. Radio frequency, preset and airtime settings still apply. BLE connection quality and buffering can affect performance even when the LoRa settings match a USB connection.
 
 ### Pairing an RNode
 
-1. Put the radio into BLE pairing or advertising mode. On RNode firmware with a screen this is usually a long-press of the left button until the OLED shows a 6-digit passkey. On rsDeck and rsCardputer, boot RNode mode first, then use the on-screen pairing control for a new host.
-2. In Ratspeak, open the Network view and tap **Add LoRa Device** then **Bluetooth**. Nearby radios appear within a few seconds.
-3. Select the radio. On Android, Ratspeak asks for the 6-digit PIN shown on the radio; enter it soon, before the radio leaves pairing mode. On desktop, the operating system shows its own pairing prompt.
-4. Set a name, region, and preset. Ratspeak brings the interface up immediately.
+1. Put the radio into its firmware's pairing mode. Follow the board's instructions; button combinations differ.
+2. Open **Network → Add LoRa Device → Bluetooth**. Grant Bluetooth/Nearby devices permission if the OS asks, then scan.
+3. Select the radio and follow the pairing prompt. On Android 1.0.37, the six-digit RNode PIN is entered inside Ratspeak. Use the PIN shown by that radio while its pairing window is open.
+4. Set the interface name, region and preset. Check the resulting connection status and radio settings.
 
-Bonding is persistent. The next time the radio is in range, Ratspeak reconnects without prompting. Android supports one enabled BLE RNode at a time; to switch radios, pause the current one first (Pause stays available while it reconnects). Android keeps its reconnect owner outside the app screen, so going Home or recreating the Activity does not itself discard the radio session. If the same physical RNode is later plugged in over USB, the BLE side tears down automatically — the radio is never driven from two transports at once.
+An existing bond can be reused, but reconnects can still need pairing again if the radio or OS has lost its bond. Android supports one enabled BLE RNode at a time. Pause the current one before switching radios; Pause remains available during connection/reconnection.
 
-When a radio is not connected, its row says why:
+On Android, a native application-scoped supervisor retains the configured connection across Activity recreation and retries when the radio returns. This does not override OS process termination or radio availability. Pause an old USB/BLE/TCP interface before moving the same radio to another connection; do not rely on automatic physical-device deduplication across transports or other applications.
 
-- **PIN did not match** or **Pairing ran out of time** — put the radio in pairing mode again, choose **Retry Connection**, and enter the PIN it shows.
-- **Radio not answering** — the radio connected but did not reply. Ratspeak reconnects on its own; restart the radio if it keeps happening.
-- **Radio failed to start** — the radio reported that its LoRa chip could not start. Check the antenna and restart it.
-- **Bluetooth link too small** — the phone kept the Bluetooth packet size at its minimum, which ESP32-based RNodes such as the Heltec V3 and V4 cannot reply through. Ratspeak asks for a larger size on every connect; turning Bluetooth off and on usually clears it.
+When a radio is not ready, keep the exact failure text:
 
-If a connect fails partway through, power-cycle the radio and remove the stale pairing from the OS Bluetooth settings before retrying. Stuck bonds are the most common cause of "scans but won't connect." On Linux, make sure the user account is in the `bluetooth` group; on Android, granting the *Nearby devices* runtime permission is required before any scan returns results.
+| Status | Next check |
+|---|---|
+| **PIN did not match** / **Pairing ran out of time** | Reopen pairing on the radio, choose **Retry Connection** and enter its current PIN. |
+| **Radio not answering** | The connection did not produce the expected radio response. Check radio power and firmware; the app retries. |
+| **Radio failed to start** | The radio reported a startup failure. Check its own display/log and hardware setup. |
+| **Bluetooth link too small** | The negotiated BLE size cannot carry the required RNode response. Record phone OS, radio firmware and the error; try reconnecting. |
+
+Release 1.0.37 includes Android BLE setup and MTU negotiation fixes for ESP32 RNodes. Update an older app before diagnosing the same failure. If a bond appears stale, compare the OS and radio pairing state before resetting either one. Linux access depends on BlueZ policy; membership in a group named `bluetooth` is not a universal requirement.
 
 ### What goes over the wire
 
-The KISS frame coming off the radio is wrapped, fragmented to fit the negotiated BLE MTU (typically 185–244 bytes depending on the OS and the radio's firmware), and reassembled on the other side. Reticulum's encryption is end-to-end across the link, so anyone sniffing the BLE channel sees ciphertext only. The link key itself is established by Reticulum, not by the Bluetooth pairing — losing the BLE bond does not leak past traffic.
+The bridge carries radio commands, Reticulum packets and their framing. Private LXMF payloads remain encrypted by Reticulum, but announces, control traffic and transport metadata are not all secret. Bluetooth pairing does not replace Reticulum identity encryption. See [Cryptography & Protection](../concepts/cryptography-and-protection.md).
 
 ## Bluetooth Peer
 
-Bluetooth Peer is a phone-to-phone (or phone-to-laptop) Reticulum link carried directly over Bluetooth Low Energy GATT. Every Ratspeak node running with Bluetooth Peer enabled is **both** an advertiser and a scanner — the roles are symmetric. When two nodes see each other, the one with the lexicographically lower identity hash takes the central role and opens the connection. This deterministic tiebreak prevents both sides from connecting at once.
+Bluetooth Peer uses BLE GATT to carry Reticulum traffic. Where the platform permits, it scans and advertises; a platform may support only the central/scanning role. The app binds a discovered peer identity from a directly received, signature-verified LXMF announce. It does not require manual Bluetooth bonding or a shared room password.
 
-There is no pairing step and no shared key to enter. Reticulum's normal identity handshake runs on top of the GATT link, so the security model is identical to any other Reticulum interface: encrypted, authenticated, and tied to long-term identities — not to the Bluetooth bond.
-
-The advertised GATT primary service is:
-
-- **Bluetooth Peer** — `a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d`
-
-The user-facing transport is only **Bluetooth Peer**. Platform-specific compatibility plumbing may register additional GATT services under the hood, but users should not have to choose a protocol or configure UUIDs by hand.
-
-Use Bluetooth Peer as a "right-here-with-you" sideband: a few people in the same room, a vehicle convoy, a small group on a hike, or a backstage crew. It is not a long-distance transport — it is the layer that makes nearby devices reachable when LoRa is overkill and Wi-Fi is unavailable or untrusted.
+For implementation work, the primary service UUID is `a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d`. The app handles its service selection and fragmentation; normal setup does not require editing UUIDs.
 
 ### Enabling it
 
-Open Network → **Bluetooth Peer** and toggle it on. The state persists, so Bluetooth Peer comes back up on next launch. No configuration file edits, no daemon restart. Discovery is continuous in the background; peers appear in the Peers list and Network view as they come into range.
+Open **Network** and select **+** beside **Bluetooth Peer**. Choose **10 minutes**, **30 minutes**, **60 minutes** or **Always on**. The app saves the choice and expiry; a timed session does not restart with a fresh interval when you reopen the app. Allow Bluetooth access and keep the app active while testing discovery; a saved preference cannot make a suspended or terminated process scan.
 
-Bluetooth Peer registers as a normal Reticulum interface, which means announces, links, resources, and LXMF traffic all flow through it the same way they would over LoRa or TCP. A peer that is reachable both over Bluetooth and over LoRa will be picked over Bluetooth when it is closer in hop cost — the transport layer chooses, not the user.
+The interface can carry announces, links, resources and LXMF traffic. When a destination has several paths, Reticulum selects a route. An established Link stays on its selected interface: losing Bluetooth can close that Link, after which a new connection may find another path. Enabling LoRa at the same time does not guarantee interruption-free handoff.
 
 ### Desktop requirements
 
-On Windows, the Bluetooth Peer advertiser/peripheral role requires the MSIX build. The plain `.exe` / MSI builds can still run the app, but they do not expose the packaged-app Bluetooth capability needed for nearby devices to discover and connect to the Windows machine over Bluetooth Peer.
+**Windows:** the peripheral/advertising implementation requires packaged-app Bluetooth capability. The public 1.0.37 release supplies EXE/MSI installers and no MSIX artifact. If advertising is unavailable, the implementation reports that condition and can continue central-only; the other device must advertise. Do not look for an MSIX download in that release or assume every Windows adapter supports the needed roles.
 
-On Linux, the advertiser/peripheral role requires a working BlueZ local GATT server and LE advertising path. In practice that means `bluetoothd` is running, the user has permission to use the adapter through BlueZ or polkit, the adapter supports LE advertising, and some distributions need `Experimental = true` in `/etc/bluetooth/main.conf` followed by a Bluetooth service restart. If Ratspeak can scan but cannot advertise, the Network view will show Bluetooth Peer as central-only.
+**Linux:** BlueZ must be running, the user must be allowed to access it, and the adapter must support LE advertising and a local GATT server. Some BlueZ configurations need experimental features for the server path. Use your distribution's guidance and the exact reported error before changing service configuration. Scanning success alone does not establish advertising support.
 
 ### Use cases vs. LoRa
 
-LoRa wins on range; BLE wins on throughput and latency. If everyone is in the same room, the same coffee shop, the same couple of vehicles, BLE will move messages and small files an order of magnitude faster than the LoRa link sitting on the same desk. Once anyone walks more than fifty meters away, LoRa takes over without any handoff work — the BLE link drops cleanly, the LoRa path is already known, and traffic continues. Run them simultaneously when you can; that is the design.
+Use Bluetooth Peer for nearby devices without a shared LAN. Use an RNode when the radio path is needed to reach beyond those devices. Both can be enabled, but test the actual route and failure behavior before depending on a mixed network.
 
 ## iOS support
 
-Apple platforms do not expose USB serial to apps, so iPhones and iPads cannot drive an RNode over a Lightning or USB-C cable. For a directly attached radio on iOS, use the BLE RNode bridge. If the radio's RNode/KISS stream is exposed on a reachable local network, iOS can also use the RNode TCP option from the Add LoRa Device sheet. The Network view on iOS hides the USB radio option entirely — there is no platform path for it.
+Ratspeak on iOS supports BLE RNode and RNode TCP, and hides the USB radio option. Grant Bluetooth permission when requested. For initial discovery and troubleshooting, keep Ratspeak in the foreground; Core Bluetooth background rules do not guarantee continuous peer discovery or advertising while the app is suspended.
 
-Bluetooth Peer works on iOS as well, but Core Bluetooth applies stricter background-execution limits than Android — extended advertising while the app is fully suspended is not guaranteed. Keep Ratspeak in the foreground or in the recents tray during active sessions for reliable peer discovery. Granting the *Bluetooth* permission at first launch is required; without it both the bridge and Bluetooth Peer will silently find nothing.
+A radio's TCP endpoint must be reachable from the phone and should be protected by the local network/VPN or bridge authentication. See [RNode over TCP](lora-and-rnode.md#rnode-over-tcp).
 
 ## Range and limits
 
-BLE is a short-range, low-throughput technology. Real-world expectations:
+Range, throughput, latency and battery use depend on the adapters, placement, interference, OS and foreground/background state. Test with the devices close together first, then test the intended location. A connection can be slower or less reliable than its nominal BLE data rate suggests.
 
-- **Range** — roughly 10 meters indoors with walls in the way, up to 30–50 meters in clear line of sight. External antennas on RNode hardware extend the bridge side; phone-to-phone range is whatever the two phone radios can manage. Putting a phone in a pocket or thick case typically cuts range by half.
-- **Throughput** — on the order of 100 kbps in good conditions, much less when the channel is congested or the connection interval is long. Fine for chat, sensor data, status, small file transfers; not suitable for streaming media.
-- **Concurrency** — most phone radios will hold a handful of simultaneous BLE connections cleanly. Beyond that, the OS starts dropping links unpredictably. Treat Bluetooth Peer as small-group transport — five to eight nearby nodes is realistic, twenty is not.
-- **Latency** — typical round-trip is tens of milliseconds, but Android in particular will lengthen the connection interval aggressively when the screen is off. Expect occasional multi-hundred-millisecond stalls on backgrounded devices.
-- **Interference** — BLE shares 2.4 GHz with Wi-Fi, microwaves, and every other consumer wireless device. Crowded RF environments degrade throughput before they break the link entirely.
-- **Battery** — continuous scanning + advertising is the most power-hungry mode BLE has. Expect a noticeable drain on phones left running Bluetooth Peer all day; the bridge alone, with no scanning, is much cheaper.
+The bundled Bluetooth Peer implementation caps its peer set at **seven**. That is a software limit, not a promise that a phone can sustain seven useful simultaneous connections. Scanning, advertising and active traffic also consume power.
 
-For longer reach, hand off to LoRa via the RNode bridge. For higher throughput between known peers, fall back to TCP over Wi-Fi or I2P. Bluetooth fills the gap where neither of those is available — close enough to see each other, but with no shared network in between.
-
-If something is misbehaving, the Network view in Ratspeak shows live counters per interface: bytes in, bytes out, last frame, current peer count. A Bluetooth interface that is up but reading zero bytes is almost always a permission issue or a stale OS-level bond, not a bug in the radio or Bluetooth Peer.
+Use the Network status and traffic counters to narrow a failure. Zero traffic can mean no discovered peer, a missing permission, an unavailable advertising role, an incompatible radio service or another connection problem. Include those states and the exact error in a report; do not assume every scan failure is a stale bond.

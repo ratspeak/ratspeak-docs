@@ -4,104 +4,103 @@ sidebar_position: 2
 
 # Home or friend group
 
-A private mesh for a household, a few friends, or a small organization. Two to ten people, one always-on box doing the routing, and an interface lock so nobody outside the group can join. This page is the recipe.
+For people on the same Wi-Fi or LAN, start by enabling **Local Network** on each Ratspeak device and test a message. An always-on node becomes useful when people connect at different times, use separate networks, or need a stable shared connection.
 
-## Why this setup
+This guide sets up a TCP transport for a group. An Offline Inbox and a channel hub are optional, separate services.
 
-You want chat that does not depend on Discord, Signal, or any company's servers. You want it to keep working when your home internet hiccups. You want everyone you trust to be reachable, and nobody you don't.
+## Choose where the node runs
 
-A single always-on transport node solves the hard part: it stays online so the rest of you can come and go. Your laptops and phones connect to it when they're on, and it gives everyone a stable route through the group. Messages to offline friends sit in an Offline Inbox only if you also run or choose an LXMF propagation node; the transport node by itself forwards packets, not mailbox storage. Lock the network with IFAC and the whole thing is invisible to outsiders, even ones who happen to be running Reticulum on the same wire.
+Use a machine you can keep powered and maintain: a home computer, a small Linux server or a VPS. A home server keeps local connections available during an internet outage; a remote VPS still depends on each user's route to the internet. Neither gives a distant radio user connectivity without a working radio path or gateway.
 
-## Hardware you need
-
-One always-on machine. Any of these work:
-
-- A cheap VPS with a public IP, anywhere from $3 to $10 per month.
-- A Raspberry Pi 4 or 5 sitting on your home Wi-Fi.
-- An old workstation or NUC you don't power off.
-- A spare laptop with the lid-close-suspend behaviour disabled.
-
-Two to ten Ratspeak clients, one per person. These are just the desktop or mobile app.
-
-Optional handhelds: an rsDeck or rsCardputer unit for anyone who wants off-grid LoRa coverage when they're away from Wi-Fi.
+For connections outside the server's LAN, arrange a reachable host and TCP port. A VPS usually has a public address; a home connection may need router forwarding and may be behind carrier-grade NAT. Confirm that path before configuring every client.
 
 ## Step 1 - set up the always-on node
 
-The transport node runs `rnsd-rs`, the rsReticulum daemon. It is a single executable, light on memory, and a good fit for Raspberry Pi-class boards.
+Install the applicable [rsReticulum tools](https://github.com/ratspeak/rsReticulum/releases), or follow their [source build instructions](https://github.com/ratspeak/rsReticulum#building). The examples here use the standalone `rnsd-rs` configuration, not the app's data directory.
 
-Drop the daemon's config at `~/.rsReticulum/config` unless you pass a different directory with `--config`. Start with this minimum:
+Create `~/.rsReticulum/config` and use that directory explicitly when starting the daemon. Replace the example network name and passphrase with your group's values:
 
-```
+```ini
 [reticulum]
   enable_transport = yes
   share_instance = yes
+  instance_control_socket = yes
 
 [interfaces]
-  [[Default Interface]]
-    type = AutoInterface
-    interface_enabled = yes
-```
-
-`enable_transport = yes` is the critical line. Without it, the node will pass packets for itself but won't forward for the group. With it, the node becomes the hub everyone else routes through.
-
-Start the daemon and leave it running. On a Pi, wire it up as a systemd service so it comes back after reboots.
-
-## Step 2 - lock the interface with IFAC
-
-By default a Reticulum interface accepts traffic from any other Reticulum node it can reach. Fine for a public mesh, wrong for a private one. The fix is the Interface Authentication Code, IFAC for short.
-
-Pick a network name and a strong shared secret. Write them down somewhere your group can find them; you'll need them on every device. Then add a TCP server interface to the always-on node's config:
-
-```
-[interfaces]
-  [[Friend Group VPS]]
+  [[Friend group]]
     type = TCPServerInterface
     enabled = yes
     listen_ip = 0.0.0.0
     listen_port = 4242
-    network_name = our-friends
-    passphrase = a-strong-shared-secret
+    networkname = our-friends
+    passphrase = replace-with-your-shared-secret
 ```
 
-`network_name` and `passphrase` together form the lock. Leave `ifac_size` unset unless you have a specific reason to tune it; Reticulum picks an interface-appropriate default. Anyone who tries to connect without the matching pair gets ignored. No announces, no path discovery, nothing leaks.
+Use a strong passphrase and share it privately. Leave `ifac_size` at its interface default unless you are matching an existing network with an explicit size.
 
-Restart `rnsd-rs` on the node. If it's a VPS, open port 4242 in your firewall (or whichever port you chose). If it's a home Pi reachable from outside, forward that port on your router.
+Start the node:
+
+```bash
+rnsd-rs --config ~/.rsReticulum
+```
+
+In another terminal, check its interfaces:
+
+```bash
+rnstatus-rs --config ~/.rsReticulum
+```
+
+Allow inbound TCP on your chosen port through the relevant host/router firewall. On a home network, expose only the intended listener. Do not expose the daemon's local shared-instance or control ports as public services.
+
+Once the foreground test works, use [Infrastructure and ops](infrastructure-and-ops.md#raspberry-pi-systemd) to run it as a service.
+
+## Step 2 - lock the interface with IFAC
+
+The `networkname` and `passphrase` fields above enable IFAC for this TCP interface. Clients must match them. A TCP socket may connect even when the IFAC values differ, so check an announce and message as well as the connection indicator.
+
+IFAC authenticates interface traffic. It does not make the server's IP address, open port or traffic volume invisible. Anyone holding the shared secret can participate, and a group member's other interfaces may connect the segment to a wider network. Decide together which bridges are intended.
+
+Avoid leaving an unintended open AutoInterface or second TCP listener on a node intended to serve only this group. A Local Network **Group ID** separates discovery groups; it is not a secret or an IFAC passphrase.
 
 ## Step 3 - add it to each Ratspeak client
 
-Open Ratspeak, head to Settings, then Network, then Interfaces. Add a new TCP client interface pointing at the always-on node:
+1. Open **Network**, select **+** next to **Internet/TCP**, and choose **Custom**.
+2. Enter the server's reachable host and port.
+3. Enable **Use IFAC**. Enter the matching **IFAC Network Name** and **IFAC Passphrase**.
+4. Connect, then check the interface status.
+5. Have another member announce from **Network**. Find them in **Peers**, send a message and confirm a reply. Add them to **Contacts** explicitly if you want to save them.
 
-```
+For a standalone Reticulum client, the corresponding interface is:
+
+```ini
 [interfaces]
-  [[Home VPS]]
+  [[Friend group]]
     type = TCPClientInterface
     enabled = yes
-    target_host = vps.example.org
+    target_host = group.example.org
     target_port = 4242
-    network_name = our-friends
-    passphrase = a-strong-shared-secret
+    networkname = our-friends
+    passphrase = replace-with-your-shared-secret
 ```
 
-The IFAC name and passphrase must match the server side exactly, character for character. A typo gets you silence, not an error message. That's by design.
+`group.example.org` is a placeholder. Use the address you tested in step 1. Match names, passphrases and any explicit IFAC size across both ends; see [Configuration reference](../reference/configuration-reference.md) for version-specific details.
 
-Save, restart the interface, and watch the connection come up. Send an announce. Within a few seconds your friends should see you in their contacts list, and you should see theirs. You're done.
+## Add offline delivery or group conversation
 
-For people on your home Wi-Fi who don't need the VPS, you can also add an `AutoInterface` block for LAN discovery - it'll find the always-on node automatically with no config beyond `network_name` and `passphrase`.
+For messages to people who are offline, operate or choose an **Offline Inbox** and configure it in the clients. Test by taking a recipient offline, sending through propagation, then reconnecting and fetching the message. The transport daemon alone does not provide this storage.
+
+For live group conversation, a desktop member can [host a channel hub](infrastructure-and-ops.md#hosting-a-channel-hub). Tell participants that the hub reads and relays channel content. A private or invite-only channel controls admission; it does not turn channel content into end-to-end encrypted direct messages.
 
 ## Bringing in handhelds (rsDeck/rsCardputer)
 
-If anyone wants LoRa coverage for hikes, festivals, or just walking around the neighbourhood, hand them an rsDeck or rsCardputer. These are portable nodes with a LoRa radio onboard. Configure the same `network_name` and `passphrase` on the LoRa interface and they'll join the same locked mesh, just over radio instead of TCP.
+Current device builds are supplied by [Ratspeak Handheld](../hardware/handheld-guide.md). A standalone handheld uses its own identity and radio connection. In RNode mode, a supported handheld supplies the radio for a phone or computer.
 
-These handhelds are standalone Reticulum endpoints with their own identity unless you deliberately import or migrate an identity. Both rsDeck and rsCardputer can also boot into RNode mode when you want the device to act as the radio for a phone or laptop instead of as its own endpoint. When someone is at home, traffic can flow through the VPS. When they're out of range, it can flow over LoRa to whichever group member is closest.
+A TCP-only server cannot reach a LoRa-only handheld without a gateway between the two segments. Match the radio parameters and use only the IFAC configuration supported by the actual firmware and mode. Test the complete path before treating the handheld as part of the group.
 
 ## Maintenance
 
-Update the daemon when you update Ratspeak. Wire format is stable, but security fixes happen.
+Keep the daemon version, config directory and service account recorded. Read release notes before updating; app and standalone daemon releases do not have to use the same version number. Back up the complete configured state directories while the services are stopped, including the LXMF directory if you run an Offline Inbox.
 
-Rotate the IFAC passphrase if someone leaves the group. Pick a new one, push it to every device on a known-good day, and the departing member's old config stops working immediately.
+If membership changes, rotate the shared secret on every participating interface and test again. Devices still using the old secret cannot join the changed interface, but rotation does not retract old messages or remove another network path.
 
-Watch the always-on node's logs for the first week. You're looking for stable links and announce traffic. If links keep dropping, your network is the suspect, not Reticulum.
-
-Back up `~/.rsReticulum/storage/` on the always-on node from time to time. It holds path tables and propagated messages - losing it isn't fatal, but a fresh node takes a while to relearn the topology.
-
-That's the whole deployment. One always-on box, an IFAC lock, and a TCP client on each device. The rest of the network you build on top of this is just contacts and conversations.
+When a connection fails, check the listener, firewall, client address, IFAC values and routing evidence before changing identities or erasing state. See [Troubleshooting](../reference/troubleshooting.md).

@@ -4,9 +4,9 @@ sidebar_position: 2
 
 # LoRa radio interfaces
 
-An RNode is a LoRa transceiver running open firmware that speaks the KISS protocol over USB serial, Bluetooth LE, or a TCP bridge. Any board in that family — RNode Mk2, LilyGO T-Beam / T-Echo, Heltec, RAK4631, homebuilt builds on a supported Semtech radio — works. The radio handles modulation; Reticulum handles addressing, encryption, and routing on top of it.
+An RNode is a compatible radio running the RNode control protocol. Check the exact board, radio chip, firmware and connection mode; a LoRa-capable board alone is not enough. This page covers Ratspeak **1.0.37** and Ratspeak Handheld **2.3.4 beta** defaults.
 
-LoRa is the slow lane of the network. Throughput is measured in hundreds of bytes per second, not kilobits, and a frame may take seconds to a minute on the air. In return you get kilometers of range from a battery-sized radio and the freedom to operate without infrastructure.
+LoRa can provide a radio path without internet or cellular service. Range and throughput depend on the radio settings, antenna, terrain, interference and network load. Test a short direct exchange before adding hops or larger transfers.
 
 ## Connecting an RNode in Ratspeak
 
@@ -14,10 +14,10 @@ Open the Network view and tap **Add LoRa Device**. Four transports are available
 
 - **USB / Serial** — desktop (Linux, macOS, Windows). The radio enumerates as a serial port; pick it from the dropdown.
 - **USB-OTG** — Android phones with USB host mode, using a USB-C OTG cable. Grant the per-device permission prompt the first time you plug in.
-- **Bluetooth** — desktop and mobile. Put the RNode into pairing mode first (hold the left button until the OLED prompts), then scan. The 6-digit passkey on the OLED is entered on the phone. Bonding only happens once; subsequent connects are silent.
+- **Bluetooth** — desktop and mobile. Use the firmware’s pairing procedure, then scan. Follow the app/OS prompt for that radio; Android 1.0.37 presents the RNode PIN prompt inside Ratspeak. A retained bond can be reused, but pairing may be needed again after an OS/radio reset.
 - **TCP** — desktop and mobile. Use this when the RNode's KISS stream is exposed over a local TCP bridge, for example by firmware with TCP support or by a nearby always-on host attached to the radio.
 
-After choosing a transport, set a name, region, and preset. Ratspeak writes the interface config and brings it up immediately — no manual config file editing. Adding another transport for the same physical RNode automatically tears down the older side, so the radio is never driven from two places at once.
+After choosing a transport, set a name, region, and preset. Ratspeak writes the interface config and brings it up immediately — no manual config file editing. Pause the old connection before switching the same radio between USB, BLE or TCP. Do not assume the app can identify every physical-device conflict across different endpoints or other hosts.
 
 ## RNode over TCP
 
@@ -27,26 +27,58 @@ In the TCP tab, enter an endpoint as `host`, `host:port`, `tcp://host`, or `tcp:
 
 Keep RNode TCP on a trusted LAN, hotspot, or VPN unless the bridge itself adds authentication. Anyone who can open the raw radio control stream can spend your airtime and change how the attached radio behaves.
 
-## The 8 firmware presets
+## Choosing a radio preset {#the-8-firmware-presets}
 
-These are the RNode/Ratspeak preset family exposed in the desktop and mobile dashboard and mirrored by current ratspeak-handheld standalone firmware. Smaller screens may present them differently, but the radio parameters are the same.
+Start with **Medium Fast (default)** for a balance of speed and reach. If you are
+joining people who already use another preset, match their frequency and preset
+instead. Check that messages get through in both directions before trying a
+faster setting.
 
-| Preset           | SF  | BW (kHz) | CR  | TX (dBm) | Use it for                                                           |
-|------------------|-----|----------|-----|----------|----------------------------------------------------------------------|
-| Short Turbo      | 7   | 500      | 4/5 | 14       | Same-room or same-building. Highest bitrate, lowest range.            |
-| Short Fast       | 7   | 250      | 4/5 | 14       | Indoor, dense urban. Fast, modest range.                              |
-| Short Slow       | 8   | 250      | 4/5 | 14       | Slightly more reach than Short Fast at the same power budget.         |
-| Medium Fast      | 9   | 250      | 4/5 | 17       | Neighborhood-scale links with line-of-sight obstructions.             |
-| Medium Slow      | 10  | 250      | 4/5 | 17       | Suburban / rural with mild terrain. Balanced.                         |
-| Long Turbo       | 11  | 500      | 4/8 | 22       | Wide bandwidth with stronger error correction than Long Fast.              |
-| **Long Fast**    | 11  | 250      | 4/5 | 22       | Long range, with more airtime than Medium Fast.    |
-| Long Moderate    | 11  | 125      | 4/8 | 22       | Maximum sensitivity over difficult terrain. Slow but reaches farther. |
+Faster presets mean shorter waits when the signal is good. Slower presets can
+help messages get through when radios are farther apart or the signal is weak.
+The range labels below are relative to these eight presets, using similar radios
+and antennas in the same conditions. They are not estimates in miles or kilometres:
+antenna placement, hills, buildings and interference can make a large difference.
 
-**Medium Fast is the default** for new Ratspeak RNode interfaces and new or reset
-handheld standalone settings. Existing saved settings are retained. Two radios
-need the same frequency, SF, BW, and CR — use the settings of the peers you want
-to reach. Older rsDeck, rsPager and rsCardputer releases documented Long Fast as
-their default; those legacy READMEs do not describe current ratspeak-handheld defaults.
+| Preset | Approx. radio speed | Relative range | When to choose it |
+|---|---:|---|---|
+| Short Turbo | 21.9 kbit/s | Very short | Nearby radios with a strong signal, when you want the shortest waits. |
+| Short Fast | 10.9 kbit/s | Short | Nearby radios when Short Turbo does not reach reliably. |
+| Short Slow | 6.25 kbit/s | Short to medium | A little more reach than Short Fast, with longer waits. |
+| **Medium Fast (default)** | **3.52 kbit/s** | **Medium** | **Start here for everyday messaging.** |
+| Medium Slow | 1.95 kbit/s | Medium to long | Try this if messages are unreliable on Medium Fast and you can accept longer waits. |
+| Long Turbo | 1.34 kbit/s | Long | Longer links when you want the fastest option in the Long group. |
+| Long Fast | 1.07 kbit/s | Long | Longer links when the Medium presets do not reach reliably. |
+| Long Moderate | 0.34 kbit/s | Very long | Weak or distant links where getting a message through matters more than speed. |
+
+The speeds are calculated radio data rates, not measured message or file-transfer
+speeds. Real transfers are slower because each message needs extra radio data,
+and radios may have to wait or retry. “Turbo” means fastest within its group:
+Long Turbo is still slower than Medium Slow.
+
+These presets are shared by the app's RNode picker and handheld 2.3.4 Standalone
+mode. New or reset settings use Medium Fast; existing saved settings are retained.
+Older rsDeck, rsPager and rsCardputer releases used Long Fast as their default.
+
+<details>
+<summary>Technical settings for each preset</summary>
+
+Use these values when comparing settings with another radio or entering them
+manually. SF is spreading factor, BW is bandwidth, CR is coding rate, and TX is
+transmit power.
+
+| Preset | SF | BW (kHz) | CR | TX (dBm) |
+|---|---:|---:|---|---:|
+| Short Turbo | 7 | 500 | 4/5 | 14 |
+| Short Fast | 7 | 250 | 4/5 | 14 |
+| Short Slow | 8 | 250 | 4/5 | 14 |
+| Medium Fast (default) | 9 | 250 | 4/5 | 17 |
+| Medium Slow | 10 | 250 | 4/5 | 17 |
+| Long Turbo | 11 | 500 | 4/8 | 22 |
+| Long Fast | 11 | 250 | 4/5 | 22 |
+| Long Moderate | 11 | 125 | 4/8 | 22 |
+
+</details>
 
 All eight handheld standalone presets use an **18-symbol preamble**. Coding rate
 4/5 is entered as `5` in RNode configuration; 4/8 is entered as `8`. TX power
@@ -73,21 +105,17 @@ mode, the connected host controls the radio settings.
 Presets are starting points. The underlying parameters Ratspeak writes to the RNode are:
 
 - **Frequency** — center frequency in Hz. Must match the regional band, stay inside any sub-band restrictions, and ideally avoid channels heavily used by other LoRa traffic in your area.
-- **Spreading factor (catalog range SF 5–12; hardware support varies)** — higher SF = greater sensitivity / range, exponentially longer airtime. SF12 is roughly 32× the on-air time of SF7 for the same payload. Each increment of SF roughly doubles symbol duration at the same bandwidth.
+- **Spreading factor (catalog range SF 5–12; hardware support varies)** — higher SF = greater sensitivity / range, exponentially longer airtime. Each increment doubles symbol duration at the same bandwidth; complete packet airtime also depends on payload, coding and preamble.
 - **Bandwidth (presets use 125–500 kHz; custom values depend on hardware)** — wider BW = faster, less sensitive, more spectrum used. Narrow BW gains sensitivity (and range) at the cost of throughput, and is more vulnerable to oscillator drift between cheap radios.
-- **Coding rate (4/5–4/8)** — forward error correction overhead. 4/5 is fastest, 4/8 the most resilient at ~60% the data rate.
+- **Coding rate (4/5–4/8)** — forward error correction overhead. Higher coding overhead reduces the useful data rate.
 - **TX power (typically 14–22 dBm)** — radio output. Cap depends on regional rules and the antenna gain you're feeding.
-- **Preamble length** — symbols transmitted before each frame. Longer preambles help under heavy interference at the cost of airtime.
+- **Preamble length** — symbols transmitted before each frame. Longer preambles use more airtime; use the value required by the firmware and receiving peers.
 
-Both nodes on a link must agree on frequency, SF, BW, and CR. TX power and preamble can differ per side.
+Frequency, spreading factor, bandwidth and packet format must be compatible. Matching presets is a useful starting point. In explicit-header mode, used by current handheld standalone firmware, the header communicates the payload coding rate; a different configured CR does not by itself establish incompatibility. TX power need not match. See Semtech’s [header explanation](https://www.semtech.com/design-support/faq/faq-lorawan) and [LoRa FAQ](https://www.semtech.com/design-support/faq/faq-lora) for the radio trade-offs.
 
 ## Regional bands
 
-LoRa is unlicensed in ISM bands but the bands themselves are regional. **You are responsible for staying within local regulations** — duty cycle, max EIRP, channel plan.
-
-- **Americas / Australia** — 915 MHz (902–928 MHz US, 915–928 MHz AU)
-- **Europe** — 868 MHz (863–870 MHz EU, with sub-band duty-cycle limits)
-- **Asia** — 923 MHz (varies sharply by country; check your national regulator)
+The region picker is a set of software defaults, not a radio authorization. Check the frequency, occupied bandwidth, power/EIRP, antenna and airtime rules for the place and radio service where you will transmit.
 
 The exact handheld region defaults are **915000000 Hz** (Americas and Australia),
 **868000000 Hz** (Europe / EU868), and **923000000 Hz** (Asia). The desktop/mobile
@@ -99,7 +127,7 @@ or airtime caps. The desktop/mobile RNode picker also prefills a long-window
 airtime limit of **1%** for Europe; other regions leave it unset. These software
 defaults do not establish compliance for your installation.
 
-If you're unsure what's legal for your location, check your national regulator's ISM-band rulings before transmitting. Receive-only operation is legal essentially everywhere LoRa hardware is sold.
+If the permitted settings are unclear, check your national regulator’s guidance before transmitting. A region label does not verify that a particular board, antenna or preset meets those rules.
 
 ## Airtime limits
 
@@ -108,19 +136,21 @@ For installations where you must stay under a regulatory duty cycle (notably the
 - **Long-window limit** — percent of a long rolling window the radio is allowed to transmit.
 - **Short-window limit** — percent of a short rolling window the radio is allowed to transmit.
 
-When the limit is reached the radio stops transmitting until the window slides forward; receive is unaffected, so the node still hears its neighbors and routes paths it can't currently emit on. These are best-effort soft caps — not a substitute for understanding your region's rules. Set them per-interface in the radio's advanced config; the Europe region prefills the long-window cap to **1%**, while short-window caps and other regions' long-window caps are unset by default. These are host-managed RNode settings, not handheld standalone region settings.
+The app sends configured caps to compatible RNode firmware. They can delay outgoing traffic; inspect the reported airtime state when a radio stops sending. The setting does not certify regulatory compliance. Set them per-interface in the radio's advanced config; the Europe region prefills the long-window cap to **1%**, while short-window caps and other regions' long-window caps are unset by default. These are host-managed RNode settings, not handheld standalone region settings.
+
+Leaving a cap unset sends no command for that limit; it does not explicitly clear a cap already on the radio.
 
 Slower presets consume more airtime for a given payload. Choose a preset that provides a reliable link, and configure airtime limits independently.
 
 ## Multi-radio boards
 
-Boards with multiple sub-radios — a RAK4631 with stacked LoRa shields, dual-radio RNode builds — are exposed as a single interface that fans out internally. Each sub-radio gets its own frequency, SF/BW/CR, and TX power, and Reticulum treats them as separate physical paths sharing one serial endpoint. This is the practical way to bridge two regional bands (a 868 MHz cell and a 433 MHz long-haul link, for example) on one device.
+Standalone rsReticulum supports `RNodeMultiInterface` for compatible multi-interface RNode firmware. Each configured sub-interface has its own virtual port and radio settings while sharing the physical serial endpoint.
 
-Single-radio boards use the standard RNode interface. Multi-radio boards use the multi-interface form. Ratspeak picks the right one based on what the firmware reports during enumeration, so adding the device looks the same in the UI either way — you'll just see one row per active sub-radio in the Network view once it's up.
+The app’s normal Add LoRa Device flow configures an `RNodeInterface`; do not assume it automatically creates a multi-radio configuration. For a multi-interface installation, verify the firmware’s virtual-port layout and the selected daemon release’s configuration support. Use a single-radio setup until that mapping is established.
 
 ## Practical notes
 
-- Two radios will only hear each other if frequency, SF, BW, and CR all match. Mismatched preset = silent failure.
-- Range is dominated by antenna and line-of-sight, not TX power. A good antenna at 14 dBm beats a bare PCB trace at 22 dBm.
-- The radio is half-duplex. Heavy TX from one node briefly deafens every node that can hear it. On busy meshes, slower presets backpressure better than fast ones.
-- LoRa is shared spectrum. Anyone in your area on the same channel sees your packets at the radio layer; Reticulum's encryption is what keeps the contents private.
+- If two radios cannot exchange traffic, compare their saved frequency, preset and packet-format settings. A preset label alone does not verify compatibility.
+- Antenna suitability, placement and obstructions matter alongside transmit power. Check the antenna and radio band together.
+- A half-duplex radio cannot receive while it transmits. Overlapping transmissions can collide; a slower preset uses more airtime and can increase contention.
+- LoRa is shared spectrum. Anyone in your area on the same channel sees your packets at the radio layer; private LXMF encryption protects message contents, but radio activity and some protocol metadata remain observable.

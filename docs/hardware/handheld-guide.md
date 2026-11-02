@@ -5,7 +5,8 @@ sidebar_label: Handheld use and recovery
 
 # Handheld use and recovery
 
-Ratspeak Handheld runs on T-Deck Plus, T-Pager, Cardputer Adv and ThinkNode M9.
+This guide covers **Ratspeak Handheld v2.3.4 beta** on T-Deck Plus, T-Pager (SX1262),
+Cardputer Adv and ThinkNode M9. Cardputer needs Cap LoRa-1262 for LoRa.
 Use Standalone mode to send encrypted messages over LoRa or WiFi without a phone.
 
 For installation and backups, see [Flashing firmware](./flashing-firmware.md).
@@ -57,7 +58,7 @@ Preview the clip before selecting **Send**, or delete it and record again.
 Sending returns to the conversation, where its delivery status is shown.
 
 Unsent clips are temporary and are removed when you close the conversation.
-Playback controls show elapsed and total time. Adjust **Settings → Voice →
+Playback controls show elapsed and total time. Adjust **Settings → Voice Messages →
 Playback volume** for the speaker.
 
 **Max voice messages** limits retained audio on internal storage, from 1 to 50,
@@ -94,8 +95,9 @@ can affect how quickly propagation completes.
 
 ## Message dates
 
-The clock syncs through GPS or WiFi. Set your timezone in Settings to display
-local time. GPS reception can take longer indoors.
+The clock can sync through WiFi or GPS where the hardware is fitted and time
+sync is enabled. Set your timezone in Settings to display local time. GPS
+reception can take longer indoors.
 
 Before the clock syncs, sent messages can appear dated near January 1970 in other
 clients. Once it syncs, new messages get the correct date; messages already sent
@@ -135,12 +137,12 @@ For WiFi, join a network and configure a TCP peer, or enable LAN discovery to fi
 nearby nodes. A local hotspot is also available; it does not provide internet
 access. WiFi client and hotspot modes are alternatives.
 
-**Auto Announce** can be set to **OFF**, or an interval of 30 minutes and up.
+**Auto Announce** can be set to **OFF**, or 30–360 minutes in five-minute steps.
 Manual **Announce** remains available when automatic announcements are off.
 
 Wait for settings to finish saving and follow any restart prompt. Standalone
-uses LoRa and WiFi; USB/BLE radio connections use **RNode** mode, which is coming
-soon for M9.
+uses LoRa and WiFi; USB/BLE radio connections use **RNode** mode on T-Deck,
+T-Pager and Cardputer. M9 has no RNode image in v2.3.4.
 
 ## Storage and SD cards {#internal-flash-sd-copies-and-deletion}
 
@@ -149,10 +151,11 @@ flash, so copying the SD card alone is not a complete backup. Follow the
 [backup instructions](./flashing-firmware.md#back-up-an-existing-handheld)
 before replacing firmware or erasing a device.
 
-**Initialize SD** prepares the card for Ratspeak. **Wipe SD Data** removes only
-Ratspeak's files from the card: `/ratdeck` on T-Deck, `/ratpager` on T-Pager,
-`/ratcom` on Cardputer and `/m9` on M9. Internal data remains and may be copied
-back to the card later. To remove a conversation, delete it from Chats.
+In **Settings → Storage**, **Initialize & Restart** prepares Ratspeak's files
+on the card. The SD erase action removes Ratspeak's data under `/ratdeck` on
+T-Deck, `/ratpager` on T-Pager, `/ratcom` on Cardputer and `/m9` on M9. Check the
+confirmation before proceeding. Internal data remains and may be copied back
+to the card later. To remove a conversation, delete it from Chats.
 
 Wait for saves or deletions to finish before switching off or removing the card.
 If a read or deletion fails, keep the data intact and retry before considering a
@@ -164,11 +167,13 @@ Internal storage keeps the newest messages. When it runs low, the oldest
 messages are removed across all conversations; messages still being sent and
 drafts are kept. The device shows a notice the first time this happens.
 
-To keep the full history, use an SD card for messages: turn on **Settings →
-Storage → SD Message Store**; Cardputer uses an inserted card automatically. The
-card then holds every message, and internal storage keeps recent copies. If the
-card is missing, the oldest internal messages are removed as without a card;
-those already on the card return when you insert it again.
+To retain more history, use an SD card for messages: turn on **Settings →
+Storage → SD Message Store**; Cardputer uses an inserted card automatically.
+Messages successfully saved to the card remain there while internal storage
+keeps recent copies. Check storage errors and available space; inserting a card
+cannot recover messages already discarded from internal storage. If the card
+is missing, internal storage keeps rolling. History already saved on that card
+becomes available when you reinsert it.
 
 **Settings → Storage** shows internal usage and whether history is complete on
 the card or rolling.
@@ -190,5 +195,6 @@ If power is lost during a reset, the device opens **Reset recovery**:
 
 For other startup problems, note the error and check power and the SD card.
 [Download mode](./flashing-firmware.md#recovery-download-mode) lets you restore a
-full backup or reinstall firmware. Reinstalling clears internal data, so keep
-that as a last step when recovering messages or an identity.
+full backup or reinstall firmware. A factory erase clears internal data; a
+compatible web update can preserve it. Back up before a recovery operation that
+changes firmware or storage, and do not erase as the first troubleshooting step.

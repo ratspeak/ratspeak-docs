@@ -3,66 +3,54 @@ sidebar_position: 2
 sidebar_label: LilyGO T-Deck Plus
 ---
 
-# Flashing the T-Deck Plus
+# Flash Ratspeak Handheld on T-Deck Plus
 
-This section provides step-by-step instructions for flashing the [LilyGO T-Deck Plus](https://lilygo.cc/en-ca/products/t-deck-plus-1) with Ratspeak using the web-based installer.
+Use this procedure to install **Ratspeak Handheld** on a **LilyGO T-Deck Plus**.
+Current firmware comes from the unified
+[ratspeak-handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases).
+The older rsDeck releases have different layouts and their own recovery
+instructions.
 
-For the unified firmware, check that the selected release is **Ratspeak Handheld**.
-If the board preset still shows rsDeck, upload `tdeck-full.zip` from the
-[unified releases](https://github.com/ratspeak/ratspeak-handheld/releases) through
-**Build your own** instead. See the [package guide](/docs/hardware/flashing-firmware)
-for the distinction between fresh installs and updates.
+## Before you start
 
-## Preparation
+Use Chrome or Edge on a computer and a USB data cable. Attach a suitable LoRa
+antenna before transmitting. Close other applications using the serial port.
 
-In order to begin, you will need:
+[Back up an existing handheld](/docs/hardware/flashing-firmware#back-up-an-existing-handheld)
+before changing firmware. Compatible web updates preserve identity, settings
+and messages, but an unidentified or incompatible installation may require
+**Erase and install**. Cancel if the data is not backed up.
 
-- LilyGO T-Deck Plus device
-- USB-C data transfer cable
-- A computer with an appropriate browser
+## Install with the browser
 
+1. Open the [Ratspeak download page](https://ratspeak.org/download.html), select
+   **T-Deck**, then **Flash in browser**.
+2. Check the version and package. **Full** includes the Standalone messenger,
+   RNode radio mode and a startup launcher. **Standalone** and **RNode** install
+   only the selected mode.
+3. Connect USB. If the flasher cannot connect normally, switch the main power
+   off, hold the trackball button, switch the power on and release the button
+   after a few seconds. The screen may stay black in download mode.
+4. Choose **Select USB Device** and select the board's serial port.
+5. Select **Flash Ratspeak**. Read the device check and any installation notice.
+   Keep the cable connected and tab open until the flasher reports completion.
+6. Restart the T-Deck if needed. A Full installation opens the mode launcher;
+   choose Standalone to use the on-device messenger.
 
-Use a desktop browser with Web Serial support, such as Chrome or Edge, to connect
-to the board.
+For a downloaded or locally built image, choose **Flash** under **Build your
+own**, then **Upload**. Use the complete `tdeck-full.bin`,
+`tdeck-standalone.bin` or `tdeck-rnode.bin`. The upload action is labelled
+**Flash firmware**. The `tdeck-standalone-launcher.bin` is for
+[bmorcelli's Launcher](/docs/hardware/flashing-firmware#bmorcellis-launcher),
+not this procedure.
 
-Back up internal flash and the SD card before flashing; see the
-[backup instructions](/docs/hardware/flashing-firmware#before-flashing).
-Compatible updates keep identity, messages and settings. A fresh installation
-clears internal storage after you accept the web flasher's backup notice.
+## Check the installation
 
-:::warning
-Attach the antenna before powering on the T-Deck Plus. Transmitting without it can damage the radio.
-:::
+In Standalone, check the name, timezone and radio settings. Announce and exchange
+a message with a known peer. In RNode mode, connect the host and configure its
+[RNode interface](/docs/networking/lora-and-rnode); the host supplies the radio
+settings.
 
-## Getting started
-
-1. Navigate over to the [Ratspeak download page](https://ratspeak.org/download.html).
-
-2. Select the T-Deck Plus from the available hardware options presented and select 'Flash in browser'.
-
-## Connecting the T-Deck Plus
-
-1. With your T-Deck Plus' main power switched off, connect it to your computer via a data transfer capable USB-C cable.
-
-2. Press on the trackball until you hear a click, and hold it.
-
-3. Turn on the main power of your device while continuing to hold the trackball for three seconds, then release the trackball. Note that the screen will be black, as it has been booted in 'download mode'; it will still be detectable by your computer.
-
-## Flashing
-
-1. On the T-Deck Plus download page, click '**Select USB Device**'. A menu will appear prompting you to select the proper device. Pair the T-Deck Plus; depending on the system hardware, it may have a variety of names.
-
-2. For a fresh installation, choose **Full** to include the launcher and both
-   modes. Verify your backup before continuing.
-
-3. Click **Flash**, check the device and backup notice, then continue.
-
-4. A successful flash will produce the below output:
-
-![Complete flash](./img/td_complete.png)
-
-5. Simply reboot your device using the button on the left side of the T-Deck Plus. Ratspeak should boot up in a few seconds.
-
-:::tip[Congratulations, you're now a Ratspeak user!]
-Questions? Reach out in the **#documentation** channel on our [Discord](https://ratspeak.org/discord).
-:::
+If the board does not start, record the displayed error and chosen image before
+reflashing. See [download mode and recovery](/docs/hardware/flashing-firmware#recovery-download-mode)
+and the [handheld guide](/docs/hardware/handheld-guide).

@@ -33,11 +33,11 @@ The initiator does not have to reveal a long-term identity just to open a link. 
 
 The first Link Request still uses normal Reticulum path discovery and may be broadcast when no path is known. After the responder accepts that request and the initiator validates its proof, the Link stays bound to the exact interface that completed the handshake. Link data, resources, keepalives, proofs, and teardown do not fall back to another interface if that interface disappears or becomes unusable; the Link closes and a new Link must discover a new path. This prevents an established session from unexpectedly leaking onto an unrelated radio or network interface.
 
-Packet proofs sent inside an active Link also follow the sender's role. An initiator proves packets with the temporary signing key it advertised in the Link Request, while a responder proves packets with the destination identity that accepted the Link. This lets either peer authenticate delivery without requiring an initiator to disclose its long-term identity.
+The signing key for a packet receipt proof depends on the proof sender's role. When the Link initiator acknowledges a received packet, it signs with the temporary key advertised in the Link Request. When the responder acknowledges one, it signs with the destination identity that accepted the Link. This lets either peer authenticate delivery without requiring an initiator to disclose its long-term identity.
 
 ## Link Timers
 
-The defaults are tuned for slow, lossy networks:
+The defaults below describe the Reticulum source bundled with Ratspeak 1.0.37:
 
 | Timer | Default behavior |
 |-------|------------------|
@@ -49,9 +49,9 @@ On a healthy LAN these values are rarely noticeable. On LoRa, packet radio, and 
 
 ## What Rides on a Link
 
-**Channels** provide reliable, ordered message streams over a link. They are the right abstraction for request/response protocols and application data that must arrive in sequence.
+**Reticulum Channels** provide reliable, ordered message streams over a link. This protocol facility is separate from Ratspeak’s hub-hosted Channels rooms. They are the right abstraction for request/response protocols and application data that must arrive in sequence.
 
-**Resources** move payloads that are too large for a single packet. A resource transfer chunks the data, verifies pieces, retransmits what is missing, and reassembles the payload on the receiving side. Files, images, and larger LXMF payloads use this pattern.
+**Resources** move payloads that are too large for a single packet. A resource transfer chunks the data, retransmits missing parts, reassembles the payload and verifies the completed transfer. Files, images, and larger LXMF payloads use this pattern.
 
 Multiple higher-level operations can share the same link while it remains active.
 
@@ -78,7 +78,9 @@ LXMF can deliver a message three ways.
 | **Opportunistic** | Send a small encrypted message as one Reticulum packet with no link setup and await its packet proof | Tiny notes, alerts, and low-overhead traffic |
 | **Propagated / Offline Inbox** | Store the encrypted message on a propagation node until the recipient asks for it | Offline recipients and delay-tolerant messaging |
 
-With default parameters, opportunistic LXMF content is at most 287 bytes. Messages larger than that fall back to Direct delivery, and messages larger than a single link packet are transferred as resources over the link.
+The default opportunistic content ceiling is 287 bytes, but title, fields, serialization and stamps reduce the usable text budget. The complete message must fit one encrypted packet. Oversized opportunistic messages use Direct delivery; Direct messages that do not fit a link packet use a resource.
+
+In Ratspeak 1.0.37, **Auto** uses Opportunistic for ordinary text only when it has a nonexpired recipient ratchet and no reusable active or pending link. Otherwise it uses Direct. Attachments and game traffic use Direct. When Offline Inbox is configured, an eligible failed live delivery can fall back to propagation. **Propagated** means a node accepted the message, not that the recipient has read or received it. The app exposes its current transfer limits; do not use the packet ceiling as a chat length limit.
 
 ## Propagation Nodes
 
@@ -88,12 +90,12 @@ Ratspeak's app UI calls this feature **Offline Inbox**. The technical LXMF term 
 
 Propagation nodes do not need plaintext access to the messages they store. They are useful because they provide availability, not because they are trusted with content.
 
-Propagation is also how messaging can feel reliable on a mesh that is not always fully connected. Your recipient does not have to be online at the exact moment you press send, as long as both of you can eventually reach a suitable propagation node.
+Propagation is also how messaging can feel reliable on a mesh that is not always fully connected. Your recipient does not have to be online at the exact moment you press send, when the sender deposits it at a suitable node and the recipient later syncs from a node that holds it. Storage limits, expiry and node availability still affect pickup.
 
 ## Stamps and Tickets
 
 LXMF uses **stamps** as proof-of-work against unsolicited traffic. A recipient can publish a stamp cost, and unknown senders must attach enough work for the message to be accepted.
 
-**Tickets** are the fast path for known correspondents. A recipient can issue a ticket to a sender, letting future messages bypass proof-of-work until the ticket expires or is rotated.
+**Tickets** are the fast path for known correspondents. A recipient can issue a ticket to a sender, letting future messages bypass proof-of-work until the ticket expires.
 
 The result is a practical split: first contact can cost a small amount of CPU, while established conversations stay lightweight.

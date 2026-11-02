@@ -10,13 +10,13 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 ## Identity & Addressing
 
-**Identity.** The cryptographic root of a Reticulum participant, service, device, or application endpoint. A Reticulum identity is a 64-byte private keyset: 32 bytes for X25519 key agreement and 32 bytes for an Ed25519 signing seed. Back it up like an SSH key. Anyone with the private key can act as that identity.
+**Identity.** The cryptographic root of a Reticulum participant, service, device, or application endpoint. A software Reticulum identity has a 64-byte private keyset: 32 bytes for X25519 key agreement and 32 bytes for an Ed25519 signing seed. Back it up like an SSH key. Anyone with the private key can act as that identity.
 
 **Ratspeak Identity.** A normal Reticulum identity created and stored by Ratspeak. There is nothing protocol-special about it; it interoperates with other Reticulum implementations.
 
-**Destination.** An addressable endpoint created by an application. A destination combines an identity, an application name, and one or more aspects such as `lxmf.delivery`. Reticulum has four destination types: Single, Group, Plain, and Link. Ratspeak messaging primarily uses Single destinations and Links.
+**Destination.** An addressable endpoint created by an application. A Single destination combines an identity with an application destination name such as `lxmf.delivery`. Reticulum has four destination types: Single, Group, Plain, and Link. Ratspeak messaging primarily uses Single destinations and Links.
 
-**Address / Destination Hash.** The 16-byte truncated SHA-256 value Reticulum routes toward. In user interfaces it is displayed as 32 hex characters, for example `4faf1b2e0a077e6a9d92fa051f256038`. Reticulum does not route on IP addresses, domain names, usernames, or phone numbers.
+**Address / Destination Hash.** The 16-byte truncated SHA-256 value Reticulum routes toward. In user interfaces it is displayed as 32 hex characters, for example `0123456789abcdef0123456789abcdef`. Reticulum does not route on IP addresses, domain names, usernames, or phone numbers.
 
 **Name Hash.** The 10-byte hash of an application destination name such as `lxmf.delivery`. For Single destinations, the final destination hash also includes the identity hash, which is why two users can both have an `lxmf.delivery` destination without sharing the same address.
 
@@ -54,9 +54,9 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Backbone.** A high-throughput TCP-based interface intended for efficient WAN links between Reticulum nodes. It is useful for infrastructure and server roles; ordinary TCP client/server interfaces are still valid and widely used.
 
-**IFAC.** Interface Access Codes. IFAC signs packets with material derived from an interface name or pre-shared passphrase. Receivers without matching IFAC settings drop those packets before they enter the local Reticulum stack. IFAC segments a carrier; it does not replace end-to-end encryption.
+**IFAC.** Interface Access Codes. IFAC signs packets with material derived from the configured `network_name` and/or passphrase. Receivers without matching IFAC settings drop those packets before they enter the local Reticulum stack. IFAC segments a carrier; it does not replace end-to-end encryption.
 
-**Bandwidth Cost / Announce Cap.** The share of an interface's bandwidth that can be spent on announces and related maintenance traffic. The default announce cap is 2%, so routing updates cannot permanently starve payload traffic on slow links.
+**Bandwidth Cost / Announce Cap.** The share of an interface's bandwidth that can be spent on announces and related maintenance traffic. The default announce cap is 2%, which limits scheduled announce traffic; it is not a guarantee that a busy link cannot become congested.
 
 ---
 
@@ -70,13 +70,17 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Link.** An encrypted point-to-point session between two destinations. A link can cross multiple hops, uses ephemeral key exchange, and provides a better substrate for reliable channels, request/response workflows, and larger transfers.
 
+**Reticulum Channel.** An ordered, reliable stream of application messages over a Reticulum link. This protocol facility is distinct from Ratspeak’s room-based Channels feature.
+
+**Ratspeak Channels.** Rooms served by a hub. Participants connect through encrypted links, but the hub can read the room messages; private/invite/key settings control access.
+
 **Resource.** A reliable transfer over a link for payloads larger than a single packet. Resources handle chunking, sequencing, verification, retransmission, and reassembly.
 
-**MTU / MDU.** Reticulum's default network MTU is 500 bytes. The plain packet MDU is 464 bytes, the encrypted Single packet payload limit is 383 bytes, and the default link packet MDU is 431 bytes. LXMF's usable message content limits are smaller because LXMF adds its own headers and signature.
+**MTU / MDU.** Reticulum's default network MTU is 500 bytes. The plain packet MDU is 464 bytes, the encrypted Single packet payload limit is 383 bytes, and the default link packet MDU is 431 bytes. IFAC/interface capacity can reduce usable space, and LXMF adds its own envelope and signature overhead.
 
 **Forward Secrecy.** The property that compromising a long-term identity key later does not retroactively decrypt old traffic. Reticulum gets this from ephemeral link key exchange and, for link-less Single destination packets, from destination ratchets when enabled.
 
-**End-to-End Encryption.** Encryption applied by the originator and removed only by the intended recipient. Transport nodes forward sealed bytes; they are not message relays with plaintext access.
+**End-to-End Encryption.** Encryption applied by the originator and removed by the intended endpoint. A transport node forwarding private LXMF traffic cannot read it. A Ratspeak Channels hub is an application endpoint and can read room traffic.
 
 ---
 
@@ -86,9 +90,11 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Direct Delivery.** LXMF opens a Reticulum link to the recipient and delivers the message over that encrypted session. This is preferred when the recipient is reachable and the message needs reliable delivery.
 
-**Opportunistic Delivery.** LXMF sends a small message as one encrypted Reticulum packet without establishing a link. With default parameters, its LXMF content limit is 287 bytes. It has no Link session, but the recipient can return an authenticated Reticulum packet proof; no returned proof leaves delivery uncertain.
+**Opportunistic Delivery.** LXMF sends a small message as one encrypted Reticulum packet without establishing a link. The default LXMF opportunistic content ceiling is 287 bytes, with the usable text budget reduced by title, fields, serialization and stamp overhead. It has no Link session, but the recipient can return an authenticated Reticulum packet proof; no returned proof leaves delivery uncertain.
 
 **Propagated Delivery.** LXMF gives the encrypted message blob to a propagation node, which stores it until the recipient connects and requests waiting mail.
+
+**Auto delivery.** In Ratspeak 1.0.37, ordinary text can use Opportunistic delivery when a current recipient ratchet is known and no reusable link is active or pending; otherwise it uses Direct. Eligible failures can fall back to Offline Inbox when configured.
 
 **Offline Inbox.** Ratspeak's user-facing name for LXMF propagated delivery and propagation-node sync. In Auto mode, Ratspeak chooses a reachable inbox node; in Manual mode, you pin a specific propagation-node hash.
 
@@ -98,7 +104,7 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Ticket.** A per-sender token that lets a trusted correspondent bypass stamp work for future messages. Tickets keep ongoing conversations lightweight after first contact.
 
-**Sideband / NomadNet.** Widely used Reticulum applications. Sideband is a graphical LXMF messenger. NomadNet is a terminal client and page system. Ratspeak interoperates with them through Reticulum and LXMF.
+**Sideband / NomadNet.** Other Reticulum applications. Sideband is a graphical LXMF messenger. NomadNet is a terminal client and page system. Ratspeak interoperates with them through Reticulum and LXMF.
 
 ---
 
@@ -107,10 +113,10 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 The core Reticulum tools most Ratspeak operators will encounter are:
 
 - **rnsd-rs** - the Reticulum daemon. It owns interfaces and routing state for local clients.
-- **rnstatus-rs** - shows interface and path status.
+- **rnstatus-rs** - shows interface status and traffic counters.
 - **rnpath-rs** - inspects, requests, and manages paths.
 - **rnid-rs** - creates, inspects, imports, exports, hashes, signs, verifies, encrypts, and decrypts Reticulum identities and identity-bound files.
 - **rncp-rs** - copies files over Reticulum resources.
 - **rnprobe-rs** - probes a destination, similar in spirit to `ping`.
 
-Most Ratspeak operators only need the tools above. Additional utility parity and deferred command-line surfaces are tracked in the rsReticulum release notes.
+Other standalone tools include `rnsh-rs` for remote shell sessions and `rnodeconf-rs` for RNode configuration. Check the selected release’s help and prerequisites before using them.

@@ -4,88 +4,70 @@ sidebar_position: 3
 
 # Your first session
 
-Ratspeak is installed. This walkthrough takes you from a fresh launch to your first reachable peer and test message. Follow along in order — each step assumes the one before it.
-
-If you haven't installed yet, see [Install & Platform Setup](../getting-started/install-and-platform-setup.md).
-
-To finish the message step, you need at least one reachable Reticulum/LXMF peer: another Ratspeak device nearby, a friend whose node is announcing, a known LXMF address, or a TCP hub/local network where other peers can be heard. If the Peers list stays empty, the setup still worked; add another interface, try a second local device, or use the [Network & Peers](../using-ratspeak/network-and-peers.md) troubleshooting path before expecting delivery.
+Create an identity, connect to the network, and send a message to another Reticulum/LXMF user. You need [Ratspeak installed](install-and-platform-setup.md) and at least one reachable peer to finish the message step. A second device or a friend using an LXMF client gives you someone to test with.
 
 ## Launch the app
 
-Open Ratspeak the same way you open any other app — Applications on macOS, the Start Menu on Windows, the application menu on Linux, the home screen on mobile. There's no terminal command, no daemon to start, no browser tab to open. Ratspeak is a single application; once it's running, it's ready.
+Open Ratspeak from your applications menu or home screen. The app includes its networking runtime; there is no separate daemon to start.
 
-The first launch lands you on the **Setup** screen. You'll see the Ratspeak logo, the tagline, and a single button: **Create Identity**.
+For a new identity, select **Create Identity**. If you are returning with an existing identity, use **Import or Restore Identity** instead. Desktop users can also choose **Hardware Key**; see [Ratkey](../products/ratkey.md) for the requirements.
 
 ## Create your identity
 
-Tap **Create Identity**. Ratspeak generates a fresh recoverable cryptographic identity on the spot — an Ed25519 signing key and an X25519 encryption key derived from a 12-word recovery phrase. This identity is yours. It's how the network recognises you, and how messages get encrypted to you and signed by you.
+1. Select **Create Identity** and wait for the **Backup Phrase** screen.
+2. Select **Tap to reveal phrase**. Write the 12 words down in order and keep them somewhere private.
+3. Check **I have written down my 12-word phrase and stored it safely**, then select **Continue**.
+4. Copy the LXMF address shown under **Your Identity**. This is the address you share with someone who wants to message you.
+5. Optionally enter a **Display Name**, then select **Connect**.
 
-The generation animation runs for a couple of seconds, then Setup shows the recovery phrase. Write the 12 words down in order and keep them offline. Ratspeak then asks you to confirm two random words before continuing. Anyone with the phrase can restore and use your identity, so do not share it.
+Anyone with your recovery phrase can restore and use your identity. The address is safe to share; the phrase is not. A display name is public and is not unique, so confirm someone's address rather than relying on their name alone.
 
-After backup confirmation, Setup shows your **LXMF address** — a long hexadecimal hash — and a copy button next to it. That hash is your address on the network. Save it somewhere; this is what you give to people who want to message you.
-
-Below the hash is a single field: **Display Name**. Pick anything — your real name, a handle, or a callsign. It's optional and shows up next to your address when peers discover you. Display names aren't unique; the hash is what's load-bearing.
-
-Tap **Connect**. Ratspeak finishes setup and drops you onto the dashboard.
-
-> Your recovery phrase and private key material are your account. Back them up and keep them private. If you want the identity encrypted at rest, set a PIN from Settings -> Identity after setup. For desktop hardware-backed keys, see [Ratkey](../products/ratkey.md).
+The recovery phrase restores the identity, not your message history. You can protect a software identity and its stored phrase with **Set PIN** in the identity menu under **Settings → Identity**. See [Settings and identity](../using-ratspeak/settings-and-identity.md) for backup, restore and protection options.
 
 ## Add your first interface
 
-A fresh install has an identity but no interfaces turned on, so it can't reach the network yet. You need at least one **interface** — a connection to other Reticulum nodes. Open the **Network** tab.
+A fresh install has no interfaces enabled. Open **Network** and choose a connection that matches your setup:
 
-You have a few easy starting points. Pick whichever matches your situation; you can add more later.
+| Connection | What to do | What it needs |
+|---|---|---|
+| Local Network | Select **+** next to **Local Network**, then **Enable**. | Another Reticulum device on the same LAN or Wi-Fi, with multicast allowed. |
+| Internet/TCP | Select **+** next to **Internet/TCP**. Choose a server under **Public**, or enter a host and port under **Custom**. | A route to that server, usually through the internet. |
+| Bluetooth Peer | Select **+** next to **Bluetooth Peer** and follow the permission prompts. | A nearby compatible peer and supported Bluetooth roles on each platform. |
+| LoRa radio | Open **Add LoRa Device**, choose the applicable Bluetooth, USB or TCP connection, configure the radio and select **Add Radio**. | Compatible RNode hardware and matching radio settings. |
 
-**Local Network.** Tap **+** next to **Local Network**, then **Enable**. If anyone else on your WiFi or LAN is running Reticulum, Local Network (Reticulum's AutoInterface) finds them automatically, using UDP ports 29716 and 42671 to discover peers on the same network segment. If your network allows multicast, you're done.
+For a first test over the internet, use a server in the **Public** list. **Official** identifies servers managed by Ratspeak; third-party entries are marked **Unofficial**. Reachability depends on the server and the paths available through it.
 
-**Bluetooth.** Tap **+** next to **Bluetooth Peer** to reach nearby Ratspeak users over Bluetooth, with no router or internet. See [Bluetooth Peer toggle](../using-ratspeak/settings-and-identity.md#bluetooth-peer-toggle) for platform notes.
+For two devices on the same LAN, enable **Local Network** on both. Guest Wi-Fi and some managed networks block the multicast discovery it uses. If discovery fails there, try a permitted TCP connection or another network.
 
-**A public Ratspeak server.** The fastest way to reach the wider Reticulum network is over the internet. Tap **+** next to **Internet/TCP** to open **Connect to Network**; the **Public** tab lists the public Ratspeak TCP servers:
+For LoRa, match the frequency and radio preset used by the peers you want to reach, and use the appropriate regional settings. A handheld acting as an RNode must be booted into RNode mode. Follow [LoRa and RNode](../networking/lora-and-rnode.md) for the full radio procedure. [Bluetooth interfaces](../networking/bluetooth-interfaces.md) lists platform-specific requirements.
 
-| Name | Endpoint |
-|---|---|
-| Ruby | `1.ratspeak.org:4141` |
-| Emerald | `2.ratspeak.org:4242` |
-| Diamond | `3.ratspeak.org:4343` |
-
-These are public Ratspeak transport servers. They connect you to the broader Reticulum network so you can hear announces from anyone reachable over the internet. Older configs that use `rns.ratspeak.org:4242` still reach Emerald. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party.
-
-**LoRa device.** If you have an [RNode](../hardware/rnode-and-supported-boards.md), plug it into USB, pair it over BLE, or point Ratspeak at an RNode TCP bridge, then tap **Add LoRa Device** in the Network tab. The modal lists detected serial ports, nearby BLE radios, and a TCP tab for endpoints such as `192.168.1.50:7633`. If no TCP port is supplied, Ratspeak uses `7633`. Pick the preset that matches the devices around you — `medium_fast` is a sensible all-rounder; `long_fast` and `long_moderate` reach further at the cost of speed; `short_turbo` and `short_fast` are higher-throughput at shorter range. Tap **Add Radio**. Ratspeak configures new radios in Reticulum's Roaming interface mode, which fits a phone or computer carrying an RNode between radio coverage areas. Developer Mode exposes the mode selector for fixed infrastructure and other advanced layouts. Ratspeak then opens the radio and starts listening. rsDeck and rsCardputer are standalone handhelds by default; boot them into RNode mode when you want Ratspeak to drive their radio over BLE or USB.
-
-You can run all of these at once. Traffic routes transparently across whatever interfaces are up — a message can travel over LoRa to a transport node, hop over TCP, and land on someone's WiFi.
+You can enable more than one interface. Check **Network** for each connection's current status before continuing.
 
 ## See your first announce
 
-Switch to the **Peers** tab.
+Open **Peers**. Reticulum announces advertise destinations and may include an LXMF display name. A peer appears when an announce reaches your device; an established connection alone does not guarantee any peers will appear.
 
-When a Reticulum node comes online, it broadcasts an **announce** — a signed packet declaring its destination hash and display name. Other nodes hear it, verify the signature, and remember the path back. Within a minute or two of bringing up an interface, announces start arriving from the network and the Peers list begins to fill in.
+For a two-device test, use **Announce** in the other device's **Network** view if it runs Ratspeak. In another LXMF client, use that client's announce control. Wait for the announce to travel over your chosen connection. Radio links can take longer than local-network links.
 
-Each row shows the peer's display name (or just their hash if they didn't set one), the destination hash itself, and the **hop count** — how many relays the announce travelled through to reach you. Lower hop counts mean closer peers.
-
-If nothing shows up after a couple of minutes, check the Network tab — your interface should be marked as connected. Public WiFi, hotel networks, and corporate firewalls often block multicast, which breaks Local Network; a connection to Ruby, Emerald, or Diamond works through most firewalls.
+Peer details include the destination address and hop count. Hop count describes the network path, not physical distance. If the list stays empty, check both devices' interface status and radio settings or use [Network and peers](../using-ratspeak/network-and-peers.md) to diagnose discovery. You can also start with a known LXMF address; see [Messaging and contacts](../using-ratspeak/messaging-and-contacts.md).
 
 ## Send your first message
 
-Tap any peer in the Peers list. Their detail panel opens. Tap **Message** to start a conversation — Ratspeak switches to the **Messages** tab with the thread already open.
+1. Select your test peer in **Peers**.
+2. Select **Message** to open the conversation.
+3. Enter a short message and send it.
+4. Check its delivery status and ask your test peer to reply.
 
-Type your message in the composer at the bottom and hit send. The message is encrypted to the peer's public key, signed with yours, and handed off to the transport layer. From your side, that's the whole interaction.
+**Delivered** confirms receipt by the destination. Sending or transmission alone does not. A message stored in an **Offline Inbox** has been accepted by a propagation node for later pickup; that is not confirmation that the recipient has received it. See the [delivery states](../using-ratspeak/messaging-and-contacts.md) for retries, failures and offline delivery.
 
-Watch the small status indicator next to your message. It moves through a few states — sending, sent, delivered, or stored in Offline Inbox — as the network confirms each step. Auto tries the recipient live first. If live delivery ultimately fails, it can retry through a reachable Offline Inbox; without one, the message is marked failed instead of pretending it was stored. For the full delivery state reference, see [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
+If delivery fails, keep the failed message and check the connection and destination before retrying. Creating another identity is not a network troubleshooting step.
 
 ## Save them as a contact
 
-If you plan to talk to this peer again, save them. From the conversation, open the thread menu and tap **Save as Contact**. You can also do this from the peer detail panel before you've messaged them.
-
-Saved contacts get a friendly name you control, a stable place in the **Contacts** tab, and they bubble to the top when you start a new conversation. Peers come and go from the Peers tab as announces age out — Contacts stick around forever.
+Open the peer's details and select **Add**. Enter an optional contact name and confirm. The contact remains in **Contacts** when its announce is no longer visible in **Peers**; saving it does not make an offline peer reachable.
 
 ## What's next
 
-You have an identity, an interface, and a path toward reachable peers. Once a peer is visible, you can send and verify the first message. From here:
-
-- [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md) — attachments, delivery states, Offline Inbox, and managing the address book.
-- [Network & Peers](../using-ratspeak/network-and-peers.md) — adding more interfaces, running as a transport node, and reading peer/network status.
-- [Settings & Identity](../using-ratspeak/settings-and-identity.md) — auto-announce intervals, display name changes, and Offline Inbox mode.
-- [rsDeck](../products/rsdeck.md) and [rsCardputer](../products/rscardputer.md) — purpose-built Ratspeak hardware for off-grid mesh.
-- [Ratkey](../products/ratkey.md) — hardware-backed identity on a YubiKey or Nitrokey.
-
-Welcome to the mesh.
+- [Messaging and contacts](../using-ratspeak/messaging-and-contacts.md) covers attachments, delivery modes and the address book.
+- [Network and peers](../using-ratspeak/network-and-peers.md) explains interfaces, discovery and transport settings.
+- [Settings and identity](../using-ratspeak/settings-and-identity.md) covers identity protection, backups and app preferences.
