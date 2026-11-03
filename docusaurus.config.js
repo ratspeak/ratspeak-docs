@@ -26,18 +26,17 @@ const footerMarkup = `
   <div class="foot-main">
     <div class="foot-brand">
       <div class="brand"><a class="brand" href="${site}/letter.html" aria-label="A letter to the community">${mark}</a><a class="brand" href="${site}/" aria-label="Ratspeak home"><span class="brand-word">ratspeak</span></a></div>
-      <p>Private messaging, built on <a href="/docs/concepts/what-is-reticulum">Reticulum</a>.</p>
+      <p>Built on <a href="/docs/concepts/what-is-reticulum">Reticulum</a></p>
     </div>
     <nav class="foot-cols" aria-label="Footer">
-      <div><h2>Product</h2><ul><li><a href="${site}/download.html">Download</a></li><li><a href="/" aria-current="page">Docs</a></li><li><a href="${site}/map.html">Map</a></li></ul></div>
+      <div><h2>Product</h2><ul><li><a href="${site}/download.html">Download</a></li><li><a href="/" aria-current="page">Docs</a></li><li><a href="${site}/map.html">Map</a></li><li><a href="${site}/portal.html">Holder portal</a></li></ul></div>
       <div><h2>Source</h2><ul><li><a href="https://github.com/ratspeak">GitHub${ext}</a></li><li><a href="https://github.com/ratspeak/Ratspeak">Ratspeak app${ext}</a></li><li><a href="https://github.com/ratspeak/ratspeak-handheld">Handheld firmware${ext}</a></li><li><a href="https://github.com/ratspeak/ratspeak-docs">These docs${ext}</a></li></ul></div>
-      <div><h2>Community</h2><ul><li><a href="${site}/discord">Discord${ext}</a></li><li><a href="${site}/telegram">Telegram${ext}</a></li><li><a href="${site}/community-guidelines.html">Guidelines</a></li></ul></div>
+      <div><h2>Community</h2><ul><li><a href="${site}/discord">Discord${ext}</a></li><li><a href="${site}/telegram">Telegram${ext}</a></li><li><a href="${site}/community-guidelines.html">Guidelines</a></li><li><a href="${site}/community.html">Community token</a></li></ul></div>
       <div><h2>Help &amp; legal</h2><ul><li><a href="${site}/support.html">Support</a></li><li><a href="${site}/privacy.html">Privacy</a></li><li><a href="${site}/terms.html">Terms</a></li></ul></div>
     </nav>
   </div>
   <div class="foot-bar">
-    <p>© 2026 Ratspeak LLC · Free and open source under <a href="https://github.com/ratspeak/Ratspeak/blob/main/LICENSE">AGPL-3.0</a></p>
-    <p><a href="${site}/community.html">Community token</a> · <a href="${site}/portal.html">Holder portal</a> · Docs content under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+    <p>© 2026 Ratspeak LLC</p>
   </div>
 `;
 

@@ -7,7 +7,7 @@ const PATHS = [
   {
     to: '/docs',
     title: 'Docs',
-    desc: 'Setup, everyday use, network configuration, and protocol reference.',
+    desc: 'Setup, everyday use, network configuration, and protocol references.',
     cta: 'Browse the docs',
   },
   {
@@ -36,9 +36,8 @@ export default function Hub() {
     <Layout title="Docs" description="Guides for Ratspeak, Reticulum, LoRa radios, and handhelds.">
       <main className="hub">
         <section className="hub-hero">
-          <p className="hub-eyebrow">Ratspeak docs</p>
-          <h1 className="hub-title">Get set up. Then go deeper.</h1>
-          <p className="hub-lede">Guides for the app and the handhelds, how Reticulum and LoRa work, and running your own nodes.</p>
+          <h1 className="hub-title">Guides &amp; technical<br />documentation</h1>
+          <p className="hub-lede">Guides for the app and handhelds, developer documentation, and running your own nodes.</p>
         </section>
 
         <section className="hub-body">
