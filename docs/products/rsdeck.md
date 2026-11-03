@@ -27,9 +27,10 @@ An SD card is optional for normal messaging.
 
 Use `tdeck-full.bin` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
-for a fresh installation. The [web flasher](https://ratspeak.org/download.html)
-accepts the complete `.bin` through **Build your own**; check that a board preset
-shows **Ratspeak Handheld** if selecting an automatic download.
+for a fresh installation. The [advanced flasher](https://ratspeak.org/flash.html)
+accepts the complete `.bin` on its **Upload** tab. For an automatic download, use
+**Flash in browser** on the [download page](https://ratspeak.org/download.html#tdeck)
+and check that the installer shows **Ratspeak Handheld**.
 
 **Back up your identity and data first.** Compatible web flasher updates keep
 identity, messages and settings; a factory installation clears internal storage

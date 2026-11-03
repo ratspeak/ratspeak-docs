@@ -26,9 +26,10 @@ settings, and messages on internal flash, which keeps the newest messages; see
 
 Use `pager-full.bin` from
 [Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
-for a fresh installation. Upload it through **Build your own** on the
-[web flasher](https://ratspeak.org/download.html), or select the T-Pager preset
-when it shows **Ratspeak Handheld**. `pager-standalone.bin` and
+for a fresh installation. Upload it on the **Upload** tab of the
+[advanced flasher](https://ratspeak.org/flash.html), or select **T-Pager** on the
+[download page](https://ratspeak.org/download.html#tpager), then **Flash in
+browser**, and check that the installer shows **Ratspeak Handheld**. `pager-standalone.bin` and
 `pager-rnode.bin` install one mode, also with esptool. For
 [bmorcelli's Launcher](../hardware/flashing-firmware.md#bmorcellis-launcher), use
 `pager-standalone-launcher.bin`. Follow the linked guide for Launcher storage

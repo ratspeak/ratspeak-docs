@@ -71,13 +71,13 @@ Do not substitute an intermediate application binary from the build directory.
 if it holds an identity, messages or settings you need to keep. Copy the SD card
 as well; it does not contain the complete internal backup.
 
-1. Open the [Ratspeak download page](https://ratspeak.org/download.html) in Chrome
-   or Edge on a computer. Under **Build your own**, choose **Flash**.
-2. Select **Upload** and choose `dist/tdeck-full.bin`, or the complete single-mode
-   image you built.
+1. Open the [Ratspeak advanced flasher](https://ratspeak.org/flash.html) in
+   Chrome or Edge on a computer.
+2. On the **Upload** tab, choose `dist/tdeck-full.bin`, or the complete
+   single-mode image you built.
 3. With the T-Deck's main power off, connect USB. Hold the trackball button,
    switch power on, then release the button after a few seconds.
-4. Choose **Select USB Device**, select the board's port, then **Flash firmware**.
+4. Choose **Select USB device**, select the board's port, then **Install firmware**.
    Read the installation notice. Cancel if it calls for erasing data you have
    not backed up. Keep USB connected until the operation finishes.
 5. Restart the handheld. A Full image opens the mode launcher; choose Standalone.

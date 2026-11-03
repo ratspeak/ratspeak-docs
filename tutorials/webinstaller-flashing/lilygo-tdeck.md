@@ -23,24 +23,26 @@ and messages, but an unidentified or incompatible installation may require
 
 ## Install with the browser
 
-1. Open the [Ratspeak download page](https://ratspeak.org/download.html), select
-   **T-Deck**, then **Flash in browser**.
-2. Check the version and package. **Full** includes the Standalone messenger,
-   RNode radio mode and a startup launcher. **Standalone** and **RNode** install
+1. Open the [Ratspeak download page](https://ratspeak.org/download.html#tdeck)
+   with **T-Deck Plus** selected. Under **Firmware**, choose a package, then
+   select **Flash in browser**.
+2. Check the version and package. **Messenger and radio** (Full) includes the
+   Standalone messenger, RNode radio mode, and a startup launcher. **Messenger
+   only** (Standalone) and **Radio for your phone or computer** (RNode) install
    only the selected mode.
 3. Connect USB. If the flasher cannot connect normally, switch the main power
    off, hold the trackball button, switch the power on and release the button
    after a few seconds. The screen may stay black in download mode.
-4. Choose **Select USB Device** and select the board's serial port.
-5. Select **Flash Ratspeak**. Read the device check and any installation notice.
+4. Choose **Select USB device** and select the board's serial port.
+5. Select **Install Ratspeak**. Read the device check and any installation notice.
    Keep the cable connected and tab open until the flasher reports completion.
 6. Restart the T-Deck if needed. A Full installation opens the mode launcher;
    choose Standalone to use the on-device messenger.
 
-For a downloaded or locally built image, choose **Flash** under **Build your
-own**, then **Upload**. Use the complete `tdeck-full.bin`,
-`tdeck-standalone.bin` or `tdeck-rnode.bin`. The upload action is labelled
-**Flash firmware**. The `tdeck-standalone-launcher.bin` is for
+For a downloaded or locally built image, open the
+[advanced flasher](https://ratspeak.org/flash.html) and use its **Upload** tab.
+Use the complete `tdeck-full.bin`, `tdeck-standalone.bin`, or `tdeck-rnode.bin`.
+The upload action is labelled **Install firmware**. The `tdeck-standalone-launcher.bin` is for
 [bmorcelli's Launcher](/docs/hardware/flashing-firmware#bmorcellis-launcher),
 not this procedure.
 

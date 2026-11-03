@@ -22,9 +22,11 @@ one can damage it.
 
 ## Choose a package
 
-- **Full** includes Standalone and RNode, with a launcher to choose between them.
-- **Standalone** is the on-device messenger, using LoRa or WiFi.
-- **RNode** turns the handheld into a radio for a Reticulum client over USB or BLE.
+- **Full** (**Messenger and radio** on the download page) includes Standalone
+  and RNode, with a launcher to choose between them.
+- **Standalone** (**Messenger only**) is the on-device messenger, using LoRa or WiFi.
+- **RNode** (**Radio for your phone or computer**) turns the handheld into a
+  radio for a Reticulum client over USB or BLE.
 
 T-Deck, T-Pager and Cardputer offer all three packages. M9 offers Standalone
 only in this release. Download the `.bin` for your device and intended mode:
@@ -46,16 +48,17 @@ Use the files from the same release; legacy ZIP packages have their own instruct
 Use Chrome or Edge on a computer, with a USB data cable.
 
 1. Open the [download page](https://ratspeak.org/download.html), select your
-   device, then **Flash in browser**.
+   device, choose its package under **Firmware**, then select **Flash in browser**.
 2. Check the package and version. M9 supports Standalone only.
-3. Connect the device and choose **Select USB Device**. If it does not connect,
+3. Connect the device and choose **Select USB device**. If it does not connect,
    try [download mode](#recovery-download-mode).
-4. Select **Flash Ratspeak**. The flasher checks the device and updates compatible
+4. Select **Install Ratspeak**. The flasher checks the device and updates compatible
    firmware automatically. An erase always requires confirmation. Keep USB
    connected until flashing finishes, then restart the device if needed.
 
-To use a `.bin` you already downloaded or built, choose **Flash** under **Build
-your own** and upload it.
+To use a `.bin` you already downloaded or built, open the
+[advanced flasher](https://ratspeak.org/flash.html), upload it on the **Upload**
+tab, and select **Install firmware**.
 
 ## esptool {#esptool}
 

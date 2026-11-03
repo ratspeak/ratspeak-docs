@@ -5,7 +5,7 @@ sidebar_label: Heltec LoRa32
 
 # Flash upstream RNode on Heltec LoRa32
 
-The public **RNode** option on the Ratspeak download page installs
+The **RNode** tab on the Ratspeak advanced flasher installs
 [upstream RNode firmware](https://github.com/markqvist/RNode_Firmware).
 Your Heltec then serves as a radio for Ratspeak or another Reticulum host.
 This procedure uses the **RNode** tab; the separately labelled **rsNode** tab
@@ -28,14 +28,15 @@ is complete.
 
 ## Choose the firmware
 
-1. Open the [Ratspeak download page](https://ratspeak.org/download.html).
-   Under **Build your own**, select **Flash**.
-2. Connect the board by USB. Select **Select USB Device** and choose its port.
-3. In **Firmware Package**, select **RNode**. Choose a **Firmware release**,
+1. Open the [Ratspeak advanced flasher](https://ratspeak.org/flash.html). From
+   the download page, select **Open the advanced flasher**.
+2. Connect the board by USB. Select **Select USB device** and choose its port.
+3. Under **Choose firmware**, select the **RNode** tab. Choose a **Firmware release**,
    the exact **Device variant**, and its **Hardware band**. If your variant is
    absent, stop rather than selecting a nearby model.
-4. Check the selected board and band in the ready message. Leave **RNode EEPROM**
-   setup enabled so the installer can provision and verify the radio.
+4. Check the selected board and band in the ready message. Under **Advanced
+   options**, leave **RNode setup** enabled so the installer can provision and
+   verify the radio.
 
 The browser setup writes an unsigned RNode device identity. If you require a
 signed device identity, use the [rnodeconf procedure](/tutorials/flashing-from-source/heltec-lora32).
@@ -43,11 +44,11 @@ This device identity is separate from your Ratspeak messaging identity.
 
 ## Flash and finish setup
 
-1. Select **Flash firmware**. Review any erase notice before continuing.
+1. Select **Install firmware**. Review any erase notice before continuing.
    Keep the USB cable connected and the tab open.
-2. Wait for both firmware writing and RNode setup to finish. **100% written**
-   alone is not confirmation that provisioning succeeded.
-3. If the page says **Firmware installed. Reset the board, then finish RNode
+2. Wait for both firmware writing and RNode setup to finish. **Flash written**
+   alone is not confirmation that provisioning succeeded; wait for **Firmware installed**.
+3. If the page says **Firmware is installed. Reset the board, then finish RNode
    setup**, press **RST**. When its serial port returns, choose **Finish Setup**
    and select the port if asked.
 4. Wait for **RNode setup complete** and the message that setup was verified.

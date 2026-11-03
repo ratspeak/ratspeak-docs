@@ -31,9 +31,10 @@ limits and backup precautions before changing partitions.
 
 Use a package from the selected [Ratspeak Handheld
 release](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4) or a local build
-with `DEVICE=cardputer`. Select **Cardputer** on the
-[web flasher](https://ratspeak.org/download.html), or upload a complete `.bin`
-through **Build your own**. Check that the selected firmware is
+with `DEVICE=cardputer`. Select **Cardputer Adv** on the
+[download page](https://ratspeak.org/download.html#cardputer), then **Flash in
+browser**, or upload a complete `.bin` on the **Upload** tab of the
+[advanced flasher](https://ratspeak.org/flash.html). Check that the selected firmware is
 **Ratspeak Handheld 2.3.4**.
 
 **Back up internal flash and the SD card first.** Compatible web flasher updates

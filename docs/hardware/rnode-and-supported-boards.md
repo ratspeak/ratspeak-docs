@@ -38,8 +38,8 @@ rsCardputer image in the current installation procedure.
 
 Upstream RNode firmware has its own device support and release list. Use its
 [automated installer](https://github.com/markqvist/RNode_Firmware#getting-started-fast)
-or the public **RNode** selector on the
-[Ratspeak download page](https://ratspeak.org/download.html) to check the exact
+or the **RNode** tab on the
+[Ratspeak advanced flasher](https://ratspeak.org/flash.html) to check the exact
 variant. Select the board revision and hardware band; do not choose by the
 radio chip name alone.
 
