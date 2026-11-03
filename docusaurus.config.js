@@ -97,7 +97,7 @@ const config = {
       attributes: {
         rel: 'mask-icon',
         href: '/favicon.svg',
-        color: '#1838ed',
+        color: '#0a0f2e',
       },
     },
     {
@@ -146,7 +146,7 @@ const config = {
       tagName: 'meta',
       attributes: {
         name: 'msapplication-TileImage',
-        content: '/assets/icons/windows/ratspeak-windows-light-150.png',
+        content: '/assets/seo/web-app-icon-192.png',
       },
     },
     {
