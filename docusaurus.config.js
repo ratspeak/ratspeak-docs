@@ -9,7 +9,7 @@ const docsImage = 'https://ratspeak.org/assets/seo/og-docs.png';
 const docsSchema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'Docs — Ratspeak',
+  name: 'Ratspeak Docs',
   url: siteUrl,
   description: siteDescription,
   isPartOf: {
@@ -42,7 +42,7 @@ const footerMarkup = `
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Docs — Ratspeak',
+  title: 'Ratspeak Docs',
   tagline: siteDescription,
   favicon: 'favicon.ico',
 
@@ -218,7 +218,7 @@ const config = {
       tagName: 'meta',
       attributes: {
         name: 'twitter:title',
-        content: 'Docs — Ratspeak',
+        content: 'Ratspeak Docs',
       },
     },
     {

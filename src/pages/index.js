@@ -33,7 +33,7 @@ const HELP = [
 
 export default function Hub() {
   return (
-    <Layout title="Docs" description="Guides for Ratspeak, Reticulum, LoRa radios, and handhelds.">
+    <Layout description="Guides for Ratspeak, Reticulum, LoRa radios, and handhelds.">
       <main className="hub">
         <section className="hub-hero">
           <h1 className="hub-title">Guides &amp; technical<br />documentation</h1>

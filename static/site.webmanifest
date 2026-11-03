@@ -1,6 +1,6 @@
 {
-  "name": "Ratspeak",
-  "short_name": "Ratspeak",
+  "name": "Ratspeak Docs",
+  "short_name": "Ratspeak Docs",
   "description": "Guides for using Ratspeak, Reticulum, LoRa, hardware devices, deployment, and private mesh networking.",
   "id": "/",
   "lang": "en-US",
@@ -16,8 +16,8 @@
     "social",
     "utilities"
   ],
-  "theme_color": "#FAF7F3",
-  "background_color": "#FAF7F3",
+  "theme_color": "#1838ed",
+  "background_color": "#0a0f2e",
   "icons": [
     {
       "src": "/favicon-32x32.png",
