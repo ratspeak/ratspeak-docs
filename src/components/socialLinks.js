@@ -4,7 +4,7 @@ const DISCORD = 'M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 0
 
 const site = 'https://ratspeak.org';
 
-// Same markup as ratspeak.org's header, so the two sites line up exactly.
+// Header circles match ratspeak.org's; the names show only in the phone drawer, where they list like Map and Docs.
 export const socialLinksHtml =
-  `<a class="social-link" href="${site}/telegram" aria-label="Ratspeak on Telegram" title="Telegram"><svg viewBox="3.4 5.05 15 15" aria-hidden="true" focusable="false"><path d="${TELEGRAM}"/></svg></a>` +
-  `<a class="social-link" href="${site}/discord" aria-label="Ratspeak on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${DISCORD}"/></svg></a>`;
+  `<a class="social-link" href="${site}/telegram" aria-label="Ratspeak on Telegram" title="Telegram"><svg viewBox="3.4 5.05 15 15" aria-hidden="true" focusable="false"><path d="${TELEGRAM}"/></svg><span class="social-name">Telegram</span></a>` +
+  `<a class="social-link" href="${site}/discord" aria-label="Ratspeak on Discord" title="Discord"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${DISCORD}"/></svg><span class="social-name">Discord</span></a>`;
