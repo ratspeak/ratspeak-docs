@@ -25,7 +25,7 @@
   --ifm-link-color:var(--text-strong);--ifm-link-hover-color:var(--text-strong);--ifm-link-hover-decoration:underline;
   --ifm-global-radius:0;--ifm-code-border-radius:0;--ifm-pagination-nav-border-radius:0;--ifm-card-border-radius:0;
   --ifm-code-background:var(--tint);--ifm-code-font-size:90%;--ifm-code-padding-horizontal:.35em;
-  --ifm-navbar-height:64px;--ifm-navbar-background-color:var(--band);--ifm-navbar-link-color:var(--on-band);
+  --ifm-navbar-height:80px;--ifm-navbar-background-color:var(--band);--ifm-navbar-link-color:var(--on-band);
   --ifm-navbar-link-hover-color:var(--on-band);--ifm-navbar-padding-horizontal:var(--gutter);--ifm-navbar-shadow:none;
   --ifm-menu-color:var(--text);--ifm-menu-color-active:var(--text-strong);--ifm-menu-color-background-active:var(--tint);
   --ifm-menu-color-background-hover:var(--surface-2);--ifm-menu-link-padding-vertical:.45rem;
@@ -54,14 +54,17 @@ body{background:var(--bg);-webkit-font-smoothing:antialiased}
 a{text-underline-offset:4px}
 
 /* ── Header: the site's cobalt band ── */
-.navbar{height:auto;min-height:var(--ifm-navbar-height);padding-block:0;border-bottom:0;color:var(--on-band)}
+.navbar{height:auto;min-height:var(--ifm-navbar-height);padding-block:0;border-bottom:1px solid transparent;color:var(--on-band)}
 .navbar :focus-visible{outline-color:var(--focus-band)}
-.navbar__brand{gap:10px;margin-right:0;color:var(--on-band)}
+.navbar__brand{gap:10px;margin-right:0;color:var(--on-band);line-height:normal}
 .navbar__brand:hover{color:var(--on-band);text-decoration:none}
 .navbar__logo{height:32px;width:32px;margin-right:0}
 .navbar__logo img{height:32px;width:32px}
-.navbar__title{font-size:24px;font-weight:700;letter-spacing:-1.3px;color:var(--on-band)}
-.rs-nav{display:flex;gap:28px;margin-left:clamp(16px,2.5vw,40px);font-size:15px;font-weight:700}
+.navbar__title{font-size:24px;font-weight:700;letter-spacing:-1.3px;line-height:normal;color:var(--on-band)}
+/* header metrics match ratspeak.org's .topbar (80/72/64, 1px rule inside, 24px brand gap) so switching sites never shifts it */
+.navbar__items:not(.navbar__items--right)>.navbar__item{padding:0}
+.rs-nav{display:flex;gap:28px;margin-left:calc(24px + clamp(16px,2.5vw,40px));font-size:15px;font-weight:700;line-height:normal}
+@media(max-width:1100px){:root{--ifm-navbar-height:72px}.rs-nav{gap:20px}}
 .rs-nav a{color:var(--on-band);padding:12px 0;text-decoration:none}
 .rs-nav a:hover{color:var(--on-band);text-decoration:underline}
 .rs-nav a[aria-current='page']{text-decoration:underline;text-decoration-thickness:2px}
@@ -81,7 +84,7 @@ a{text-underline-offset:4px}
 .navbar svg[aria-label='(opens in new tab)']{display:none}
 
 @media(max-width:996px){
-  :root{--ifm-navbar-height:64px;--ifm-navbar-sidebar-width:min(360px,calc(100vw - 56px))}
+  :root{--ifm-navbar-sidebar-width:min(360px,calc(100vw - 56px))}
   .navbar__title{font-size:22px}
   .navbar__logo,.navbar__logo img{width:28px;height:28px}
   .navbar__items--right .rs-download-item{display:flex}
@@ -89,7 +92,7 @@ a{text-underline-offset:4px}
   /* the drawer flattens both panels: site links on top, the docs menu under them */
   .navbar-sidebar{background:var(--bg);box-shadow:none;min-height:100dvh;overflow:hidden;z-index:401}
   .navbar-sidebar__backdrop{background:var(--scrim);z-index:400}
-  .navbar-sidebar__brand{background:var(--band);height:64px;padding:0 16px;box-shadow:none;gap:10px}
+  .navbar-sidebar__brand{background:var(--band);height:var(--ifm-navbar-height);padding:0 16px;box-shadow:none;gap:10px}
   .navbar-sidebar__brand .navbar__brand{flex:1 1 auto;min-width:0}
   .navbar-sidebar__brand [class*='colorModeToggle']{display:block;margin:0}
   .navbar-sidebar__close{color:var(--on-band);width:40px;height:40px;display:grid;place-items:center;margin-left:8px}
@@ -104,6 +107,7 @@ a{text-underline-offset:4px}
   .navbar-sidebar .rs-nav a[aria-current='page']{color:var(--text-strong);text-decoration:none;box-shadow:inset 4px 0 0 var(--text-strong)}
   .navbar-sidebar .menu{padding:0}
 }
+@media(max-width:700px){:root{--ifm-navbar-height:64px}}
 @media(max-width:479px){.header-download{padding:10px 12px}}
 @media(max-width:360px){.navbar__brand .navbar__title{display:none}}
 
@@ -122,7 +126,7 @@ html.docs-doc-page{
   --ifm-toc-border-color:var(--line);--ifm-hr-border-color:var(--hairline);--ifm-table-border-color:var(--hairline);
   --ifm-code-background:var(--tint);--ifm-code-font-size:15px;--ifm-code-padding-horizontal:5px;--ifm-code-padding-vertical:1px;
   --ifm-menu-color:var(--text);--ifm-menu-color-active:var(--link);--ifm-menu-color-background-active:transparent;--ifm-menu-color-background-hover:var(--tint);
-  --ifm-navbar-height:64px;--doc-sidebar-width:280px!important;
+  --doc-sidebar-width:280px!important;
   --docusaurus-highlighted-code-line-bg:var(--tint);
 }
 html.docs-doc-page[data-theme='dark']{
@@ -305,7 +309,7 @@ html.docs-doc-page :focus-visible{outline:2px solid var(--focus);outline-offset:
 .docs-doc-page .footer{border-top-color:var(--hairline)}
 
 @media(max-width:996px){
-  html.docs-doc-page{--ifm-font-size-base:17px;--ifm-line-height-base:1.647;--ifm-navbar-height:56px}
+  html.docs-doc-page{--ifm-font-size-base:17px;--ifm-line-height-base:1.647}
   .docs-doc-page .theme-doc-markdown{font-size:17px;line-height:28px}
   .docs-doc-page .markdown h1{font-size:28px;line-height:34px}
   .docs-doc-page .markdown>header+p{font-size:17px;line-height:28px}
@@ -316,7 +320,7 @@ html.docs-doc-page :focus-visible{outline:2px solid var(--focus);outline-offset:
   .docs-doc-page .markdown th,.docs-doc-page .markdown td{min-width:200px}
   .docs-doc-page .markdown :is(th,td):first-child{position:sticky;left:0;z-index:1;min-width:120px;background:var(--bg);box-shadow:1px 0 0 var(--line)}
   .docs-doc-page .navbar-sidebar{background:var(--bg)}
-  .docs-doc-page .navbar-sidebar__brand{background:var(--bg);border-bottom:1px solid var(--header-rule);height:56px}
+  .docs-doc-page .navbar-sidebar__brand{background:var(--bg);border-bottom:1px solid var(--header-rule);height:var(--ifm-navbar-height)}
   .docs-doc-page .navbar-sidebar__close{color:var(--heading)}
   .docs-doc-page .navbar-sidebar .rs-nav a{color:var(--text);border-bottom-color:var(--hairline)}
   .docs-doc-page .navbar-sidebar .rs-nav a[aria-current='page']{color:var(--link);box-shadow:inset 2px 0 0 var(--link)}
