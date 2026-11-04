@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Troubleshooting
 
-These checks cover Ratspeak **1.0.37**. Record your version and platform before
+These checks cover Ratspeak **1.0.40**. Record your version and platform before
 trying a workaround; older builds can have different behavior. Handheld advice
 is listed separately below.
 
@@ -21,7 +21,38 @@ chmod +x Ratspeak-*.AppImage
 ./Ratspeak-*.AppImage
 ```
 
-If the error names FUSE, install your distribution's FUSE 2 compatibility library. Ubuntu 24.04 calls it `libfuse2t64`; older Debian/Ubuntu releases commonly use `libfuse2`. See the [AppImage FUSE guide](https://docs.appimage.org/user-guide/troubleshooting/fuse.html).
+The AppImage mounts itself with FUSE. It does not need the FUSE 2 library (`libfuse2`), only a `fusermount` program. If it reports `No suitable fusermount binary found on the $PATH` or another FUSE error, install your distribution's FUSE 3 package, which provides `fusermount3`:
+
+- Debian and Ubuntu: `sudo apt install fuse3`
+- Fedora: `sudo dnf install fuse3`
+- Arch: `sudo pacman -S fuse3`
+
+Where FUSE is unavailable, for example in a container, run it without mounting:
+
+```bash
+./Ratspeak-*.AppImage --appimage-extract-and-run
+```
+
+Setting `APPIMAGE_EXTRACT_AND_RUN=1` does the same. The AppImage then extracts to a temporary directory on every launch and removes it on exit, so it starts more slowly.
+
+## AppImage shows a blank window or no window
+
+Two problems fixed in Ratspeak 1.0.40; update if you use an older AppImage:
+
+- On newer distributions, such as Arch, Fedora 44, and Ubuntu 26.04, the window opens blank and the terminal shows `Could not create default EGL display: EGL_BAD_PARAMETER`. This happens under X11 too.
+- On niri, or another Wayland compositor without Xwayland, no window appears.
+
+From 1.0.40, the AppImage uses your system's Wayland libraries and runs natively on Wayland. If a Wayland session still misbehaves, launch it once under X11 and include the result in your report:
+
+```bash
+GDK_BACKEND=x11 ./Ratspeak-*.AppImage
+```
+
+The `.deb` and `.rpm` packages use the system libraries and were not affected.
+
+## Voice memos or ringtones are silent in the AppImage
+
+AppImages before 1.0.40 did not bundle the GStreamer media plugins that voice-memo playback and ringtones use. Update to 1.0.40 or later, or use the `.deb` or `.rpm` package, which uses your system's GStreamer.
 
 ## Gray or blank window on Linux
 
@@ -55,7 +86,7 @@ packaging reference.
 
 ## Two title bars under Sway, Hyprland, or niri
 
-Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
+Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. From 1.0.40 this also applies to the AppImage, which now runs natively on Wayland. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
 
 ## Windows SmartScreen blocks the installer
 
@@ -80,15 +111,15 @@ Walk through these in order:
 
 ## My RNode doesn't show up in "Add LoRa Device"
 
-- **macOS / Linux**: serial devices need user permissions. On macOS, check for a serial device such as `/dev/cu.usbserial-*` or `/dev/cu.usbmodem*`; the name depends on its USB interface. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you installed an older rule yourself, compare it with the current rule before changing your udev setup. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
+- **macOS / Linux**: serial devices need user permissions. On macOS, check for a serial device such as `/dev/cu.usbserial-*` or `/dev/cu.usbmodem*`; the name depends on its USB interface. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you installed an older rule yourself, compare it with the current rule before changing your udev setup. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
 - **Windows**: install the CP210x or CH340 driver matching your RNode's USB chip. Check Device Manager for an unknown COM device.
 - **iOS**: USB radios are not supported. Use a BLE-equipped RNode from **Network → Add LoRa Device → Bluetooth**, or use the TCP tab if your RNode stream is exposed on a reachable local endpoint. Follow the pairing prompt shown for that connection.
 - Bad cables look identical to good ones. If nothing else works, try a different USB cable — many shipped with devices are charge-only.
 
 ## Android Bluetooth RNode stays on "Initializing RNode"
 
-Update to 1.0.37 if you are on an older build. This release includes setup fixes
-for ESP32 Bluetooth RNodes on older Android versions and shows the RNode PIN
+Update to 1.0.40 if you are on an older build. Releases since 1.0.37 include setup
+fixes for ESP32 Bluetooth RNodes on older Android versions and show the RNode PIN
 prompt inside Ratspeak. Put the radio into pairing mode and use its PIN. Keep the
 exact failure text: pairing failures, timeouts and an unresponsive radio are
 different problems. If initialization still stalls, also record the Android
@@ -131,7 +162,7 @@ active profile or delete the database to attempt a restore.
 - On both devices, open **Network** and use **+** beside **Bluetooth Peer** to enable it.
 - Both devices need OS-level Bluetooth permission. On iOS and recent Android, the OS prompts on first scan; if you denied, grant it under system settings.
 - Move the devices close together while testing; walls, interference and the adapters affect range.
-- Windows advertising needs a packaged Bluetooth peripheral capability. The public 1.0.37 downloads are EXE/MSI, with no MSIX download. Do not rely on that Windows installation being discoverable; test with the other device advertising, and report any peripheral-unavailable message.
+- Windows advertising needs a packaged Bluetooth peripheral capability. The public 1.0.40 downloads are EXE/MSI, with no MSIX download. Do not rely on that Windows installation being discoverable; test with the other device advertising, and report any peripheral-unavailable message.
 - On Linux, the `bluetooth` service must be running (`systemctl status bluetooth`), the user must have BlueZ permissions, the adapter must support LE advertising, and BlueZ must allow the requested peripheral role. Follow your distribution's BlueZ guidance if it refuses advertising.
 
 ## I can't reach a public Ratspeak TCP server
@@ -234,7 +265,7 @@ flash backups and Wi-Fi passwords out of reports.
 
 ## Closing the Linux window quits Ratspeak
 
-In 1.0.37, Ratspeak can run even when a tray cannot be installed. In that case,
+In 1.0.40, Ratspeak can run even when a tray cannot be installed. In that case,
 closing the window quits instead of hiding it. Keep the window open if you need
 Ratspeak running, and check your desktop's tray support if you expected a tray icon.
 
