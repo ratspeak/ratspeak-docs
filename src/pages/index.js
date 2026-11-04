@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
+import SearchBar from '@theme/SearchBar';
 import '../css/hub.css';
 
 const Arrow = () => (
@@ -61,7 +62,10 @@ export default function Hub() {
         <section className="hub-hero">
           <div className="hub-in">
             <h1 className="hub-title">Guides &amp; technical<br /><span className="hub-nowrap">documentation.</span></h1>
-            <p className="hub-lede">Guides for the app and handhelds, developer documentation, and running your own nodes.</p>
+            <div className="hub-hero-row">
+              <p className="hub-lede">Guides for the app and handhelds, developer documentation, and running your own nodes.</p>
+              <div className="hub-search"><SearchBar /></div>
+            </div>
           </div>
         </section>
 

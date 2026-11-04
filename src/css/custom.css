@@ -353,3 +353,69 @@ html.docs-doc-page :focus-visible{outline:2px solid var(--focus);outline-offset:
 }
 
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+
+/* ── Search: top of the docs sidebar, the portal hero, and the top of the phone drawer ── */
+.navbar__search{
+  --s-link:var(--link,var(--text-strong));--s-hair:var(--hairline,var(--line));
+  --search-local-modal-background:var(--surface);--search-local-modal-shadow:0 0 0 1px var(--line);
+  --search-local-modal-width:560px;--search-local-modal-width-sm:calc(100vw - 32px);--search-local-spacing:8px;
+  --search-local-hit-background:transparent;--search-local-hit-shadow:none;--search-local-hit-height:48px;
+  --search-local-hit-color:var(--text);--search-local-hit-active-color:var(--text);--search-local-muted-color:var(--muted);
+  --search-local-highlight-color:var(--s-link);--search-local-input-active-border-color:var(--s-link);
+  margin-left:0!important}
+.navbar__search-input{width:240px;height:40px;padding:0 48px 0 36px;border:1px solid var(--control);border-radius:0;background:var(--surface);color:var(--text);font:15px/1 'DM Sans',system-ui,sans-serif}
+.navbar__search-input::placeholder{color:var(--muted);opacity:1}
+.navbar__search .navbar__search-input:focus{outline:0;border-color:var(--s-link);box-shadow:inset 0 0 0 1px var(--s-link)}
+.navbar__search .navbar__search-input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.navbar__search [class*='searchIcon_']{left:12px;width:16px;height:16px;color:var(--muted)}
+.navbar__search [class*='searchBarLoadingRing']{top:50%!important;left:10px!important;transform:translateY(-50%)}
+.navbar__search [class*='searchHintContainer_']{right:8px;gap:2px}
+.navbar__search [class*='searchHint_']{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border:1px solid currentColor;border-radius:3px;background:none;box-shadow:none;font:400 13px/1 'DM Sans',sans-serif;color:var(--muted);opacity:.8}
+.navbar__search [class*='searchClearButton_']{color:var(--muted);font-size:14px}
+/* results */
+.navbar__search [class*='dropdownMenu_']{max-height:min(70vh,600px);overflow-y:auto;overscroll-behavior:contain;margin-top:8px;padding:4px 0!important;border-radius:0!important;text-align:left}
+.navbar__search [class*='suggestion_']{height:auto!important;min-height:48px;margin:0!important;padding:0 16px!important;border-radius:0!important}
+.navbar__search [class*='suggestion_'][class*='cursor_']{background:var(--tint)!important;box-shadow:inset 2px 0 0 var(--s-link)}
+.navbar__search [class*='suggestion_'][class*='cursor_'] mark{text-decoration:none}
+.navbar__search [class*='hitWrapper_']{margin:0 10px;padding:8px 0;font-weight:400}
+.navbar__search [class*='hitTitle_']{font-size:15px;line-height:22px;color:var(--text)}
+.navbar__search [class*='hitPath_']{font-size:13px;line-height:20px;color:var(--muted)!important}
+.navbar__search mark{background:none;color:var(--s-link)!important;font-weight:700}
+.navbar__search [class*='hitIcon_'],.navbar__search [class*='hitAction_']{width:16px;height:16px;color:var(--muted)!important}
+.navbar__search [class*='hitTree_']{color:var(--line)!important}
+.navbar__search [class*='hitTree_'] svg{width:20px;opacity:1}
+.navbar__search [class*='noResults_']{padding:20px 16px;font-size:15px;line-height:22px;color:var(--text)}
+.navbar__search [class*='noResultsIcon_']{display:none}
+.navbar__search [class*='hitFooter_']{margin:4px 0 0;padding:10px 16px 6px;border-top:1px solid var(--s-hair);font-size:13px;text-align:left}
+.navbar__search [class*='hitFooter_'] a{color:var(--s-link);font-weight:700;text-decoration:none}
+.navbar__search [class*='hitFooter_'] a:hover{text-decoration:underline;text-underline-offset:3px}
+/* Docusaurus adds a navbar search whenever a search theme is installed; the sidebar, hero, and drawer carry it instead */
+.navbar [class*='navbarSearchContainer']{display:none}
+.sidebar-search{flex:none;padding:16px 16px 4px 20px}
+.sidebar-search .navbar__search,.sidebar-search .navbar__search-input{width:100%}
+.sidebar-search [class*='searchBar_']{display:block!important}
+.sidebar-search .navbar__search [class*='searchBar_'] [class*='dropdownMenu_']{left:0!important;right:auto!important}
+.sidebar-search+.menu{padding-top:12px!important}
+/* the docs sidebar clips to its width; let the results overlay the article */
+.theme-doc-sidebar-container{clip-path:none!important}
+
+/* phones: search tops the drawer; Map and Docs sit at its foot */
+.drawer-search{display:none}
+@media(max-width:996px){
+  .navbar-sidebar{display:flex;flex-direction:column}
+  .navbar-sidebar__items{flex:1 1 auto;min-height:0;height:auto!important}
+  .drawer-search{display:block;flex:none;padding:12px 16px;border-bottom:1px solid var(--hairline,var(--line))}
+  .drawer-search .navbar__search{width:100%}
+  .drawer-search [class*='searchBar_']{display:block!important}
+  .drawer-search .navbar__search-input{width:100%!important;height:44px;font-size:17px}
+  .drawer-search .navbar__search [class*='searchBar_'] [class*='dropdownMenu_']{left:0!important;right:0!important;width:auto!important;max-width:none!important;max-height:calc(100dvh - 140px)}
+  .navbar-sidebar__brand{flex:none}
+  .navbar-sidebar__item:first-child{order:2;position:sticky;bottom:0;z-index:1;margin-top:auto;padding-block:8px calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}
+  .navbar-sidebar__item+.navbar-sidebar__item{order:1;border-top:0}
+  .navbar-sidebar__item+.navbar-sidebar__item::before{content:none}
+  .navbar-sidebar .rs-nav a[href$='#play']{display:none}
+  .navbar-sidebar .rs-nav a{display:flex;align-items:center;gap:12px;border-bottom:0}
+  .navbar-sidebar .rs-nav a::before{content:'';flex:none;width:20px;height:20px;background:currentColor;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+  .navbar-sidebar .rs-nav a[href$='map.html']{--icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M2.5 5 7.5 3l5 2 5-2v12l-5 2-5-2-5 2z'/%3E%3Cpath d='M7.5 3v12M12.5 5v12'/%3E%3C/svg%3E")}
+  .navbar-sidebar .rs-nav a[href='/']{--icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M5 2.5h7l3.5 3.5v11.5H5z'/%3E%3Cpath d='M12 2.5V6h3.5M7.5 10.5h5M7.5 13.5h5'/%3E%3C/svg%3E")}
+}

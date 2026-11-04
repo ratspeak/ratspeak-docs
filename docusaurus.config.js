@@ -65,6 +65,7 @@ const config = {
   clientModules: [
     require.resolve('./src/js/navbarActive.js'),
     require.resolve('./src/js/mobileSidebar.js'),
+    require.resolve('./src/js/searchShortcut.js'),
   ],
 
   headTags: [
@@ -268,6 +269,24 @@ const config = {
         sidebarPath: './sidebars-tutorials.js',
         rehypePlugins: [tutorialSteps],
       },
+    ],
+  ],
+
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      /** @type {import('@easyops-cn/docusaurus-search-local').PluginOptions} */
+      ({
+        hashed: true,
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: false,
+        docsRouteBasePath: ['docs', 'tutorials'],
+        // Hash input only; must list every indexed docs source dir.
+        docsDir: ['docs', 'tutorials'],
+        highlightSearchTermsOnTargetPage: false,
+        searchBarShortcutKeymap: 'mod+k',
+      }),
     ],
   ],
 
