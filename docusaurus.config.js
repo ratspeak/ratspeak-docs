@@ -2,6 +2,7 @@
 import {readFileSync} from 'node:fs';
 import ratspeakPrism from './src/prism/ratspeak.js';
 import tutorialSteps from './src/rehype/tutorial-steps.js';
+import {socialLinksHtml} from './src/components/socialLinks.js';
 
 const siteUrl = 'https://docs.ratspeak.org';
 const siteDescription =
@@ -295,7 +296,7 @@ const config = {
     ({
       colorMode: {
         defaultMode: 'dark',
-        disableSwitch: false,
+        disableSwitch: true,
         respectPrefersColorScheme: false,
       },
       image: docsImage,
@@ -318,6 +319,7 @@ const config = {
             position: 'left',
             value: `<nav class="rs-nav" aria-label="Main navigation"><a href="${site}/map.html">Map</a><a href="/" aria-current="page">Docs</a><a href="${site}/#play">How it works</a></nav>`,
           },
+          {type: 'html', position: 'right', className: 'rs-social-item', value: `<div class="rs-social">${socialLinksHtml}</div>`},
           {type: 'html', position: 'right', className: 'rs-download-item', value: `<a class="header-download" href="${site}/download.html">Download</a>`},
         ],
       },

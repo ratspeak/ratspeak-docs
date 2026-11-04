@@ -69,13 +69,14 @@ a{text-underline-offset:4px}
 .rs-nav a:hover{color:var(--on-band);text-decoration:underline}
 .rs-nav a[aria-current='page']{text-decoration:underline;text-decoration-thickness:2px}
 .navbar__items--right{gap:16px}
-.navbar__items--right [class*='colorModeToggle']{order:-1;margin:0;width:40px;height:40px}
 .navbar__items--right>.rs-download-item{padding:0}
-[class*='colorModeToggle'] button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line-band);color:var(--on-band)}
-[class*='colorModeToggle'] button:hover{background:rgb(255 255 255 / .12)}
-[class*='colorModeToggle'] svg{width:20px;height:20px}
-[data-theme-choice='light'] [class*='lightToggleIcon'],[data-theme-choice='dark'] [class*='darkToggleIcon']{display:none}
-[data-theme-choice='light'] [class*='darkToggleIcon'],[data-theme-choice='dark'] [class*='lightToggleIcon']{display:initial}
+/* Telegram and Discord, sized and spaced like ratspeak.org's header */
+.navbar__items--right>.rs-social-item{padding:0}
+.rs-social{display:flex;align-items:center;gap:16px}
+.social-link{position:relative;display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;border:1.5px solid var(--line-band);color:var(--on-band)}
+.social-link::before{content:'';position:absolute;inset:-2px}
+.social-link:hover{background:rgb(255 255 255 / .12);color:var(--on-band)}
+.social-link svg{width:20px;height:20px;fill:currentColor}
 .header-download{display:inline-flex;align-items:center;min-height:40px;padding:11px 16px;background:var(--cta);color:var(--on-cta);border:2px solid var(--on-cta);box-shadow:3px 3px 0 #15204a;font-size:14px;font-weight:700;line-height:1;text-decoration:none;transition:transform .15s,box-shadow .15s}
 [data-theme='dark'] .header-download{box-shadow:3px 3px 0 var(--band-deep)}
 .header-download:hover{color:var(--on-cta);text-decoration:none;transform:translate(2px,2px);box-shadow:1px 1px 0 #15204a}
@@ -88,13 +89,12 @@ a{text-underline-offset:4px}
   .navbar__title{font-size:22px}
   .navbar__logo,.navbar__logo img{width:28px;height:28px}
   .navbar__items--right .rs-download-item{display:flex}
-  .navbar__items--right [class*='colorModeToggle']{display:none}
+  .navbar__items--right>.rs-social-item{display:none}
   /* the drawer flattens both panels: site links on top, the docs menu under them */
   .navbar-sidebar{background:var(--bg);box-shadow:none;min-height:100dvh;overflow:hidden;z-index:401}
   .navbar-sidebar__backdrop{background:var(--scrim);z-index:400}
   .navbar-sidebar__brand{background:var(--band);height:var(--ifm-navbar-height);padding:0 16px;box-shadow:none;gap:10px}
   .navbar-sidebar__brand .navbar__brand{flex:1 1 auto;min-width:0}
-  .navbar-sidebar__brand [class*='colorModeToggle']{display:block;margin:0}
   .navbar-sidebar__close{color:var(--on-band);width:40px;height:40px;display:grid;place-items:center;margin-left:8px}
   .navbar-sidebar__items{flex-direction:column;height:calc(100% - 64px);overflow-y:auto;transform:none!important;width:var(--ifm-navbar-sidebar-width)}
   .navbar-sidebar__item{flex:0 0 auto;height:auto;overflow:visible;padding:16px;width:100%}
@@ -149,8 +149,7 @@ html.docs-doc-page :focus-visible{outline:2px solid var(--focus);outline-offset:
 .docs-doc-page .rs-nav a{color:var(--nav-text)}
 .docs-doc-page .rs-nav a:hover{color:var(--nav-text);text-decoration-thickness:1px}
 .docs-doc-page .rs-nav a[aria-current='page']{color:var(--nav-text);text-decoration-color:var(--link);text-underline-offset:6px}
-.docs-doc-page [class*='colorModeToggle'] button{border:1px solid var(--line);color:var(--text)}
-.docs-doc-page [class*='colorModeToggle'] button:hover{background:var(--tint)}
+.docs-doc-page .social-link,.docs-doc-page .social-link:hover{border-color:var(--line);color:var(--nav-text)}
 .docs-doc-page .header-download,[data-theme='dark'] .docs-doc-page .header-download{box-shadow:3px 3px 0 var(--lane)}
 .docs-doc-page .header-download:hover,[data-theme='dark'] .docs-doc-page .header-download:hover{box-shadow:1px 1px 0 var(--lane)}
 .docs-doc-page .navbar__toggle{color:var(--heading)}
