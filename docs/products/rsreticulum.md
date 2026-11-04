@@ -8,7 +8,7 @@ rsReticulum is the Rust implementation of the Reticulum network stack. Use its s
 
 The current standalone release is [**1.3.0**](https://github.com/ratspeak/rsReticulum/releases/tag/v1.3.0). Its release baseline is Python Reticulum **1.4.2** for the implemented surface. The project remains experimental; wire compatibility does not mean every interface, tool or public Rust item has identical support across implementations.
 
-Ratspeak 1.0.37 uses a different, pinned rsReticulum source set with package version **1.4.0**. If you are building the app, use its dependency manifest and [source-build guide](../reference/building-from-source.md), rather than substituting the standalone tag.
+Ratspeak 1.0.40 uses a different, pinned rsReticulum source set with package version **1.4.0**. If you are building the app, use its dependency manifest and [source-build guide](../reference/building-from-source.md), rather than substituting the standalone tag.
 
 ## For node operators
 

@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # LoRa radio interfaces
 
-An RNode is a compatible radio running the RNode control protocol. Check the exact board, radio chip, firmware and connection mode; a LoRa-capable board alone is not enough. This page covers Ratspeak **1.0.37** and Ratspeak Handheld **2.3.4 beta** defaults.
+An RNode is a compatible radio running the RNode control protocol. Check the exact board, radio chip, firmware and connection mode; a LoRa-capable board alone is not enough. This page covers Ratspeak **1.0.40** and Ratspeak Handheld **2.3.4 beta** defaults.
 
 LoRa can provide a radio path without internet or cellular service. Range and throughput depend on the radio settings, antenna, terrain, interference and network load. Test a short direct exchange before adding hops or larger transfers.
 
@@ -14,7 +14,7 @@ Open the Network view and tap **Add LoRa Device**. Four transports are available
 
 - **USB / Serial** — desktop (Linux, macOS, Windows). The radio enumerates as a serial port; pick it from the dropdown.
 - **USB-OTG** — Android phones with USB host mode, using a USB-C OTG cable. Grant the per-device permission prompt the first time you plug in.
-- **Bluetooth** — desktop and mobile. Use the firmware’s pairing procedure, then scan. Follow the app/OS prompt for that radio; Android 1.0.37 presents the RNode PIN prompt inside Ratspeak. A retained bond can be reused, but pairing may be needed again after an OS/radio reset.
+- **Bluetooth** — desktop and mobile. Use the firmware’s pairing procedure, then scan. Follow the app/OS prompt for that radio; Android 1.0.40 presents the RNode PIN prompt inside Ratspeak. A retained bond can be reused, but pairing may be needed again after an OS/radio reset.
 - **TCP** — desktop and mobile. Use this when the RNode's KISS stream is exposed over a local TCP bridge, for example by firmware with TCP support or by a nearby always-on host attached to the radio.
 
 After choosing a transport, set a name, region, and preset. Ratspeak writes the interface config and brings it up immediately — no manual config file editing. Pause the old connection before switching the same radio between USB, BLE or TCP. Do not assume the app can identify every physical-device conflict across different endpoints or other hosts.

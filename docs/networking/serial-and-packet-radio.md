@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Serial and packet radio
 
-Serial interfaces carry Reticulum over a cable or a compatible modem/TNC. Match the framing and serial settings to both endpoints. These configuration details target **standalone rsReticulum 1.3.0**; Ratspeak 1.0.37 exposes a smaller set of radio setup controls, described below.
+Serial interfaces carry Reticulum over a cable or a compatible modem/TNC. Match the framing and serial settings to both endpoints. These configuration details target **standalone rsReticulum 1.3.0**; Ratspeak 1.0.40 exposes a smaller set of radio setup controls, described below.
 
 ## Why serial interfaces matter
 

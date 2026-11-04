@@ -45,6 +45,6 @@ The input is a seed string, not an address validator. Use one canonical address 
 
 Shared vectors check Rust/JavaScript compatibility for address seeds. Arbitrary Unicode strings are not guaranteed to match: Rust uses Unicode scalar values while JavaScript uses UTF-16 code units. Keep the vectors when adapting the algorithm, and test the exact output format your renderer consumes.
 
-Ratspeak **1.0.37** still uses its inline Blockies-style avatar implementation. It does not depend on the standalone LXMFace package, so do not assume changing this library will change the app's avatars.
+Ratspeak **1.0.40** still uses its inline Blockies-style avatar implementation. It does not depend on the standalone LXMFace package, so do not assume changing this library will change the app's avatars.
 
 LXMFace is [MIT-licensed](https://github.com/ratspeak/LXMFace/blob/297bd18b70bf6030a4746afca659e7d555dfa4f0/LICENSE), adapted from the Blockies algorithm with circular SVG rendering.

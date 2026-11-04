@@ -6,7 +6,7 @@ sidebar_position: 1
 
 An interface connects Reticulum to a carrier such as TCP, Bluetooth or LoRa. A node can use several interfaces, subject to platform support and hardware limits. The routing layer can then reach destinations through different media.
 
-This overview distinguishes Ratspeak 1.0.37 controls from standalone rsReticulum 1.3.0 configuration. A protocol driver existing in the library does not mean every app/platform exposes a setup form for it.
+This overview distinguishes Ratspeak 1.0.40 controls from standalone rsReticulum 1.3.0 configuration. A protocol driver existing in the library does not mean every app/platform exposes a setup form for it.
 
 ## What an interface is
 

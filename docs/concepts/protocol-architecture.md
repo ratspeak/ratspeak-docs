@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Protocol architecture
 
-This page explains how Reticulum addresses, discovers, and forwards traffic. Packet constants below match the Reticulum source bundled with Ratspeak 1.0.37; standalone configuration examples target rsReticulum 1.3.0. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
+This page explains how Reticulum addresses, discovers, and forwards traffic. Packet constants below match the Reticulum source bundled with Ratspeak 1.0.40; standalone configuration examples target rsReticulum 1.3.0. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
 
 ## Destination-Based Addressing
 

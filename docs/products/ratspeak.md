@@ -10,7 +10,7 @@ Private LXMF messages are encrypted to the recipient. Channels use a different m
 
 ## Get the app
 
-The current public desktop/Android release is **1.0.37**. Use the [downloads page](https://ratspeak.org/download.html) or the [versioned GitHub release](https://github.com/ratspeak/Ratspeak/releases/tag/v1.0.37). iOS is available through the [public TestFlight channel](https://testflight.apple.com/join/AzzW4Jg6); check TestFlight for its offered build.
+The current public desktop/Android release is **1.0.40**. Use the [downloads page](https://ratspeak.org/download.html) or the [versioned GitHub release](https://github.com/ratspeak/Ratspeak/releases/tag/v1.0.40). iOS is available through the [public TestFlight channel](https://testflight.apple.com/join/AzzW4Jg6); check TestFlight for its offered build.
 
 | Platform | Release packages | RNode connections in the app |
 |---|---|---|
@@ -56,8 +56,8 @@ App state lives under `.ratspeak/` in the OS app-data directory. Active Reticulu
 
 You do not need a separate `rnsd-rs` or `lxmd-rs` installation for ordinary app use. For an always-on transport node, Offline Inbox node or Channels hub, follow [Infrastructure and ops](../deployment/infrastructure-and-ops.md).
 
-Ratspeak embeds its protocol libraries. Release 1.0.37 pins rsReticulum/rsLXMF sources with package version 1.4.0, which differ from the standalone 1.3.0 downloads. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
+Ratspeak embeds its protocol libraries. Release 1.0.40 pins rsReticulum/rsLXMF sources with package version 1.4.0, which differ from the standalone 1.3.0 downloads. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
 
 The Tauri frontend calls the Rust backend through app-internal commands and events. Those commands are a [contributor interface](../reference/tauri-ipc-reference.md), not a stable public SDK. Library consumers should start with the component APIs.
 
-The app source is [AGPL-3.0-or-later](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/LICENSE).
+The app source is [AGPL-3.0-or-later](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/LICENSE).

@@ -69,7 +69,7 @@ Ratchets provide forward secrecy for link-less Single destination packets.
 
 When a destination has ratchets enabled, its announces include a rotating X25519 ratchet public key signed by the long-term identity. Senders that know the current ratchet encrypt to that ratchet key instead of the static identity encryption key. Once an old ratchet private key has been discarded, the long-term identity key alone cannot decrypt packets encrypted to that ratchet. Keeping copies of old ratchet keys defeats that protection.
 
-Defaults in the Reticulum source bundled with Ratspeak 1.0.37:
+Defaults in the Reticulum source bundled with Ratspeak 1.0.40:
 
 | Parameter | Default |
 |-----------|---------|

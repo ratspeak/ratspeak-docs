@@ -4,9 +4,9 @@ sidebar_position: 2
 
 # Tauri IPC reference
 
-This is a contributor reference for the **Ratspeak 1.0.37** app source at `25af91cc276928b6ed3191f1042633f949108a35`. The Tauri command/event surface connects the app’s WebView to its Rust backend. It is internal to the app and is not a stable public SDK or a remote automation service.
+This is a contributor reference for the **Ratspeak 1.0.40** app source at `15831404cd792dbdc56aa682ba9221a9039821f5`. The Tauri command/event surface connects the app’s WebView to its Rust backend. It is internal to the app and is not a stable public SDK or a remote automation service.
 
-The versioned [command registration](https://github.com/ratspeak/Ratspeak/blob/v1.0.37/src-tauri/src/lib.rs) and [command modules](https://github.com/ratspeak/Ratspeak/tree/v1.0.37/crates/ratspeak-tauri/src/commands) are the authority for signatures and feature gates. Recheck them when changing app versions.
+The versioned [command registration](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/src-tauri/src/lib.rs) and [command modules](https://github.com/ratspeak/Ratspeak/tree/v1.0.40/crates/ratspeak-tauri/src/commands) are the authority for signatures and feature gates. Recheck them when changing app versions.
 
 ## How IPC works in Ratspeak
 

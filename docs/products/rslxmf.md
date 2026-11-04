@@ -8,7 +8,7 @@ rsLXMF implements LXMF messaging in Rust. Application developers use `lxmf-core`
 
 The current standalone release is [**1.3.0**](https://github.com/ratspeak/rsLXMF/releases/tag/v1.3.0), with rsReticulum 1.3.0 as its sibling source set. Its documented compatibility floor is LXMF **1.0.1**, with **1.1.0** as the release reference. The implementation remains experimental, and compatibility must be assessed for the fields and delivery flow being used.
 
-Ratspeak 1.0.37 instead pins coordinated rsLXMF/rsReticulum commits with package version **1.4.0**. Follow the [app source manifest](../reference/building-from-source.md) when building that app.
+Ratspeak 1.0.40 instead pins coordinated rsLXMF/rsReticulum commits with package version **1.4.0**. Follow the [app source manifest](../reference/building-from-source.md) when building that app.
 
 ## Delivery methods
 

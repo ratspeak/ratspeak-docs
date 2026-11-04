@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Bluetooth interfaces
 
-Ratspeak 1.0.37 has two Bluetooth paths:
+Ratspeak 1.0.40 has two Bluetooth paths:
 
 - **Bluetooth RNode** connects the app to a compatible LoRa radio. Bluetooth replaces the USB cable; the radio still sends over LoRa.
 - **Bluetooth Peer** connects nearby Ratspeak devices directly, without a LoRa radio or shared Wi-Fi network.
@@ -21,7 +21,7 @@ The bridge carries the RNode control/data stream. Radio frequency, preset and ai
 
 1. Put the radio into its firmware's pairing mode. Follow the board's instructions; button combinations differ.
 2. Open **Network → Add LoRa Device → Bluetooth**. Grant Bluetooth/Nearby devices permission if the OS asks, then scan.
-3. Select the radio and follow the pairing prompt. On Android 1.0.37, the six-digit RNode PIN is entered inside Ratspeak. Use the PIN shown by that radio while its pairing window is open.
+3. Select the radio and follow the pairing prompt. On Android 1.0.40, the six-digit RNode PIN is entered inside Ratspeak. Use the PIN shown by that radio while its pairing window is open.
 4. Set the interface name, region and preset. Check the resulting connection status and radio settings.
 
 An existing bond can be reused, but reconnects can still need pairing again if the radio or OS has lost its bond. Android supports one enabled BLE RNode at a time. Pause the current one before switching radios; Pause remains available during connection/reconnection.
@@ -37,7 +37,7 @@ When a radio is not ready, keep the exact failure text:
 | **Radio failed to start** | The radio reported a startup failure. Check its own display/log and hardware setup. |
 | **Bluetooth link too small** | The negotiated BLE size cannot carry the required RNode response. Record phone OS, radio firmware and the error; try reconnecting. |
 
-Release 1.0.37 includes Android BLE setup and MTU negotiation fixes for ESP32 RNodes. Update an older app before diagnosing the same failure. If a bond appears stale, compare the OS and radio pairing state before resetting either one. Linux access depends on BlueZ policy; membership in a group named `bluetooth` is not a universal requirement.
+Releases since 1.0.37 include Android BLE setup and MTU negotiation fixes for ESP32 RNodes; 1.0.38 also fixes setup stalling at **Initializing RNode** on some older Android versions. Update an older app before diagnosing the same failure. If a bond appears stale, compare the OS and radio pairing state before resetting either one. Linux access depends on BlueZ policy; membership in a group named `bluetooth` is not a universal requirement.
 
 ### What goes over the wire
 
@@ -57,7 +57,7 @@ The interface can carry announces, links, resources and LXMF traffic. When a des
 
 ### Desktop requirements
 
-**Windows:** the peripheral/advertising implementation requires packaged-app Bluetooth capability. The public 1.0.37 release supplies EXE/MSI installers and no MSIX artifact. If advertising is unavailable, the implementation reports that condition and can continue central-only; the other device must advertise. Do not look for an MSIX download in that release or assume every Windows adapter supports the needed roles.
+**Windows:** the peripheral/advertising implementation requires packaged-app Bluetooth capability. The public 1.0.40 release supplies EXE/MSI installers and no MSIX artifact. If advertising is unavailable, the implementation reports that condition and can continue central-only; the other device must advertise. Do not look for an MSIX download in that release or assume every Windows adapter supports the needed roles.
 
 **Linux:** BlueZ must be running, the user must be allowed to access it, and the adapter must support LE advertising and a local GATT server. Some BlueZ configurations need experimental features for the server path. Use your distribution's guidance and the exact reported error before changing service configuration. Scanning success alone does not establish advertising support.
 

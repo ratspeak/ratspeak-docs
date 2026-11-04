@@ -6,7 +6,7 @@ sidebar_position: 6
 
 rsLXST provides experimental LXST telephony and media support for Rust applications using Reticulum. If you want to make a call in Ratspeak, start with [Voice calls](../using-ratspeak/messaging-and-contacts.md#voice-calls-experimental); this page is for library users.
 
-The current standalone source release is [**0.3.0**](https://github.com/ratspeak/rsLXST/releases/tag/v0.3.0), targeting the implemented LXST **0.4.5** surface. It has no standalone `rnphone-rs` application. Ratspeak 1.0.37 pins a later coordinated source commit carrying the same package version; use the app's [dependency manifest](../reference/building-from-source.md) for app builds.
+The current standalone source release is [**0.3.0**](https://github.com/ratspeak/rsLXST/releases/tag/v0.3.0), targeting the implemented LXST **0.4.5** surface. It has no standalone `rnphone-rs` application. Ratspeak 1.0.40 pins a later coordinated source commit carrying the same package version; use the app's [dependency manifest](../reference/building-from-source.md) for app builds.
 
 ## Application boundary
 

@@ -37,7 +37,7 @@ The signing key for a packet receipt proof depends on the proof sender's role. W
 
 ## Link Timers
 
-The defaults below describe the Reticulum source bundled with Ratspeak 1.0.37:
+The defaults below describe the Reticulum source bundled with Ratspeak 1.0.40:
 
 | Timer | Default behavior |
 |-------|------------------|
@@ -80,7 +80,7 @@ LXMF can deliver a message three ways.
 
 The default opportunistic content ceiling is 287 bytes, but title, fields, serialization and stamps reduce the usable text budget. The complete message must fit one encrypted packet. Oversized opportunistic messages use Direct delivery; Direct messages that do not fit a link packet use a resource.
 
-In Ratspeak 1.0.37, **Auto** uses Opportunistic for ordinary text only when it has a nonexpired recipient ratchet and no reusable active or pending link. Otherwise it uses Direct. Attachments and game traffic use Direct. When Offline Inbox is configured, an eligible failed live delivery can fall back to propagation. **Propagated** means a node accepted the message, not that the recipient has read or received it. The app exposes its current transfer limits; do not use the packet ceiling as a chat length limit.
+In Ratspeak 1.0.40, **Auto** uses Opportunistic for ordinary text only when it has a nonexpired recipient ratchet and no reusable active or pending link. Otherwise it uses Direct. Attachments and game traffic use Direct. When Offline Inbox is configured, an eligible failed live delivery can fall back to propagation. **Propagated** means a node accepted the message, not that the recipient has read or received it. The app exposes its current transfer limits; do not use the packet ceiling as a chat length limit.
 
 ## Propagation Nodes
 

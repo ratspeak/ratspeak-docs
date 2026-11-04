@@ -25,7 +25,7 @@ Release versions below distinguish standalone downloads from libraries bundled i
 
 | Component | Role | Start here |
 |---|---|---|
-| [Ratspeak](../products/ratspeak.md) | App; public release 1.0.37, plus the iOS TestFlight channel | [Install & Platform Setup](../getting-started/install-and-platform-setup.md) |
+| [Ratspeak](../products/ratspeak.md) | App; public release 1.0.40, plus the iOS TestFlight channel | [Install & Platform Setup](../getting-started/install-and-platform-setup.md) |
 | [rsReticulum](../products/rsreticulum.md) | Rust networking stack; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
 | [rsLXMF](../products/rslxmf.md) | Rust messaging library and `lxmd-rs`; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
 | [rsLXST](../products/rslxst.md) | Experimental voice/media library; standalone release 0.3.0 | Library README and API reference |
@@ -34,7 +34,7 @@ Release versions below distinguish standalone downloads from libraries bundled i
 | [LXMFace](../products/lxmface.md) | Avatar library for application developers | Library README |
 | [Ratkey](../products/ratkey.md) | Experimental hardware identity work and the desktop PIV integration | [Settings & Identity](../using-ratspeak/settings-and-identity.md) |
 
-Ratspeak 1.0.37 bundles coordinated protocol commits with rsReticulum/rsLXMF package version 1.4.0. Those are not the standalone 1.3.0 source sets. Developers should use the selected app release's dependency manifest, as explained in [Building from source](../reference/building-from-source.md).
+Ratspeak 1.0.40 bundles coordinated protocol commits with rsReticulum/rsLXMF package version 1.4.0. Those are not the standalone 1.3.0 source sets. Developers should use the selected app release's dependency manifest, as explained in [Building from source](../reference/building-from-source.md).
 
 ## For users
 

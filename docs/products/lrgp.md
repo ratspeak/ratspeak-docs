@@ -6,7 +6,7 @@ sidebar_position: 7
 
 LRGP, the Lightweight Reticulum Gaming Protocol, carries game actions in LXMF messages. Its built-in games are **Tic-Tac-Toe, Chess and Four in a Row**. If you want to play in Ratspeak, use the [Games guide](../using-ratspeak/games.md); the details below are for application and game developers.
 
-The standalone Rust release is [**lrgp-rs 0.4.1**](https://github.com/ratspeak/lrgp-rs/releases/tag/v0.4.1). The Python source package identifies itself as **0.4.0** at the [documented revision](https://github.com/ratspeak/lrgp-py/tree/6b9938342832be6b98eab940ac38679588e02b5e). Package versions are separate from the wire marker, which remains `lrgp.v1`. Ratspeak 1.0.37 pins its own Rust source commit in the app dependency manifest.
+The standalone Rust release is [**lrgp-rs 0.4.1**](https://github.com/ratspeak/lrgp-rs/releases/tag/v0.4.1). The Python source package identifies itself as **0.4.0** at the [documented revision](https://github.com/ratspeak/lrgp-py/tree/6b9938342832be6b98eab940ac38679588e02b5e). Package versions are separate from the wire marker, which remains `lrgp.v1`. Ratspeak 1.0.40 pins its own Rust source commit in the app dependency manifest.
 
 ## Wire format and delivery
 

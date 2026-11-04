@@ -8,7 +8,7 @@ Hardware-backed Reticulum identities keep private-key operations on a PIV token.
 
 ## Using a hardware identity in Ratspeak
 
-For Ratspeak **1.0.37**, follow [Settings and identity](../using-ratspeak/settings-and-identity.md). The desktop app can create a hardware identity, add an existing one, restore its recoverable form, unlock it with a PIN and manage its lock behavior. Mobile Ratspeak uses software identities.
+For Ratspeak **1.0.40**, follow [Settings and identity](../using-ratspeak/settings-and-identity.md). The desktop app can create a hardware identity, add an existing one, restore its recoverable form, unlock it with a PIN and manage its lock behavior. Mobile Ratspeak uses software identities.
 
 Two provisioning choices have different backup properties:
 
@@ -29,7 +29,7 @@ PIV operations use system smart-card services, including PC/SC access on desktop
 
 ## For Rust developers
 
-`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/5b38cae702a5b3984adf12a435f6d3012fcf90e1/crates/rns-ratkey). Ratspeak 1.0.37 pins that crate as part of the **1.4.0** component source set; standalone rsReticulum 1.3.0 is a separate source line.
+`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/5b38cae702a5b3984adf12a435f6d3012fcf90e1/crates/rns-ratkey). Ratspeak 1.0.40 pins that crate as part of the **1.4.0** component source set; standalone rsReticulum 1.3.0 is a separate source line.
 
 The crate provides bound hardware identities, `.hwid` metadata, provisioning and restore operations, seed derivation, PIN/session handling and mock transports for tests. Real PC/SC support is behind the `hardware` Cargo feature. An application must handle token removal, failed PIN checks, locking and identity changes; wire compatibility does not provide that UI or lifecycle management for it.
 

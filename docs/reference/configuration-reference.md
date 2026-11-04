@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Configuration reference
 
-This reference covers standalone **rsReticulum 1.3.0** and **rsLXMF 1.3.0**, plus app settings in **Ratspeak 1.0.37**. The app bundles newer protocol source than the standalone 1.3.0 downloads; their defaults are not interchangeable.
+This reference covers standalone **rsReticulum 1.3.0** and **rsLXMF 1.3.0**, plus app settings in **Ratspeak 1.0.40**. The app bundles newer protocol source than the standalone 1.3.0 downloads; their defaults are not interchangeable.
 
 ## Reticulum config (`~/.rsReticulum/config` or `~/.reticulum/config`)
 
