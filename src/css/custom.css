@@ -25,7 +25,7 @@
   --ifm-link-color:var(--text-strong);--ifm-link-hover-color:var(--text-strong);--ifm-link-hover-decoration:underline;
   --ifm-global-radius:0;--ifm-code-border-radius:0;--ifm-pagination-nav-border-radius:0;--ifm-card-border-radius:0;
   --ifm-code-background:var(--tint);--ifm-code-font-size:90%;--ifm-code-padding-horizontal:.35em;
-  --ifm-navbar-height:72px;--ifm-navbar-background-color:var(--band);--ifm-navbar-link-color:var(--on-band);
+  --ifm-navbar-height:64px;--ifm-navbar-background-color:var(--band);--ifm-navbar-link-color:var(--on-band);
   --ifm-navbar-link-hover-color:var(--on-band);--ifm-navbar-padding-horizontal:var(--gutter);--ifm-navbar-shadow:none;
   --ifm-menu-color:var(--text);--ifm-menu-color-active:var(--text-strong);--ifm-menu-color-background-active:var(--tint);
   --ifm-menu-color-background-hover:var(--surface-2);--ifm-menu-link-padding-vertical:.45rem;
@@ -66,7 +66,8 @@ a{text-underline-offset:4px}
 .rs-nav a:hover{color:var(--on-band);text-decoration:underline}
 .rs-nav a[aria-current='page']{text-decoration:underline;text-decoration-thickness:2px}
 .navbar__items--right{gap:16px}
-.navbar__items--right [class*='colorModeToggle']{order:-1;margin:0}
+.navbar__items--right [class*='colorModeToggle']{order:-1;margin:0;width:40px;height:40px}
+.navbar__items--right>.rs-download-item{padding:0}
 [class*='colorModeToggle'] button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line-band);color:var(--on-band)}
 [class*='colorModeToggle'] button:hover{background:rgb(255 255 255 / .12)}
 [class*='colorModeToggle'] svg{width:20px;height:20px}
