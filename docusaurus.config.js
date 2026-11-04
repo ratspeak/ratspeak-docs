@@ -1,6 +1,7 @@
 // @ts-check
 import {readFileSync} from 'node:fs';
-import {themes as prismThemes} from 'prism-react-renderer';
+import ratspeakPrism from './src/prism/ratspeak.js';
+import tutorialSteps from './src/rehype/tutorial-steps.js';
 
 const siteUrl = 'https://docs.ratspeak.org';
 const siteDescription =
@@ -118,7 +119,7 @@ const config = {
       tagName: 'meta',
       attributes: {
         name: 'theme-color',
-        content: '#1838ed',
+        content: '#121a45',
       },
     },
     {
@@ -265,6 +266,7 @@ const config = {
         path: 'tutorials',
         routeBasePath: 'tutorials',
         sidebarPath: './sidebars-tutorials.js',
+        rehypePlugins: [tutorialSteps],
       },
     ],
   ],
@@ -305,8 +307,9 @@ const config = {
         copyright: footerMarkup,
       },
       prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.nightOwl,
+        theme: ratspeakPrism,
+        darkTheme: ratspeakPrism,
+        additionalLanguages: ['bash'],
       },
     }),
 };
