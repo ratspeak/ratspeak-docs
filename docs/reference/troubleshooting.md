@@ -86,7 +86,7 @@ packaging reference.
 
 ## Two title bars under Sway, Hyprland, or niri
 
-Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. From 1.0.40 this also applies to the AppImage, which now runs natively on Wayland. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
+Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. From 1.0.40 this also applies to the AppImage, which now runs natively on Wayland. On Wayland, restart Ratspeak after changing it. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
 
 ## Windows SmartScreen blocks the installer
 
