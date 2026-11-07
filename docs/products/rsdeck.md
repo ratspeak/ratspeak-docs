@@ -54,7 +54,8 @@ flasher or esptool. For
 
 On a fresh installation, Standalone mode creates a Reticulum identity and asks
 for a display name and timezone. Share your Ratspeak contact QR to include your
-name, address, identity, and public key. **Legacy** shows an LXMF-address-only QR.
+name, address, identity, and public key. **Legacy** shows the `lxma://` address-and-key
+QR that Columba, MeshChatX, and other LXMF apps scan.
 
 ## What you can do on it
 
