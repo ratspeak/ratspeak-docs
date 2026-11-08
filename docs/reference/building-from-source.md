@@ -246,7 +246,7 @@ The mobile app compiles rsReticulum and rsLXMF as Rust libraries; it does not re
 
 ## Ratspeak Handheld
 
-T-Deck Plus, T-Pager, Cardputer Adv and M9 use the unified `ratspeak-handheld` repository. Follow its [firmware build procedure](../hardware/flashing-firmware.md#build-from-source) for the selected release and board. Handheld 2.3.4 has an M9 Standalone image only; Launcher and RNode instructions apply to the other supported boards.
+T-Deck Plus, T-Pager, Cardputer Adv and M9 use the unified `ratspeak-handheld` repository. Follow its [firmware build procedure](../hardware/flashing-firmware.md#build-from-source) for the selected release and board. Handheld 2.3.5 has an M9 Standalone image only; Launcher and RNode instructions apply to the other supported boards.
 
 Normal firmware builds use the included Rust archives and do not need this desktop sibling layout. `tools/release_identity.json` records the firmware/source identity. Keep firmware components from the same build and validate the package before flashing. The earlier `rsDeck`, `rsPager` and `rsCardputer` repositories describe their historical releases.
 

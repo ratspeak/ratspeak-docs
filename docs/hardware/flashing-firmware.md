@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Flashing firmware
 
-Install **Ratspeak Handheld v2.3.4 beta** on T-Deck Plus, T-Pager (SX1262),
+Install **Ratspeak Handheld v2.3.5 beta** on T-Deck Plus, T-Pager (SX1262),
 Cardputer Adv or ThinkNode M9. Cardputer requires Cap LoRa-1262 for LoRa.
 Firmware is available from the [download page](https://ratspeak.org/download.html)
 and [GitHub releases](https://github.com/ratspeak/ratspeak-handheld/releases).

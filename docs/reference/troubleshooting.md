@@ -236,7 +236,7 @@ LoRa delivery time depends on radio settings, message size, hops, contention and
 
 ## Ratspeak Handheld
 
-For **Ratspeak Handheld 2.3.4 beta**, start with the [handheld guide](../hardware/handheld-guide.md) and the page for your board. The M9 has a Standalone image only; mode and hardware instructions for other boards do not automatically apply.
+For **Ratspeak Handheld 2.3.5 beta**, start with the [handheld guide](../hardware/handheld-guide.md) and the page for your board. The M9 has a Standalone image only; mode and hardware instructions for other boards do not automatically apply.
 
 - **T-Pager frequency is hard to change:** open **Settings → Device → Developer
   Radio Controls** and hold the encoder as prompted. Return to **Settings → LoRa

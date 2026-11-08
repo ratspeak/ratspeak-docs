@@ -5,7 +5,7 @@ sidebar_label: Handheld use and recovery
 
 # Handheld use and recovery
 
-This guide covers **Ratspeak Handheld v2.3.4 beta** on T-Deck Plus, T-Pager (SX1262),
+This guide covers **Ratspeak Handheld v2.3.5 beta** on T-Deck Plus, T-Pager (SX1262),
 Cardputer Adv and ThinkNode M9. Cardputer needs Cap LoRa-1262 for LoRa.
 Use Standalone mode to send encrypted messages over LoRa or WiFi without a phone.
 
@@ -142,7 +142,7 @@ Manual **Announce** remains available when automatic announcements are off.
 
 Wait for settings to finish saving and follow any restart prompt. Standalone
 uses LoRa and WiFi; USB/BLE radio connections use **RNode** mode on T-Deck,
-T-Pager and Cardputer. M9 has no RNode image in v2.3.4.
+T-Pager and Cardputer. M9 has no RNode image in v2.3.5.
 
 ## Storage and SD cards {#internal-flash-sd-copies-and-deletion}
 

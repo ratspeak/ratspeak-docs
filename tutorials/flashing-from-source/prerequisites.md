@@ -21,7 +21,7 @@ also points source developers to upstream's build instructions.
 
 ## Ratspeak Handheld build prerequisites
 
-The v2.3.4 source build uses **Linux or macOS**, **Git**, **Make**, **Python 3.12**
+The v2.3.5 source build uses **Linux or macOS**, **Git**, **Make**, **Python 3.12**
 and **Arduino CLI 1.4.1**. The repository pins the Python build dependencies,
 including PlatformIO and esptool. Follow the T-Deck tutorial to install those
 in a virtual environment.

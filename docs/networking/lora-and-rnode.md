@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # LoRa radio interfaces
 
-An RNode is a compatible radio running the RNode control protocol. Check the exact board, radio chip, firmware and connection mode; a LoRa-capable board alone is not enough. This page covers Ratspeak **1.0.40** and Ratspeak Handheld **2.3.4 beta** defaults.
+An RNode is a compatible radio running the RNode control protocol. Check the exact board, radio chip, firmware and connection mode; a LoRa-capable board alone is not enough. This page covers Ratspeak **1.0.40** and Ratspeak Handheld **2.3.5 beta** defaults.
 
 LoRa can provide a radio path without internet or cellular service. Range and throughput depend on the radio settings, antenna, terrain, interference and network load. Test a short direct exchange before adding hops or larger transfers.
 
@@ -56,7 +56,7 @@ speeds. Real transfers are slower because each message needs extra radio data,
 and radios may have to wait or retry. “Turbo” means fastest within its group:
 Long Turbo is still slower than Medium Slow.
 
-These presets are shared by the app's RNode picker and handheld 2.3.4 Standalone
+These presets are shared by the app's RNode picker and handheld 2.3.5 Standalone
 mode. New or reset settings use Medium Fast; existing saved settings are retained.
 Older rsDeck, rsPager and rsCardputer releases used Long Fast as their default.
 

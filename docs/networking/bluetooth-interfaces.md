@@ -13,7 +13,7 @@ A Bluetooth connection is a carrier interface. A Reticulum Link is an encrypted 
 
 ## BLE RNode bridge
 
-The phone or computer acts as the BLE central and the RNode as the peripheral. Use firmware that exposes a compatible RNode BLE service. A supported Ratspeak handheld must be in **RNode** mode; Standalone is a separate messenger. Handheld 2.3.4 provides RNode images for T-Deck Plus, T-Pager and Cardputer Adv, not M9.
+The phone or computer acts as the BLE central and the RNode as the peripheral. Use firmware that exposes a compatible RNode BLE service. A supported Ratspeak handheld must be in **RNode** mode; Standalone is a separate messenger. Handheld 2.3.5 provides RNode images for T-Deck Plus, T-Pager and Cardputer Adv, not M9.
 
 The bridge carries the RNode control/data stream. Radio frequency, preset and airtime settings still apply. BLE connection quality and buffering can affect performance even when the LoRa settings match a USB connection.
 

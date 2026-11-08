@@ -7,7 +7,7 @@ sidebar_label: T-Deck Plus
 
 The T-Deck Plus is supported by [Ratspeak Handheld](https://github.com/ratspeak/ratspeak-handheld),
 the shared successor to rsDeck, rsPager, and rsCardputer. This page describes
-**Ratspeak Handheld 2.3.4 beta**.
+**Ratspeak Handheld 2.3.5 beta**.
 The full image boots a small launcher that can start either mode:
 
 - **Standalone** — on-device Reticulum/LXMF messaging over LoRa, with local identity, contacts, messages, radio settings, Wi-Fi options, GPS time sync, and SD-card storage support.
@@ -26,7 +26,7 @@ An SD card is optional for normal messaging.
 ## Get the firmware on your device
 
 Use `tdeck-full.bin` from
-[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
+[Ratspeak Handheld releases](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.5)
 for a fresh installation. The [advanced flasher](https://ratspeak.org/flash.html)
 accepts the complete `.bin` on its **Upload** tab. For an automatic download, use
 **Flash in browser** on the [download page](https://ratspeak.org/download.html#tdeck)

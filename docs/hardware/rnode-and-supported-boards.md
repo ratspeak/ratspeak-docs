@@ -20,7 +20,7 @@ Choose a **Standalone** handheld if you want to read and send messages on the
 device itself. Ratspeak Handheld's **Full** package includes both modes and a
 launcher for switching between them.
 
-The **Ratspeak Handheld v2.3.4** release provides these images:
+The **Ratspeak Handheld v2.3.5** release provides these images:
 
 | Device | Released modes | Hardware detail |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ The **Ratspeak Handheld v2.3.4** release provides these images:
 | M5Stack Cardputer Adv | Full, Standalone, RNode | LoRa requires the Cap LoRa-1262 module. |
 | ThinkNode M9 | Standalone | This release has no M9 Full or RNode image. |
 
-The [release downloads](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.4)
+The [release downloads](https://github.com/ratspeak/ratspeak-handheld/releases/tag/v2.3.5)
 and [flashing guide](./flashing-firmware.md) identify each package. Do not use an
 image for a similarly named board or substitute an older rsDeck, rsPager or
 rsCardputer image in the current installation procedure.

@@ -29,7 +29,7 @@ Release versions below distinguish standalone downloads from libraries bundled i
 | [rsReticulum](../products/rsreticulum.md) | Rust networking stack; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
 | [rsLXMF](../products/rslxmf.md) | Rust messaging library and `lxmd-rs`; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
 | [rsLXST](../products/rslxst.md) | Experimental voice/media library; standalone release 0.3.0 | Library README and API reference |
-| [Ratspeak Handheld](../hardware/handheld-guide.md) | Beta firmware 2.3.4; supported modes depend on board | [Flashing firmware](../hardware/flashing-firmware.md) |
+| [Ratspeak Handheld](../hardware/handheld-guide.md) | Beta firmware 2.3.5; supported modes depend on board | [Flashing firmware](../hardware/flashing-firmware.md) |
 | [LRGP](../products/lrgp.md) | Standalone Rust/Python game protocol implementations | [Games](../using-ratspeak/games.md) |
 | [LXMFace](../products/lxmface.md) | Avatar library for application developers | Library README |
 | [Ratkey](../products/ratkey.md) | Experimental hardware identity work and the desktop PIV integration | [Settings & Identity](../using-ratspeak/settings-and-identity.md) |
@@ -38,7 +38,7 @@ Ratspeak 1.0.40 bundles coordinated protocol commits with rsReticulum/rsLXMF pac
 
 ## For users
 
-The app manages its network and identity through its own UI. A standalone handheld can message without a phone; RNode mode instead makes supported hardware a radio for a host app. M9 has a Standalone image only in handheld 2.3.4.
+The app manages its network and identity through its own UI. A standalone handheld can message without a phone; RNode mode instead makes supported hardware a radio for a host app. M9 has a Standalone image only in handheld 2.3.5.
 
 Ratspeak can exchange LXMF messages with other Reticulum clients such as Sideband and NomadNet when there is a path and both applications support the content being sent. App-specific games, voice or Channels are separate capabilities.
 

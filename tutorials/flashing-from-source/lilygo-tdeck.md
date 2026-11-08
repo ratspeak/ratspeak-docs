@@ -5,7 +5,7 @@ sidebar_label: LilyGO T-Deck Plus
 
 # Build Ratspeak Handheld for T-Deck Plus
 
-This tutorial builds **Ratspeak Handheld v2.3.4** for the **LilyGO T-Deck Plus**
+This tutorial builds **Ratspeak Handheld v2.3.5** for the **LilyGO T-Deck Plus**
 and produces the same package types as the release. It uses the unified
 [`ratspeak-handheld` repository](https://github.com/ratspeak/ratspeak-handheld).
 The older `rsDeck` repository is retained for legacy recovery.
@@ -23,8 +23,8 @@ create the build environment.
 Clone the release into a new directory:
 
 ```sh
-git clone --branch v2.3.4 https://github.com/ratspeak/ratspeak-handheld.git ratspeak-handheld-v2.3.4
-cd ratspeak-handheld-v2.3.4
+git clone --branch v2.3.5 https://github.com/ratspeak/ratspeak-handheld.git ratspeak-handheld-v2.3.5
+cd ratspeak-handheld-v2.3.5
 python3.12 -m venv .venv
 . .venv/bin/activate
 python3 -m pip install -r requirements-build.txt
