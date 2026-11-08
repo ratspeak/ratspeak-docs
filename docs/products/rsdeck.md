@@ -129,6 +129,10 @@ do not assume their partition layouts are interchangeable.
 
 ## License
 
-The standalone firmware and launcher are AGPL-3.0-or-later; bundled RNode firmware
+The standalone firmware and launcher are under the Reticulum License, as is the
+bundled protocol core, a port of Mark Qvist's Reticulum and LXMF that carries his
+copyright (see [Licenses](../reference/licenses.md)). Voice memos use rsLXST, a
+port of LXST; a license for it is being arranged with its author, and until then
+no rights to that component are granted. Bundled RNode firmware
 retains its GPLv3 license. See the repository's
-[third-party notices](https://github.com/ratspeak/ratspeak-handheld/blob/v2.3.4/THIRD_PARTY_NOTICES.md).
+[third-party notices](https://github.com/ratspeak/ratspeak-handheld/blob/main/THIRD_PARTY_NOTICES.md).

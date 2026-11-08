@@ -72,4 +72,4 @@ python examples/chess_local.py
 
 On Windows, activate with `.venv\Scripts\Activate.ps1` in PowerShell instead. The optional `rns` extra adds the Reticulum/LXMF network bridge; the local game examples do not need a network.
 
-Both standalone implementations are MIT-licensed. LRGP's license does not change the AGPL license of the Ratspeak application that embeds it.
+Both standalone implementations are MIT-licensed. LRGP's license does not change the license of the Ratspeak application that embeds it (see [Licenses](../reference/licenses.md)).

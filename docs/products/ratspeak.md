@@ -60,4 +60,4 @@ Ratspeak embeds its protocol libraries. Release 1.0.40 pins rsReticulum/rsLXMF s
 
 The Tauri frontend calls the Rust backend through app-internal commands and events. Those commands are a [contributor interface](../reference/tauri-ipc-reference.md), not a stable public SDK. Library consumers should start with the component APIs.
 
-The app source is [AGPL-3.0-or-later](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/LICENSE).
+The app is published under the [Reticulum License](https://github.com/ratspeak/Ratspeak/blob/main/LICENSE). It bundles rsReticulum and rsLXMF, ports of Mark Qvist's reference implementations that carry his copyright under the same license, and voice uses rsLXST, a port of LXST for which a license for Ratspeak is being arranged with its author; see [Licenses](../reference/licenses.md).

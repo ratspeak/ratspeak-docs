@@ -67,4 +67,4 @@ See [Network interfaces](../networking/interfaces-overview-and-design.md) for se
 
 ## Build and license
 
-The host workspace requires **Rust 1.89+**. Build standalone 1.3.0 from its tag using the [standalone source instructions](../reference/building-from-source.md); the binaries use `*-rs` names. The source is [AGPL-3.0-or-later](https://github.com/ratspeak/rsReticulum/blob/v1.3.0/LICENSE). Use the repository API guide and local tests when changing an integration; wire compatibility and platform behavior still need their own verification.
+The host workspace requires **Rust 1.89+**. Build standalone 1.3.0 from its tag using the [standalone source instructions](../reference/building-from-source.md); the binaries use `*-rs` names. The source is under the [Reticulum License](https://github.com/ratspeak/rsReticulum/blob/main/LICENSE), the license of the reference implementation it is ported from; see [Licenses](../reference/licenses.md). Use the repository API guide and local tests when changing an integration; wire compatibility and platform behavior still need their own verification.

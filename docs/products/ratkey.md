@@ -41,4 +41,4 @@ The separate [ratspeak/ratkey repository](https://github.com/ratspeak/ratkey) co
 
 Use its repository instructions for that tool's provisioning, verification and application integration. Its recoverable provisioning describes a **24-word phrase**. Do not substitute those instructions for Ratspeak's 12-word app flow or assume backup files and phrases are interchangeable without a verified import path.
 
-The Python package is MIT-licensed. The Rust `rns-ratkey` crate is part of the AGPL-3.0-or-later rsReticulum workspace. Both need implementation-specific testing; this page makes no blanket claim that every PIV token or third-party Reticulum application is supported.
+The Python package is MIT-licensed. The Rust `rns-ratkey` crate is part of the rsReticulum workspace, which uses the Reticulum License. Both need implementation-specific testing; this page makes no blanket claim that every PIV token or third-party Reticulum application is supported.

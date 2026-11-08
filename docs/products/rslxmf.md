@@ -55,4 +55,4 @@ LXMF fields carry typed MessagePack values. Use the matching field API for the d
 
 Standalone source builds require **Rust 1.89+** and the matching rsReticulum sibling checkout. Follow [Building from source](../reference/building-from-source.md) for the pinned standalone pair and OS prerequisites. The daemon binary is `lxmd-rs`; it does not need Python at runtime.
 
-The project is [AGPL-3.0-or-later](https://github.com/ratspeak/rsLXMF/blob/v1.3.0/LICENSE). API checks and interoperability tests provide evidence for their exercised cases; they do not establish support for every third-party client extension or deployment.
+The project is under the [Reticulum License](https://github.com/ratspeak/rsLXMF/blob/main/LICENSE), the license of the reference implementation it is ported from; see [Licenses](../reference/licenses.md). API checks and interoperability tests provide evidence for their exercised cases; they do not establish support for every third-party client extension or deployment.
