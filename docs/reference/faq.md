@@ -96,7 +96,7 @@ Ratspeak's experimental desktop hardware-key flow is designed for supported Yubi
 
 ## Is Ratspeak free and open source?
 
-Ratspeak is free, and its source is published under the Reticulum License: anyone may use, modify, distribute, and sell it on three conditions (no use in systems built to harm people, no use in or contribution to AI or language-model training, and the notices kept). The bundled rsReticulum and rsLXMF are ports of Mark Qvist's reference implementations and carry his copyright under the same license. Voice uses rsLXST, a port of LXST; a license for it is being arranged with its author, and until then Ratspeak grants no rights to that component. See [Licenses](licenses.md). Related libraries, documentation, and hardware designs have their own licenses; check the license in the repository you intend to use or modify. Contributions and bug reports belong in the relevant project's repository.
+Ratspeak is free, and its source is published under the Reticulum License: anyone may use, modify, distribute, and sell it on three conditions (no use in systems built to harm people, no use in or contribution to AI or language-model training, and the notices kept). The bundled rsReticulum and rsLXMF are ports of Mark Qvist's reference implementations and carry his copyright under the same license. Voice uses rsLXST under his separate LXST license, so builds that include voice are non-commercial and may not be used outside Ratspeak. See [Licenses](licenses.md). Related libraries, documentation, and hardware designs have their own licenses; check the license in the repository you intend to use or modify. Contributions and bug reports belong in the relevant project's repository.
 
 ## Where can I get help?
 

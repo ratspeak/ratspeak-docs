@@ -13,7 +13,7 @@ sidebar_position: 6
 | [rsLXMF](https://github.com/ratspeak/rsLXMF) | [Reticulum License](https://github.com/ratspeak/rsLXMF/blob/main/LICENSE) | Mark Qvist, unless otherwise noted; additions and modifications Ratspeak LLC |
 | [rsReticulumLite](https://github.com/ratspeak/rsReticulumLite) | [Reticulum License](https://github.com/ratspeak/rsReticulumLite/blob/main/LICENSE) | Mark Qvist, unless otherwise noted; additions and modifications Ratspeak LLC |
 | [rsLXMFLite](https://github.com/ratspeak/rsLXMFLite) | [Reticulum License](https://github.com/ratspeak/rsLXMFLite/blob/main/LICENSE) | Mark Qvist, unless otherwise noted; additions and modifications Ratspeak LLC |
-| [rsLXST](https://github.com/ratspeak/rsLXST) | LXST license, being arranged with the author | Mark Qvist |
+| [rsLXST](https://github.com/ratspeak/rsLXST) | [LXST license](https://github.com/ratspeak/rsLXST/blob/main/LICENSE) | Mark Qvist |
 | [lrgp-rs](https://github.com/ratspeak/lrgp-rs), [lrgp-py](https://github.com/ratspeak/lrgp-py), [lxmface](https://github.com/ratspeak/lxmface) | MIT | Ratspeak |
 | RNode firmware bundled in ratspeak-handheld | GPL-3.0-or-later | Mark Qvist and contributors |
 | microReticulum, used by the legacy handheld firmware | Apache-2.0 | its author |
@@ -42,7 +42,18 @@ It permits use, modification, distribution, and sale, on three conditions:
 ## LXST
 
 rsLXST is derived from the [LXST](https://github.com/markqvist/LXST) reference
-implementation, which is published under CC BY-NC-ND 4.0. A license for its use in
-Ratspeak (voice calls in the app, voice memos on the handhelds) is being arranged
-with its author and will be recorded here. Until then, Ratspeak LLC grants no
-rights to that component.
+implementation, which is published under CC BY-NC-ND 4.0, and is used under the
+following license from its author:
+
+```
+LXST Copyright 2026 Mark Qvist.
+
+This implementation of LXST is derived from the LXST reference implementation,
+and used under license for Ratspeak, for non-commercial use only.
+No derivatives or use outside Ratspeak is permitted.
+
+For commercial licensing inquiries, contact license@unsigned.io
+```
+
+Builds that include rsLXST (voice calls in the app, voice memos on the handhelds)
+are non-commercial and not for use outside Ratspeak.

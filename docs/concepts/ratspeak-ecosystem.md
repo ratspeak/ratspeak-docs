@@ -48,4 +48,4 @@ Run `rnsd-rs` with transport enabled to forward for other nodes. Add `lxmd-rs` w
 
 ## For developers
 
-Use rsReticulum for networking, rsLXMF for messaging, LRGP for game messages, or LXMFace for avatars. Each repository's README and API reference describe its integration boundary. rsLXST, the voice component, is being licensed for Ratspeak only and is not offered for other applications (see [Licenses](../reference/licenses.md)). The app embeds these pieces; its internal Tauri commands are not a stable replacement for the library APIs.
+Use rsReticulum for networking, rsLXMF for messaging, LRGP for game messages, or LXMFace for avatars. Each repository's README and API reference describe its integration boundary. rsLXST, the voice component, is licensed for Ratspeak only and is not offered for other applications (see [Licenses](../reference/licenses.md)). The app embeds these pieces; its internal Tauri commands are not a stable replacement for the library APIs.
