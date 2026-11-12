@@ -26,16 +26,25 @@ and messages, but an unidentified or incompatible installation may require
 1. Open the [Ratspeak download page](https://ratspeak.org/download.html#tdeck)
    with **T-Deck Plus** selected. Under **Firmware**, choose a package, then
    select **Flash in browser**.
+
+   ![Ratspeak download page with T-Deck Plus selected among the supported devices](./img/td_select.png)
+
 2. Check the version and package. **Messenger and radio** (Full) includes the
    Standalone messenger, RNode radio mode, and a startup launcher. **Messenger
    only** (Standalone) and **Radio for your phone or computer** (RNode) install
    only the selected mode.
+
+   ![T-Deck Plus firmware package: Messenger and radio, Messenger only, or Radio for your phone or computer](./img/td_firmware.png)
+
 3. Connect USB. If the flasher cannot connect normally, switch the main power
    off, hold the trackball button, switch the power on and release the button
    after a few seconds. The screen may stay black in download mode.
 4. Choose **Select USB device** and select the board's serial port.
 5. Select **Install Ratspeak**. Read the device check and any installation notice.
    Keep the cable connected and tab open until the flasher reports completion.
+
+   ![Flash complete: 100% written and verified, ready to restart the T-Deck](./img/td_complete.png)
+
 6. Restart the T-Deck if needed. A Full installation opens the mode launcher;
    choose Standalone to use the on-device messenger.
 

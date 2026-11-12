@@ -30,10 +30,16 @@ is complete.
 
 1. Open the [Ratspeak advanced flasher](https://ratspeak.org/flash.html). From
    the download page, select **Open the advanced flasher**.
+
+   ![Download page device row with the "Open the advanced flasher" link, for boards like Heltec that aren't quick-pick cards](./img/heltec_select.png)
+
 2. Connect the board by USB. Select **Select USB device** and choose its port.
 3. Under **Choose firmware**, select the **RNode** tab. Choose a **Firmware release**,
    the exact **Device variant**, and its **Hardware band**. If your variant is
    absent, stop rather than selecting a nearby model.
+
+   ![Advanced flasher RNode tab with a Heltec LoRa32 device variant and hardware band selected](./img/heltec_firmware.png)
+
 4. Check the selected board and band in the ready message. Under **Advanced
    options**, leave **RNode setup** enabled so the installer can provision and
    verify the radio.
@@ -54,9 +60,7 @@ This device identity is separate from your Ratspeak messaging identity.
 4. Wait for **RNode setup complete** and the message that setup was verified.
    If setup fails, keep the log and follow its error before trying another flash.
 
-![Installer waiting for a reset before RNode setup can finish](./img/rs_lr1.png)
-
-![RNode setup complete after identity and firmware-hash verification](./img/rs_lr2.png)
+![Installer waiting for a reset before RNode setup can finish](./img/heltec_installed.png)
 
 If the board cannot enter the flasher, use
 [Heltec's bootloader instructions](https://wiki.heltec.org/docs/platform/f%26t/flash):
