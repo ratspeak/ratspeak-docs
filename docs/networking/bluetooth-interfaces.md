@@ -47,7 +47,7 @@ The bridge carries radio commands, Reticulum packets and their framing. Private 
 
 Bluetooth Peer uses BLE GATT to carry Reticulum traffic. Where the platform permits, it scans and advertises; a platform may support only the central/scanning role. The app binds a discovered peer identity from a directly received, signature-verified LXMF announce. It does not require manual Bluetooth bonding or a shared room password.
 
-For implementation work, the primary service UUID is `a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d`. The app handles its service selection and fragmentation; normal setup does not require editing UUIDs.
+For implementation work, the primary service UUID is `13370001-c7cb-4de2-98de-5d87fa06443d`. Ratspeak 1.0.44 and earlier use a different service UUID, so they do not find or connect to newer versions over Bluetooth Peer; update both devices. The app handles its service selection and fragmentation; normal setup does not require editing UUIDs.
 
 ### Enabling it
 
