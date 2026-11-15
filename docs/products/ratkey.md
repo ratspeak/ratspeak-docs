@@ -8,11 +8,11 @@ Hardware-backed Reticulum identities keep private-key operations on a PIV token.
 
 ## Using a hardware identity in Ratspeak
 
-For Ratspeak **1.0.40**, follow [Settings and identity](../using-ratspeak/settings-and-identity.md). The desktop app can create a hardware identity, add an existing one, restore its recoverable form, unlock it with a PIN and manage its lock behavior. Mobile Ratspeak uses software identities.
+For Ratspeak **1.1.0**, follow [Settings and identity](../using-ratspeak/settings-and-identity.md). The desktop app can create a hardware identity, add an existing one, restore its recoverable form, unlock it with a PIN and manage its lock behavior. Mobile Ratspeak uses software identities.
 
 Two provisioning choices have different backup properties:
 
-- **Hardware-only** generates private keys on the token. Losing or resetting that token loses the identity; this mode does not provide a recovery phrase.
+- **Key only** (hardware-only) generates private keys on the token. Losing or resetting that token loses the identity; this mode does not provide a recovery phrase.
 - **Recoverable** derives keys on the host and imports them into the token. Ratspeak's flow supplies a **12-word recovery phrase**. Anyone with that phrase can recreate the identity independently of the token PIN.
 
 The token performs Ed25519 signing and X25519 key agreement. Public identity material remains wire-compatible with Reticulum. Hardware protection does not encrypt the app's message database or prevent a compromised unlocked host from asking the connected token to perform an allowed operation.
@@ -29,11 +29,11 @@ PIV operations use system smart-card services, including PC/SC access on desktop
 
 ## For Rust developers
 
-`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/5b38cae702a5b3984adf12a435f6d3012fcf90e1/crates/rns-ratkey). Ratspeak 1.0.40 pins that crate as part of the **1.4.0** component source set; standalone rsReticulum 1.3.0 is a separate source line.
+`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/9f14d24cb152cd85fa85b44803da859df020c6ea/crates/rns-ratkey). Ratspeak 1.1.0 pins that crate as part of its rsReticulum **1.5.0** source set; standalone rsReticulum 1.3.0 is a separate source line.
 
 The crate provides bound hardware identities, `.hwid` metadata, provisioning and restore operations, seed derivation, PIN/session handling and mock transports for tests. Real PC/SC support is behind the `hardware` Cargo feature. An application must handle token removal, failed PIN checks, locking and identity changes; wire compatibility does not provide that UI or lifecycle management for it.
 
-Use the crate source and the [rsReticulum API guide](https://github.com/ratspeak/rsReticulum/blob/5b38cae702a5b3984adf12a435f6d3012fcf90e1/api/README.md) for the selected revision. The crate remains experimental and is not published to crates.io by this workspace.
+Use the crate source and the [rsReticulum API guide](https://github.com/ratspeak/rsReticulum/blob/9f14d24cb152cd85fa85b44803da859df020c6ea/api/README.md) for the selected revision. The crate remains experimental and is not published to crates.io by this workspace.
 
 ## The Python Ratkey tool
 

@@ -94,9 +94,9 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Propagated Delivery.** LXMF gives the encrypted message blob to a propagation node, which stores it until the recipient connects and requests waiting mail.
 
-**Auto delivery.** In Ratspeak 1.0.40, ordinary text can use Opportunistic delivery when a current recipient ratchet is known and no reusable link is active or pending; otherwise it uses Direct. Eligible failures can fall back to Offline Inbox when configured.
+**Automatic delivery.** In Ratspeak 1.1.0, ordinary text can use Opportunistic delivery when a recipient ratchet is known and no reusable link is active or pending; otherwise it uses Direct. Eligible failures can fall back to Offline Inbox when configured.
 
-**Offline Inbox.** Ratspeak's user-facing name for LXMF propagated delivery and propagation-node sync. In Auto mode, Ratspeak chooses a reachable inbox node; in Manual mode, you pin a specific propagation-node hash.
+**Offline Inbox.** Ratspeak's user-facing name for LXMF propagated delivery and propagation-node sync. In Automatic mode, Ratspeak chooses a reachable inbox node; in Manual mode, you pin a specific propagation-node hash.
 
 **Propagation Node.** An LXMF daemon, such as `lxmd-rs`, that stores messages for offline recipients. It is a delivery aid, not a trust anchor; message contents remain encrypted to the recipient.
 

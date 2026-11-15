@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Building from source
 
-Use this guide to build **Ratspeak 1.0.40**, or the separate **rsReticulum 1.3.0** and **rsLXMF 1.3.0** command-line releases. For an ordinary installation, use [Install & Platform Setup](../getting-started/install-and-platform-setup.md). iOS users can join the [public TestFlight](https://testflight.apple.com/join/AzzW4Jg6).
+Use this guide to build **Ratspeak 1.1.0**, or the separate **rsReticulum 1.3.0** and **rsLXMF 1.3.0** command-line releases. For an ordinary installation, use [Install & Platform Setup](../getting-started/install-and-platform-setup.md). iOS users can join the [public TestFlight](https://testflight.apple.com/join/AzzW4Jg6).
 
 ## What you are building
 
@@ -27,10 +27,10 @@ For a released app, `release/dependency-set.json` at the **Ratspeak release tag*
 Install Git and Node.js first; this release uses Node **22.22.0** for its source tooling. From a directory where you want to keep the sources:
 
 ```bash
-git clone --branch v1.0.40 https://github.com/ratspeak/Ratspeak.git Ratspeak-source-tools
+git clone --branch v1.1.0 https://github.com/ratspeak/Ratspeak.git Ratspeak-source-tools
 node Ratspeak-source-tools/scripts/release/checkout-release-source.mjs \
-  --tag v1.0.40 --destination ratspeak-v1.0.40-source
-cd ratspeak-v1.0.40-source
+  --tag v1.1.0 --destination ratspeak-v1.1.0-source
+cd ratspeak-v1.1.0-source
 node Ratspeak/scripts/release/source-integrity.mjs verify-tags
 ```
 
@@ -39,7 +39,7 @@ The helper fetches the exact component commits and verifies their annotated inte
 The resulting layout is:
 
 ```text
-ratspeak-v1.0.40-source/
+ratspeak-v1.1.0-source/
 ├── Ratspeak/
 ├── rsReticulum/
 ├── rsLXMF/
@@ -47,17 +47,17 @@ ratspeak-v1.0.40-source/
 └── lrgp-rs/
 ```
 
-GitHub's automatic Ratspeak source archive contains only the app repository. If packaging from archives, fetch all five exact revisions and retain these names. See the [versioned source-packaging guide](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/docs/source-packaging.md) for manual/Nix packaging and offline source verification.
+GitHub's automatic Ratspeak source archive contains only the app repository. If packaging from archives, fetch all five exact revisions and retain these names. See the [versioned source-packaging guide](https://github.com/ratspeak/Ratspeak/blob/v1.1.0/docs/source-packaging.md) for manual/Nix packaging and offline source verification.
 
 `Ratspeak/src-tauri` is a separate Cargo workspace. Its app build uses `src-tauri/Cargo.lock`; root workspace checks use `Ratspeak/Cargo.lock`. Keep both release lockfiles intact.
 
 ## Common prerequisites
 
-Install [Rust through rustup](https://www.rust-lang.org/tools/install). The minimum supported Rust version is **1.89.0**; the release toolchain is **1.96.0**. Select the release toolchain for this checkout and install its Tauri CLI:
+Install [Rust through rustup](https://www.rust-lang.org/tools/install). The minimum supported Rust version is **1.90.0**; the release toolchain is **1.96.0**. Select the release toolchain for this checkout and install its Tauri CLI:
 
 ```bash
 rustup toolchain install 1.96.0
-# Run inside ratspeak-v1.0.40-source:
+# Run inside ratspeak-v1.1.0-source:
 rustup override set 1.96.0
 cargo install tauri-cli --version 2.12.4 --locked
 ```
@@ -83,7 +83,7 @@ Install Xcode Command Line Tools:
 xcode-select --install
 ```
 
-For iOS, install the full Xcode app, launch it and finish its component setup. Release 1.0.40 records Xcode **26.3** and iOS SDK **26.2** in its dependency manifest.
+For iOS, install the full Xcode app, launch it and finish its component setup. Release 1.1.0 records Xcode **27.2** and iOS SDK **27.2** in its dependency manifest.
 
 ### Linux desktop
 
@@ -127,7 +127,7 @@ node scripts/release/android-sdk-view.mjs create \
   --sdk "$ANDROID_HOME" --ndk 27.0.12077973 --parent "$SDK_VIEW_PARENT"
 ```
 
-Use the returned `view` path for `ANDROID_HOME` and `ANDROID_SDK_ROOT`, and its `ndk/27.0.12077973` subdirectory for `ANDROID_NDK_HOME` and `NDK_HOME`, in the build shell. Keep that view available through Gradle and packaging. Check the build log's **Using installed NDK** line. This helper does not support Windows; Windows source builders must establish the same NDK selection in their own SDK setup. The [Android release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/.github/workflows/release-android.yml) shows the complete release environment and validation.
+Use the returned `view` path for `ANDROID_HOME` and `ANDROID_SDK_ROOT`, and its `ndk/27.0.12077973` subdirectory for `ANDROID_NDK_HOME` and `NDK_HOME`, in the build shell. Keep that view available through Gradle and packaging. Check the build log's **Using installed NDK** line. This helper does not support Windows; Windows source builders must establish the same NDK selection in their own SDK setup. The [Android release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.1.0/.github/workflows/release-android.yml) shows the complete release environment and validation.
 
 USB debugging and `adb devices` are needed when installing or debugging on a physical phone, not for producing an APK.
 
@@ -199,7 +199,7 @@ cd src-tauri
 cargo tauri ios build --debug --target aarch64-sim -- --locked
 ```
 
-Use `cargo tauri ios dev` for interactive simulator/device development. Production IPA export additionally needs the appropriate signing/profile setup; the [iOS release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/.github/workflows/release-ios.yml) records the build and entitlement checks.
+Use `cargo tauri ios dev` for interactive simulator/device development. Production IPA export additionally needs the appropriate signing/profile setup; the [iOS release workflow](https://github.com/ratspeak/Ratspeak/blob/v1.1.0/.github/workflows/release-ios.yml) records the build and entitlement checks.
 
 If a packaged build tries to load a local development server, check for shell overrides such as `TAURI_CONFIG` and `TAURI_DEV_HOST`. A packaged app should load its bundled assets.
 

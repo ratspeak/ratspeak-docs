@@ -10,7 +10,7 @@ Private LXMF messages are encrypted to the recipient. Channels use a different m
 
 ## Get the app
 
-The current public desktop/Android release is **1.0.40**. Use the [downloads page](https://ratspeak.org/download.html) or the [versioned GitHub release](https://github.com/ratspeak/Ratspeak/releases/tag/v1.0.40). iOS is available through the [public TestFlight channel](https://testflight.apple.com/join/AzzW4Jg6); check TestFlight for its offered build.
+The current public desktop/Android release is **1.1.0**. Use the [downloads page](https://ratspeak.org/download.html) or the [versioned GitHub release](https://github.com/ratspeak/Ratspeak/releases/tag/v1.1.0). iOS is available through the [public TestFlight channel](https://testflight.apple.com/join/AzzW4Jg6); check TestFlight for its offered build.
 
 | Platform | Release packages | RNode connections in the app |
 |---|---|---|
@@ -24,17 +24,20 @@ Bluetooth roles, background behavior and device permissions differ by platform. 
 
 ## Inside the app
 
-The desktop sidebar and mobile navigation arrange these features differently:
+The desktop sidebar lists every view. On a phone, the tab bar holds **Peers**, **Messages**, and **Channels**, and **More** holds the rest:
 
-- **Messages and Contacts** hold conversations and saved peers. Messages include delivery state, attachments, search and formatting.
+- **Home**, on desktop, shows recent messages and peers, with **New message**, **Add connection**, and **Announce**.
+- **Messages** and **Contacts** hold conversations and saved peers. Messages include delivery state, attachments, search, formatting, and more than one conversation with the same person.
 - **Channels** connect to a hub and its rooms. Joining, moderation and room access are separate from private LXMF delivery.
+- [**Games**](../using-ratspeak/games.md) provides Chess, Tic-Tac-Toe, and Four in a Row through [LRGP](lrgp.md).
 - **Peers** shows discovered messaging peers. An old announce or saved contact does not establish a current path.
-- **Network** manages interfaces, paths, transport mode, Offline Inbox and Bluetooth Peer.
-- **Settings** manages identities, backups, PIN protection, appearance and app preferences.
-- [**Games**](../using-ratspeak/games.md) provides Chess, Tic-Tac-Toe and Four in a Row through [LRGP](lrgp.md).
-- **Setup** handles the initial identity and backup. Identity management also remains available after setup.
+- **Network** maps your connections, with every way to connect in one **Connectivity** panel. **Pause all** stops them at once.
+- **Activity** shows what Ratspeak is doing on the network and explains problems in plain words.
+- **Identity** holds your identities, with the recovery phrase, PIN, and export.
+- **Settings** covers sending, appearance, notifications, privacy and blocking, network policy, Offline Inbox, and storage.
+- **Setup** handles the initial identity and backup.
 
-A fresh app starts without a network interface. Add a path that fits your setup: local LAN discovery, a reachable TCP server, a nearby Bluetooth Peer or an RNode radio. Start with [Choosing your setup](../getting-started/choosing-your-setup.md).
+A fresh app starts without a network interface. Turn on a path that fits your setup: local LAN discovery, a reachable internet server, a nearby Bluetooth Peer, or an RNode radio. Start with [Choosing your setup](../getting-started/choosing-your-setup.md).
 
 ## Voice calls
 
@@ -56,7 +59,7 @@ App state lives under `.ratspeak/` in the OS app-data directory. Active Reticulu
 
 You do not need a separate `rnsd-rs` or `lxmd-rs` installation for ordinary app use. For an always-on transport node, Offline Inbox node or Channels hub, follow [Infrastructure and ops](../deployment/infrastructure-and-ops.md).
 
-Ratspeak embeds its protocol libraries. Release 1.0.40 pins rsReticulum/rsLXMF sources with package version 1.4.0, which differ from the standalone 1.3.0 downloads. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
+Ratspeak embeds its protocol libraries. Release 1.1.0 pins rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, which differ from the standalone 1.3.0 downloads, and follows Reticulum 1.6.0, LXMF 1.3.0, and LXST 0.6.0. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
 
 The Tauri frontend calls the Rust backend through app-internal commands and events. Those commands are a [contributor interface](../reference/tauri-ipc-reference.md), not a stable public SDK. Library consumers should start with the component APIs.
 

@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Protocol architecture
 
-This page explains how Reticulum addresses, discovers, and forwards traffic. Packet constants below match the Reticulum source bundled with Ratspeak 1.0.40; standalone configuration examples target rsReticulum 1.3.0. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
+This page explains how Reticulum addresses, discovers, and forwards traffic. Packet constants below match the Reticulum source bundled with Ratspeak 1.1.0; standalone configuration examples target rsReticulum 1.3.0. It is the technical follow-up to **What is Reticulum?**, but it still focuses on the concepts operators and advanced users need rather than implementation internals.
 
 ## Destination-Based Addressing
 
@@ -155,7 +155,7 @@ Type 2 headers are used for transported packets that need an explicit transport 
 | Encrypted Single packet payload | 383 bytes | Maximum encrypted Single destination packet payload |
 | Link packet MDU | 431 bytes | Default payload size for encrypted Link packets |
 
-These are default protocol budgets, not guaranteed application payload sizes on every interface. IFAC overhead and interface/link capacity can reduce the usable budget.
+These are default protocol budgets, not guaranteed application payload sizes on every interface. IFAC overhead and interface/link capacity can reduce the usable budget. Ratspeak 1.1.0 also turns on link MTU discovery by default, so a link over a fast interface can carry larger packets than the default link MDU; **Settings → Network → Links** turns it off.
 
 LXMF messages have smaller content limits because LXMF adds destination fields, timestamps, signatures, and structured-message overhead. The default LXMF opportunistic content ceiling is 287 bytes before additional title/fields/stamp effects. It is not a fixed app text limit; larger messages use Direct link delivery or resources.
 

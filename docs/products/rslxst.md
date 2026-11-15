@@ -6,7 +6,7 @@ sidebar_position: 6
 
 rsLXST is Ratspeak's voice component: the Rust port of LXST behind voice calls in the app and voice memos on the handhelds. Its author licenses the port for use in Ratspeak only, for non-commercial use, with no derivatives or use outside Ratspeak; it is not offered as a library for other applications. If you want to make a call in Ratspeak, start with [Voice calls](../using-ratspeak/messaging-and-contacts.md#voice-calls-experimental); this page documents the component for Ratspeak development.
 
-The most recent tagged source is [**0.3.0**](https://github.com/ratspeak/rsLXST/releases/tag/v0.3.0), targeting the implemented LXST **0.4.5** surface; the current license and README are on [`main`](https://github.com/ratspeak/rsLXST). It has no standalone `rnphone-rs` application. Ratspeak 1.0.40 pins a later coordinated source commit carrying the same package version; use the app's [dependency manifest](../reference/building-from-source.md) for app builds.
+The most recent tagged source is [**0.3.0**](https://github.com/ratspeak/rsLXST/releases/tag/v0.3.0), targeting the implemented LXST **0.4.5** surface; the current license and README are on [`main`](https://github.com/ratspeak/rsLXST). It has no standalone `rnphone-rs` application. Ratspeak 1.1.0 pins rsLXST **0.4.0**, which targets LXST **0.6.0**; use the app's [dependency manifest](../reference/building-from-source.md) for app builds.
 
 ## Service boundary in Ratspeak
 
