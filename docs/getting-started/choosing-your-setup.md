@@ -19,13 +19,13 @@ Choose a device to run Ratspeak and a connection to other Reticulum users. A pho
 
 ## Just the Ratspeak desktop app
 
-[Install Ratspeak](install-and-platform-setup.md), create or restore an identity, then enable a connection in the **Network** tab. A fresh install has no interfaces enabled. For two devices on the same Wi-Fi or LAN, enable **Local Network** on both. To reach peers through the internet, add an **Internet/TCP** connection.
+[Install Ratspeak](install-and-platform-setup.md), create or restore an identity, then turn on a connection in the **Network** tab. A fresh install has no interfaces enabled. For two devices on the same Wi-Fi or LAN, turn on **Local Network** on both. To reach peers through the internet, turn on **Internet** and join a server.
 
 The [first-session guide](your-first-session.md) walks through connecting and sending a message. Installing a separate Reticulum daemon is optional; the app includes its own networking runtime.
 
 ## Ratspeak desktop + a TCP server {#ratspeak-desktop--a-tcp-hub}
 
-In **Network → Internet/TCP**, choose a server from the **Public** list or enter a host and port under **Custom**. You can use an existing public server or one you operate yourself. The server provides a connection to the Reticulum destinations it can reach; it does not make every user reachable.
+In **Network**, turn on **Internet** and choose **Join** beside a listed server, or choose **Add your own server** and enter its address and port. You can use an existing public server or one you operate yourself. The server provides a connection to the Reticulum destinations it can reach; it does not make every user reachable.
 
 See [IP, LAN and I2P](../networking/ip-internet-and-i2p.md) for connection details and [Infrastructure and ops](../deployment/infrastructure-and-ops.md) for hosting.
 

@@ -101,9 +101,9 @@ For identity export, recovery phrases and restore limits, see [Settings and iden
 
 ## Updating
 
-In **Settings**, choose **Check for updates** next to the version. After you confirm, Ratspeak contacts GitHub and shows the available release information. **Get Update** opens the release; the app does not install it automatically. On iPhone and iPad, use TestFlight.
+In **Settings → About**, choose **Check for updates** under the version. After you choose **Continue**, Ratspeak contacts GitHub and shows the available release information. **Get Update** opens the release; the app does not install it automatically. On iPhone and iPad, **Open TestFlight** takes you to TestFlight.
 
-Before updating, retain your identity backup and read the release notes for compatibility or migration instructions. Quit Ratspeak completely, install the newer package using the same installation method, and reopen it. Keep the existing app data; do not uninstall and erase data as an update procedure. Confirm the version in Settings and check that your identity and conversations are present.
+Before updating, retain your identity backup and read the release notes for compatibility or migration instructions. Quit Ratspeak completely, install the newer package using the same installation method, and reopen it. Keep the existing app data; do not uninstall and erase data as an update procedure. Confirm the version in **Settings → About** and check that your identity and conversations are present.
 
 ## Next
 
