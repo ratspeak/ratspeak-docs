@@ -29,11 +29,11 @@ PIV operations use system smart-card services, including PC/SC access on desktop
 
 ## For Rust developers
 
-`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/9f14d24cb152cd85fa85b44803da859df020c6ea/crates/rns-ratkey). Ratspeak 1.1.0 pins that crate as part of its rsReticulum **1.5.0** source set; standalone rsReticulum 1.3.0 is a separate source line.
+`rns-ratkey` lives inside [rsReticulum](https://github.com/ratspeak/rsReticulum/tree/v1.5.0/crates/rns-ratkey). Ratspeak 1.1.0 uses that crate from rsReticulum **1.5.0**.
 
 The crate provides bound hardware identities, `.hwid` metadata, provisioning and restore operations, seed derivation, PIN/session handling and mock transports for tests. Real PC/SC support is behind the `hardware` Cargo feature. An application must handle token removal, failed PIN checks, locking and identity changes; wire compatibility does not provide that UI or lifecycle management for it.
 
-Use the crate source and the [rsReticulum API guide](https://github.com/ratspeak/rsReticulum/blob/9f14d24cb152cd85fa85b44803da859df020c6ea/api/README.md) for the selected revision. The crate remains experimental and is not published to crates.io by this workspace.
+Use the crate source and the [rsReticulum API guide](https://github.com/ratspeak/rsReticulum/blob/v1.5.0/api/README.md) for the selected revision. The crate remains experimental and is not published to crates.io by this workspace.
 
 ## The Python Ratkey tool
 

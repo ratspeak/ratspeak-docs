@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Building from source
 
-Use this guide to build **Ratspeak 1.1.0**, or the separate **rsReticulum 1.3.0** and **rsLXMF 1.3.0** command-line releases. For an ordinary installation, use [Install & Platform Setup](../getting-started/install-and-platform-setup.md). iOS users can join the [public TestFlight](https://testflight.apple.com/join/AzzW4Jg6).
+Use this guide to build **Ratspeak 1.1.0**, or the **rsReticulum 1.5.0** and **rsLXMF 1.5.0** command-line tools. For an ordinary installation, use [Install & Platform Setup](../getting-started/install-and-platform-setup.md). iOS users can join the [public TestFlight](https://testflight.apple.com/join/AzzW4Jg6).
 
 ## What you are building
 
@@ -18,7 +18,7 @@ The shell examples use Bash on macOS/Linux, or Git Bash on Windows. The app need
 | [rsLXST](https://github.com/ratspeak/rsLXST) | Experimental voice stack, enabled by default. |
 | [lrgp-rs](https://github.com/ratspeak/lrgp-rs) | Game protocol. |
 
-Keep all four siblings even when disabling voice: Cargo still needs to resolve the declared path dependencies. The app's protocol pins are newer than the standalone 1.3.0 releases. Use a separate directory for those standalone builds.
+Keep all four siblings even when disabling voice: Cargo still needs to resolve the declared path dependencies. The app builds on rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, the same releases as the standalone tools, but its manifest selects exact commits. Use a separate directory for standalone builds.
 
 ## Select an exact source set
 
@@ -207,18 +207,20 @@ For normal device use, [TestFlight](https://testflight.apple.com/join/AzzW4Jg6) 
 
 ## Build rsReticulum
 
-Use a **separate source directory** for the standalone 1.3.0 tools:
+Use a **separate source directory** for the standalone tools:
 
 ```bash
-mkdir reticulum-v1.3.0-source
-cd reticulum-v1.3.0-source
-git clone --branch v1.3.0 https://github.com/ratspeak/rsReticulum.git
-git clone --branch v1.3.0 https://github.com/ratspeak/rsLXMF.git
+mkdir reticulum-v1.5.0-source
+cd reticulum-v1.5.0-source
+git clone --branch v1.5.0 https://github.com/ratspeak/rsReticulum.git
+git clone --branch v1.5.0 https://github.com/ratspeak/rsLXMF.git
 cd rsReticulum
 cargo build --release --locked
 ```
 
-These releases require Rust 1.89 or newer. The tools land in `target/release/`: `rnsd-rs`, `rnstatus-rs`, `rnpath-rs`, `rnid-rs`, `rnprobe-rs`, `rncp-rs`, `rnsh-rs` and `rnodeconf-rs`. The `-rs` suffix distinguishes the executable; it does not select a configuration directory.
+These releases require Rust 1.89 or newer. The default build compiles a bundled SQLite, so it also needs a C compiler: Xcode Command Line Tools on macOS, `build-essential` and `pkg-config` on Debian, Ubuntu, and Raspberry Pi OS, or the MSVC build tools on Windows. The git tools use Unix-only APIs, so on Windows build the other tools with `cargo build --release --locked -p rns-tools`.
+
+The tools land in `target/release/`: `rnsd-rs`, `rnstatus-rs`, `rnpath-rs`, `rnid-rs`, `rnprobe-rs`, `rncp-rs`, `rnsh-rs`, `rnodeconf-rs`, `rnx-rs`, `rnir-rs`, and `rnpkg-rs`, plus `rngit-rs`, `git-remote-rns`, and `rngcs-rs` for [git over Reticulum](../products/rngit.md). The `-rs` suffix distinguishes the executable; it does not select a configuration directory.
 
 Print the starter configuration to inspect it:
 
@@ -230,7 +232,7 @@ Choose your configuration and interfaces using [Configuration reference](configu
 
 ## Build rsLXMF
 
-In that same standalone source directory, rsLXMF depends on the sibling rsReticulum 1.3.0 checkout:
+In that same standalone source directory, rsLXMF depends on the sibling rsReticulum 1.5.0 checkout:
 
 ```bash
 cd ../rsLXMF
@@ -238,7 +240,7 @@ cargo build --release --locked
 ./target/release/lxmd-rs --exampleconfig
 ```
 
-The daemon is `target/release/lxmd-rs`. Configure its LXMF directory and its Reticulum directory separately; see [Infrastructure & Ops](../deployment/infrastructure-and-ops.md). It can attach to a running shared Reticulum instance, or own an in-process runtime. Distinct directories alone do not avoid conflicts over shared-instance names, ports or radio devices.
+The daemon is `target/release/lxmd-rs`; `lxmd-rs --version` prints `lxmd-rs 1.5.0 (LXMF 1.3.0, Reticulum 1.6.0)`. Configure its LXMF directory and its Reticulum directory separately; see [Infrastructure & Ops](../deployment/infrastructure-and-ops.md). It can attach to a running shared Reticulum instance, or own an in-process runtime. Distinct directories alone do not avoid conflicts over shared-instance names, ports, or radio devices.
 
 ## Mobile and the protocol repos
 

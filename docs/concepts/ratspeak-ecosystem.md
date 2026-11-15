@@ -21,20 +21,20 @@ For messaging, start with [Choosing Your Setup](../getting-started/choosing-your
 
 ## Quick reference
 
-Release versions below distinguish standalone downloads from libraries bundled in the app.
+The table lists current releases; the app builds on the same protocol releases.
 
 | Component | Role | Start here |
 |---|---|---|
 | [Ratspeak](../products/ratspeak.md) | App; public release 1.1.0, plus the iOS TestFlight channel | [Install & Platform Setup](../getting-started/install-and-platform-setup.md) |
-| [rsReticulum](../products/rsreticulum.md) | Rust networking stack; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
-| [rsLXMF](../products/rslxmf.md) | Rust messaging library and `lxmd-rs`; standalone release 1.3.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
-| [rsLXST](../products/rslxst.md) | Experimental voice/media library; standalone release 0.3.0 | Library README and API reference |
+| [rsReticulum](../products/rsreticulum.md) | Rust networking stack and node tools; release 1.5.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
+| [rsLXMF](../products/rslxmf.md) | Rust messaging library and `lxmd-rs`; release 1.5.0 | [Infrastructure & Ops](../deployment/infrastructure-and-ops.md) |
+| [rsLXST](../products/rslxst.md) | Experimental voice component; release 0.4.0 | Library README and API reference |
 | [Ratspeak Handheld](../hardware/handheld-guide.md) | Beta firmware 2.3.5; supported modes depend on board | [Flashing firmware](../hardware/flashing-firmware.md) |
 | [LRGP](../products/lrgp.md) | Standalone Rust/Python game protocol implementations | [Games](../using-ratspeak/games.md) |
 | [LXMFace](../products/lxmface.md) | Avatar library for application developers | Library README |
 | [Ratkey](../products/ratkey.md) | Experimental hardware identity work and the desktop PIV integration | [Settings & Identity](../using-ratspeak/settings-and-identity.md) |
 
-Ratspeak 1.1.0 bundles rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, following Reticulum 1.6.0, LXMF 1.3.0, and LXST 0.6.0. Those are not the standalone source sets listed above. Developers should use the selected app release's dependency manifest, as explained in [Building from source](../reference/building-from-source.md).
+Ratspeak 1.1.0 bundles rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, following Reticulum 1.6.0, LXMF 1.3.0, and LXST 0.6.0. The app's dependency manifest selects their exact commits; developers should build from it, as explained in [Building from source](../reference/building-from-source.md).
 
 ## For users
 

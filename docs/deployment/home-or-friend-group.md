@@ -16,7 +16,7 @@ For connections outside the server's LAN, arrange a reachable host and TCP port.
 
 ## Step 1 - set up the always-on node
 
-Install the applicable [rsReticulum tools](https://github.com/ratspeak/rsReticulum/releases), or follow their [source build instructions](https://github.com/ratspeak/rsReticulum#building). The examples here use the standalone `rnsd-rs` configuration, not the app's data directory.
+Install the applicable [rsReticulum tools](https://github.com/ratspeak/rsReticulum/releases), or follow their [source build instructions](../reference/building-from-source.md#build-rsreticulum). The examples here use the standalone `rnsd-rs` configuration, not the app's data directory.
 
 Create `~/.rsReticulum/config` and use that directory explicitly when starting the daemon. Replace the example network name and passphrase with your group's values:
 

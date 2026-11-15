@@ -59,7 +59,7 @@ App state lives under `.ratspeak/` in the OS app-data directory. Active Reticulu
 
 You do not need a separate `rnsd-rs` or `lxmd-rs` installation for ordinary app use. For an always-on transport node, Offline Inbox node or Channels hub, follow [Infrastructure and ops](../deployment/infrastructure-and-ops.md).
 
-Ratspeak embeds its protocol libraries. Release 1.1.0 pins rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, which differ from the standalone 1.3.0 downloads, and follows Reticulum 1.6.0, LXMF 1.3.0, and LXST 0.6.0. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
+Ratspeak embeds its protocol libraries. Release 1.1.0 pins rsReticulum 1.5.0, rsLXMF 1.5.0, and rsLXST 0.4.0, the same releases as the standalone tools, and follows Reticulum 1.6.0, LXMF 1.3.0, and LXST 0.6.0. [Building from source](../reference/building-from-source.md) explains the exact five-repository source set and toolchains, including builds with voice disabled.
 
 The Tauri frontend calls the Rust backend through app-internal commands and events. Those commands are a [contributor interface](../reference/tauri-ipc-reference.md), not a stable public SDK. Library consumers should start with the component APIs.
 
