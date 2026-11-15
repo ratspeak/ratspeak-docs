@@ -37,7 +37,8 @@ rsCardputer image in the current installation procedure.
 ## Other RNode boards
 
 Upstream RNode firmware has its own device support and release list. Use its
-[automated installer](https://github.com/markqvist/RNode_Firmware#getting-started-fast)
+[automated installer](https://github.com/markqvist/RNode_Firmware#getting-started-fast),
+`rnodeconf-rs -a` from [rsReticulum](../products/rsreticulum.md#for-node-operators),
 or the **RNode** tab on the
 [Ratspeak advanced flasher](https://ratspeak.org/flash.html) to check the exact
 variant. Select the board revision and hardware band; do not choose by the

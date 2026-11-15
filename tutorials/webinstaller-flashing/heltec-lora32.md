@@ -45,7 +45,8 @@ is complete.
    verify the radio.
 
 The browser setup writes an unsigned RNode device identity. If you require a
-signed device identity, use the [rnodeconf procedure](/tutorials/flashing-from-source/heltec-lora32).
+signed device identity, use the [rnodeconf procedure](/tutorials/flashing-from-source/heltec-lora32),
+with `rnodeconf` or `rnodeconf-rs`.
 This device identity is separate from your Ratspeak messaging identity.
 
 ## Flash and finish setup

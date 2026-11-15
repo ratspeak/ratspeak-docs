@@ -81,6 +81,24 @@ For a later upstream firmware update, review its release notes and run:
 rnodeconf PORT --update
 ```
 
+## With rnodeconf-rs
+
+`rnodeconf-rs` from [rsReticulum](/docs/products/rsreticulum#for-node-operators)
+1.5.0 takes the same options, so you can run the steps above with it in place of
+`rnodeconf` and skip installing Reticulum:
+
+```sh
+rnodeconf-rs --autoinstall
+rnodeconf-rs PORT --info
+rnodeconf-rs PORT --update
+```
+
+The installer asks the same questions and shows the same summary before it
+flashes. To write the Heltec's flash it runs `python3` with the `esptool.py`
+that comes with the firmware, so keep a Python 3 with the `pyserial` module
+installed. Downloaded firmware and signing keys go in `~/.config/rnodeconf`, or
+`%APPDATA%\rnodeconf` on Windows.
+
 ## If you need to compile RNode
 
 The installer above uses prebuilt firmware. Upstream maintains the

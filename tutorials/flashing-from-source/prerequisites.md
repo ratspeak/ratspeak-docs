@@ -17,7 +17,9 @@ The procedures in this section use two different tools:
 | Install upstream RNode on Heltec LoRa32 | Downloads, flashes and provisions a prebuilt RNode image with `rnodeconf` | [Heltec installation](/tutorials/flashing-from-source/heltec-lora32) |
 
 `rnodeconf` is an installer and configuration utility, not a compiler. Its guide
-also points source developers to upstream's build instructions.
+also points source developers to upstream's build instructions. rsReticulum's
+`rnodeconf-rs` takes the same options and needs no Python Reticulum install; the
+guide covers both.
 
 ## Ratspeak Handheld build prerequisites
 

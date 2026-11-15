@@ -225,4 +225,14 @@ Reticulum. Follow the [Heltec/rnodeconf tutorial](/tutorials/flashing-from-sourc
 for tool setup, installation and verification; select your exact supported board
 and band in the installer.
 
+rsReticulum 1.5.0 includes `rnodeconf-rs`, which takes the same options without
+the Python Reticulum package. `rnodeconf-rs -a` runs the same guided installer:
+it asks for the serial port, board, and band, shows a summary to confirm,
+downloads the firmware, then flashes and provisions the board, creating a local
+signing key if you have none. It still calls the board's flasher: `python3` with
+the firmware's `esptool.py` for ESP32 boards such as the Heltec LoRa32,
+`adafruit-nrfutil` for nRF52 boards such as the RAK4631, and `avrdude` for AVR
+boards. See
+[rsReticulum](../products/rsreticulum.md#for-node-operators).
+
 For Ratspeak Handheld, use the device's **RNode** or **Full** package above.
