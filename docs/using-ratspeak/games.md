@@ -6,27 +6,29 @@ sidebar_position: 4
 
 The **Games** view lets you play **Tic-Tac-Toe**, **Chess**, and **Four in a Row** with your contacts. Challenges and moves travel as LXMF messages using [LRGP](../products/lrgp.md). You do not need a separate game server.
 
-Ratspeak tries live delivery first. If that fails and Offline Inbox is enabled with a reachable node, it can store the move for later pickup. Check the delivery status before assuming your opponent has received a challenge or move. **Stored in Offline Inbox** is not confirmation that they have received it; see [delivery states](messaging-and-contacts.md#delivery-states).
+Ratspeak tries live delivery first. If that fails and Offline Inbox is enabled with a reachable node, it can store the move for later pickup. Check the delivery status before assuming your opponent has received a challenge or move. **In the Offline Inbox** is not confirmation that they have received it; see [delivery states](messaging-and-contacts.md#delivery-states).
 
 ## What the Games view does
 
-Open **Games** from the navigation. On a wide screen, the view has two columns:
+Open **Games** from the navigation, or from **More** on a phone. The list holds your games, filtered by **All**, **Active**, **Pending**, or **Done**. Games with a move waiting on you show an unread badge, the same way the Messages view marks unread conversations.
 
-- **Sessions** on the left, grouped by status — pending challenges, active games, finished games.
-- **Board** on the right, showing whichever session you've selected.
+With no game selected, the Games home shows:
 
-Sessions with a move waiting on you show an unread badge, the same way the Messages view marks unread threads.
+- **Your move** — games and challenges waiting on you.
+- **Start a new game** — a tile for each game. A first run shows only these, under **Choose a game**.
+- **Play again** — people you played recently, for a new challenge.
 
-On a narrow screen, select a session to open its board. Use the back button to return to the list.
+On a narrow screen, select a game to open its board. Use the back button to return to the list.
 
 ## Starting a game
 
 1. Open **Games**.
-2. Tap **New Game**.
-3. Pick Tic-Tac-Toe, Chess, or Four in a Row.
-4. Select a contact, then tap **Send Challenge**.
+2. Choose the game's tile under **Start a new game**. On a phone's list, or beside an open game, **New game** asks for the game first.
+3. Select a contact as your opponent, then choose **Send challenge**.
 
-When your contact receives the challenge, they can open it and choose **Accept** or **Decline**. Until they answer, you can choose **Cancel** to withdraw it. Challenges expire after about a day without a response.
+**Play again** opens the same challenge with that person and game already chosen. In a conversation, **Challenge to a game** starts one with that person.
+
+When your contact receives the challenge, they can open it and choose **Accept** or **Decline**. Until they answer, you can choose **Cancel challenge** to withdraw it. Challenges expire after about a day without a response.
 
 Both peers hold their own copy of the game state locally. Each client applies moves to its own board. Transport or Offline Inbox nodes can carry the messages, but do not run the game.
 
@@ -55,18 +57,18 @@ The board has seven columns and six rows. Select a column to drop your piece int
 
 ## If a move fails
 
-The board shows whether the last action is sending, stored, sent, or failed. If it fails, use **Resend last move**. This retries the same action; it does not make a second move. If repeated attempts fail, check [your network connection](network-and-peers.md) and your opponent's availability.
+The board shows whether the last action is sending, stored, sent, or failed. If it fails, use **Resend**. This retries the same action; it does not make a second move. If repeated attempts fail, check [your network connection](network-and-peers.md) and your opponent's availability.
 
 ## How a session ends
 
 A game ends one of four ways:
 
 - **Resign** — either player can resign from an active game's board controls.
-- **Draw** — use the draw controls to offer or answer a draw. Tic-Tac-Toe and Four in a Row also draw when the board fills with no winner. Chess detects automatic draw conditions and offers **Claim threefold** or **Claim 50-move** when applicable.
+- **Draw** — use **Offer draw**, or **Accept draw** and **Decline draw** when your opponent offers one. Tic-Tac-Toe and Four in a Row also draw when the board fills with no winner. Chess detects automatic draw conditions and offers **Claim threefold repetition** or **Claim the fifty-move rule** when applicable.
 - **Checkmate / win** — three in a row wins Tic-Tac-Toe, four in a row wins Four in a Row, and checkmate wins Chess.
 - **Expiry** — inactive Tic-Tac-Toe games expire after about a day; Chess and Four in a Row allow about seven days between actions. These limits include a one-hour allowance for differences between device clocks. An expired game cannot accept further moves.
 
-Finished sessions remain in the list. **Rematch** sends a new challenge for the same game and opponent. You can remove a finished, declined, or expired session with its **Remove from history** control; active games must end first. Removing a session deletes its local game history, not your opponent’s copy.
+Finished games remain in the list. **Rematch** sends a new challenge for the same game and opponent; a declined or expired challenge offers **Challenge again**. You can remove a finished, declined, or expired game with **Remove game**; active games must end first. Removing a game deletes its local game history, not your opponent’s copy.
 
 ## What non-Ratspeak clients see
 
