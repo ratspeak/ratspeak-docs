@@ -17,7 +17,7 @@ Settings has nine sections:
 | **Notifications** | **Notifications**, **Previews**, and, on Android, **Background battery access** |
 | **Privacy and blocking** | **Blocked people**, **Hide known spam peers**, **Protect Activity identities**, **Announce Ratspeak features**, and **Trusted websites** |
 | **Network** | **Auto-announce**, **Relay for other devices**, **Reconnect radios** on Android, **Discovery**, **Private network**, **Network stamps**, and **Links** |
-| **Offline Inbox** | Which inbox to use, and hosting one |
+| **Offline Inbox** | Which inbox (an LXMF propagation node) to use, and hosting one |
 | **Storage** | Clearing routes and peers, deleting messages and contacts, and **Reset Ratspeak** |
 | **Developer** | **Developer mode** and **Reticulum on this device** |
 | **About** | The version, **Check for updates**, the policies, and **Licenses** |
@@ -100,7 +100,7 @@ A manual announce is always available, regardless of the auto-announce setting: 
 
 **Settings → Network** holds **Auto-announce** and **Relay for other devices**, then **Discovery**, **Private network**, **Network stamps**, and **Links**. Changes in those last four restart the network for a moment. The connections themselves are in the **Network** tab, where you add, turn on or off, pause, and edit them. Offline Inbox has its own Settings section.
 
-**Relay for other devices** is **Off** by default. **On** allows forwarding for other peers; **Automatic** relays only when the configured interfaces and network meet its conditions. See [Network and peers](network-and-peers.md#transport-mode) for the conditions, for [discovered servers](network-and-peers.md#discovered-servers-and-radios) and [private networks](network-and-peers.md#private-networks), and for the Developer controls used with another local Reticulum instance. On Android, **Reconnect radios** lets Bluetooth radios reconnect on their own.
+**Relay for other devices** is Reticulum's transport mode. It is **Off** by default. **On** allows forwarding for other peers; **Automatic** relays only when the configured interfaces and network meet its conditions. See [Network and peers](network-and-peers.md#transport-mode) for the conditions, for [discovered servers](network-and-peers.md#discovered-servers-and-radios) and [private networks](network-and-peers.md#private-networks), and for the Developer controls used with another local Reticulum instance. On Android, **Reconnect radios** lets Bluetooth radios reconnect on their own.
 
 **Network stamps** has two switches, both off by default. **Stamp my announces and path requests** lets nodes that require stamps pass yours on, and uses some battery. **Require stamps from others** asks the same of other nodes; older software doesn't stamp, so nodes running it aren't heard.
 
