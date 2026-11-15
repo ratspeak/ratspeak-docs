@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Troubleshooting
 
-These checks cover Ratspeak **1.0.40**. Record your version and platform before
+These checks cover Ratspeak **1.1.0**. Record your version and platform before
 trying a workaround; older builds can have different behavior. Handheld advice
 is listed separately below.
 
@@ -86,7 +86,7 @@ packaging reference.
 
 ## Two title bars under Sway, Hyprland, or niri
 
-Check **Settings → System → Window Decorations**. **Auto** uses the detected desktop session; **On** and **Off** override it. From 1.0.40 this also applies to the AppImage, which now runs natively on Wayland. On Wayland, restart Ratspeak after changing it. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
+Check **Settings → General → Window → Window decorations**. **Automatic** uses the detected desktop session and hides the title bar under tiling Wayland compositors; **On** and **Off** override it. From 1.0.40 this also applies to the AppImage, which now runs natively on Wayland. The change applies after Ratspeak restarts. If Auto chooses incorrectly, include the output of `ratspeak --webview-diag` in your report.
 
 ## Windows SmartScreen blocks the installer
 
@@ -94,7 +94,7 @@ SmartScreen checks download reputation as well as publisher information, so an u
 
 ## App is slow to start the first time
 
-Let the startup screen finish before retrying an action. A new profile also needs identity setup; identity creation happens when you choose **Create Identity**. If the screen stops progressing, record its message and how long it has remained there. A repeated stall after reopening the app needs investigation; it is not something to ignore indefinitely.
+Let the startup screen finish before retrying an action. A new profile also needs identity setup; identity creation happens when you choose **Create identity**. If the screen stops progressing, record its message and how long it has remained there. A repeated stall after reopening the app needs investigation; it is not something to ignore indefinitely.
 
 ## Messaging says service unavailable or not initialized
 
@@ -104,39 +104,39 @@ During startup or an identity switch, messaging calls can return `service_unavai
 
 Walk through these in order:
 
-1. Open **Network** and confirm at least one interface is enabled and connected. A fresh app profile does not connect an interface for you.
+1. Open **Network** and confirm that at least one connection in **Connectivity** shows **Connected**. A fresh app profile does not connect an interface for you.
 2. **AutoInterface**: both ends must be on the same LAN. Many corporate WiFi networks and guest SSIDs block multicast — try a wired connection or a different network.
 3. **TCP**: confirm you can reach the host and port (`nc -zv host port`). Check the remote side has a TCPServer interface listening on that port.
 4. **LoRa**: check frequency, spreading factor, bandwidth and compatible packet format. Start with matching presets; in explicit-header mode, the header communicates the payload coding rate. See [LoRa settings](../networking/lora-and-rnode.md#tunable-parameters). Also check that IFAC settings match if you use them.
 
-## My RNode doesn't show up in "Add LoRa Device"
+## My RNode doesn't show up in "Set up a radio"
 
 - **macOS / Linux**: serial devices need user permissions. On macOS, check for a serial device such as `/dev/cu.usbserial-*` or `/dev/cu.usbmodem*`; the name depends on its USB interface. On Linux, the `.deb` and `.rpm` packages install a udev rule, `/usr/lib/udev/rules.d/70-ratspeak.rules`, that gives the user signed in at the computer access to common USB-serial radios. With the AppImage, copy [`70-ratspeak.rules`](https://github.com/ratspeak/Ratspeak/blob/v1.0.40/src-tauri/resources/linux/70-ratspeak.rules) to `/etc/udev/rules.d/`, then run `sudo udevadm control --reload && sudo udevadm trigger`. If you installed an older rule yourself, compare it with the current rule before changing your udev setup. Without the rule, add yourself to the group that owns serial ports, `dialout` on most distributions or `uucp` on Arch (`sudo usermod -aG dialout $USER`), then log out and back in.
 - **Windows**: install the CP210x or CH340 driver matching your RNode's USB chip. Check Device Manager for an unknown COM device.
-- **iOS**: USB radios are not supported. Use a BLE-equipped RNode from **Network → Add LoRa Device → Bluetooth**, or use the TCP tab if your RNode stream is exposed on a reachable local endpoint. Follow the pairing prompt shown for that connection.
+- **iOS**: USB radios are not supported. Turn on **Radio** in **Network** and choose **Bluetooth** for a BLE-equipped RNode, or **Wi-Fi** if your RNode stream is exposed on a reachable local endpoint. Follow the pairing prompt shown for that connection.
 - Bad cables look identical to good ones. If nothing else works, try a different USB cable — many shipped with devices are charge-only.
 
 ## Android Bluetooth RNode stays on "Initializing RNode"
 
-Update to 1.0.40 if you are on an older build. Releases since 1.0.37 include setup
+Update to 1.1.0 if you are on an older build. Releases since 1.0.37 include setup
 fixes for ESP32 Bluetooth RNodes on older Android versions and show the RNode PIN
 prompt inside Ratspeak. Put the radio into pairing mode and use its PIN. Keep the
 exact failure text: pairing failures, timeouts and an unresponsive radio are
 different problems. If initialization still stalls, also record the Android
 version and radio firmware. You can pause a connecting/reconnecting radio before
-adding another. See [Bluetooth interfaces](../networking/bluetooth-interfaces.md).
+adding another: **Pause** is in the radio's details in **Network**. See [Bluetooth interfaces](../networking/bluetooth-interfaces.md).
 
 ## Messages aren't delivering
 
 A few things to check:
 
 - **Check the delivery method and status.** Direct delivery needs a reachable recipient. Propagated delivery needs a usable Offline Inbox node and later pickup by the recipient. A message deposited at a node is not the same as confirmed delivery to the recipient. See [Messaging & Contacts](../using-ratspeak/messaging-and-contacts.md).
-- **The current path is unknown.** A saved contact or old announce does not establish a current path. Open the contact and tap **Request Path**, or use a configured Offline Inbox node that you can reach.
+- **The current path is unknown.** A saved contact or old announce does not establish a current path. With **Keep trying to send** on, the message waits (an hourglass) and goes when the recipient is heard; choose **Try now** from its menu to try sooner. A configured Offline Inbox node that you can reach can also hold it.
 - **No connected path.** You need a Reticulum path to the recipient or the chosen propagation node. Another interface or transport node can help only if it connects to that network; an arbitrary TCP server may not.
 
 ## I lost my identity
 
-Use the app's **Import / Restore** flow if you have its recovery phrase, a
+Use **Restore an identity** on first setup, or **Import or restore** on the **Identity** page, if you have its recovery phrase, a
 Ratspeak identity backup, or a compatible Reticulum private key. A PIN-encrypted
 `.rsi` backup also needs its backup PIN. An identity restore does not restore
 message history or app settings.
@@ -151,23 +151,23 @@ If no usable key material, phrase or backup remains, create a new identity and
 share its new messaging address with your contacts. Do not copy files into an
 active profile or delete the database to attempt a restore.
 
-## Auto-Announce isn't broadcasting
+## Auto-announce isn't broadcasting
 
-1. **Settings → Network → Auto-Announce** must not be set to **Off**.
-2. At least one interface must be enabled and connected. If all interfaces are red, there's nothing to announce on.
-3. Use **Network → Announce** to test a manual announce. Check the reported status rather than assuming it was transmitted immediately; network limits and connection state still apply.
+1. **Settings → Network → Auto-announce** must not be set to **Never**.
+2. At least one connection must be on and connected. If none is, there's nothing to announce on, and **Announce** in Network stays unavailable.
+3. Use **Announce** in **Network** to test a manual announce. Check the reported status rather than assuming it was transmitted immediately; network limits and connection state still apply.
 
 ## Bluetooth Peer sees nothing
 
-- On both devices, open **Network** and use **+** beside **Bluetooth Peer** to enable it.
+- On both devices, open **Network** and turn on **Bluetooth Peer**. Both devices need 1.1.0 or later, or both 1.0.44 or earlier: the two use different Bluetooth identifiers.
 - Both devices need OS-level Bluetooth permission. On iOS and recent Android, the OS prompts on first scan; if you denied, grant it under system settings.
 - Move the devices close together while testing; walls, interference and the adapters affect range.
-- Windows advertising needs a packaged Bluetooth peripheral capability. The public 1.0.40 downloads are EXE/MSI, with no MSIX download. Do not rely on that Windows installation being discoverable; test with the other device advertising, and report any peripheral-unavailable message.
+- Windows advertising needs a packaged Bluetooth peripheral capability. The public 1.1.0 downloads are EXE/MSI, with no MSIX download. Do not rely on that Windows installation being discoverable; test with the other device advertising, and report any peripheral-unavailable message.
 - On Linux, the `bluetooth` service must be running (`systemctl status bluetooth`), the user must have BlueZ permissions, the adapter must support LE advertising, and BlueZ must allow the requested peripheral role. Follow your distribution's BlueZ guidance if it refuses advertising.
 
 ## I can't reach a public Ratspeak TCP server
 
-Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.ratspeak.org:4343`) are best-effort public Ratspeak infrastructure with no uptime guarantee. The legacy endpoint `rns.ratspeak.org:4242` is an alias for Emerald. In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party. If one is unreachable:
+Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.ratspeak.org:4343`) are best-effort public Ratspeak infrastructure with no uptime guarantee. The legacy endpoint `rns.ratspeak.org:4242` is an alias for Emerald. In the app, these three are listed first under **Internet**; community servers operated by third parties are listed under **Unofficial**. If one is unreachable:
 
 - Try another public Ratspeak server, or a different community hub from [Reticulum's current connect/backbone information](https://reticulum.network/connect.html) or from a community directory you trust.
 - Run your own TCPServer on a small VPS — it's a single interface block in the config.
@@ -175,7 +175,7 @@ Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.r
 
 ## Path not found for a contact you've messaged before
 
-Reticulum forgets stale paths. Open the contact and tap **Request Path**, or wait for the next announce from the recipient. If the recipient went offline, a reachable Offline Inbox/propagation node can still hold encrypted mail for later pickup.
+Reticulum forgets stale paths. Wait for the next announce from the recipient; with **Keep trying to send** on, a waiting message goes when they are heard, or choose **Try now** from its menu. If the recipient went offline, a reachable Offline Inbox/propagation node can still hold encrypted mail for later pickup.
 
 ## "Ratspeak is already open"
 
@@ -193,7 +193,7 @@ Only one copy of Ratspeak can use its data at a time; a second copy stops at the
 
 ## Peers or Network views are laggy with many nodes
 
-Filter out **Discovered** peers you have never spoken to, or narrow the interface/status filters while diagnosing a large mesh. Large announce tables are normal on busy networks; narrow what is shown rather than deleting what the router has learned.
+Search the Peers list, or keep **Older / unknown** collapsed, while diagnosing a large mesh. Ratspeak clears peers it hasn't heard from in a day, except contacts and anyone you've messaged or played a game with. **Settings → Privacy and blocking → Hide known spam peers** hides bridge-style IDs you haven't saved or messaged. Large announce tables are normal on busy networks; narrow what is shown rather than deleting what the router has learned.
 
 ## Voice call button never appears
 
@@ -218,7 +218,7 @@ If the prompt does not return after a denial, grant permission in the OS setting
 A few things to check:
 
 - **You are not a contact yet.** Ratspeak rings for saved contacts or recognized direct peers. A recent zero-hop announce or a cached zero-hop path can establish that direct-peer status. Save the caller on the receiving device and try again.
-- **The spam guard rejected repeated unknown callers.** Ten policy-rejected calls from a non-contact/non-direct identity within the rejection window can create a blackhole; this is not a count of how often you press Decline. Open **Network → Blackholes** and remove the entry if it was a mistake.
+- **The spam guard rejected repeated unknown callers.** Ten policy-rejected calls from a non-contact/non-direct identity within the rejection window can create a blackhole; this is not a count of how often you press Decline. In **Activity**, the network filter notice offers **Review**; **Clear network drops** lets those callers reach you again if it was a mistake.
 - **You blocked the contact.** Ratspeak rejects that contact’s incoming call and can add a network blackhole when the call arrives. If you unblock a trusted caller, also check for and remove a related blackhole that would still reject the call.
 - **The voice stack is not running.** Reopen the app — the call surface comes online once the LXST service has started.
 

@@ -14,7 +14,7 @@ No. Compatible local-network, Bluetooth, or RNode radio connections can carry Re
 
 ## What hardware do I need?
 
-For internet or local-network use, start with a supported computer or phone. Configure a connection in **Network → Connections**; a fresh install does not automatically join a public TCP server. For LoRa, you need a compatible RNode and a supported connection between it and Ratspeak. Check [Interfaces overview](../networking/interfaces-overview-and-design.md) and the hardware guide for your exact device before buying or flashing it.
+For internet or local-network use, start with a supported computer or phone. Turn on a connection in **Network**; a fresh install does not automatically join a public server. For LoRa, you need a compatible RNode and a supported connection between it and Ratspeak. Check [Interfaces overview](../networking/interfaces-overview-and-design.md) and the hardware guide for your exact device before buying or flashing it.
 
 ## What is Reticulum, and what is LXMF?
 
@@ -36,7 +36,7 @@ Your identity is a set of cryptographic keys. Ratspeak derives its LXMF messagin
 
 ## How do I move my identity to a new device?
 
-Use **Import or Restore Identity** with the 12-word recovery phrase, or import a PIN-encrypted `.rsi` backup exported from the old device. These restore the identity, not messages, contacts, or app settings. Raw Reticulum key exports are unencrypted and need the same protection as a recovery phrase. For full-profile backup and migration precautions, see [Backing up and migrating](../using-ratspeak/settings-and-identity.md#backing-up-and-migrating).
+Use **Restore an identity** on first setup, or **Import or restore** on the **Identity** page, with the 12-word recovery phrase or a PIN-encrypted `.rsi` backup exported from the old device. These restore the identity, not messages, contacts, or app settings. Raw Reticulum key exports are unencrypted and need the same protection as a recovery phrase. For full-profile backup and migration precautions, see [Backing up and migrating](../using-ratspeak/settings-and-identity.md#backing-up-and-migrating).
 
 ## What is the maximum attachment size?
 
@@ -50,7 +50,7 @@ Ratspeak stores app settings, contacts, and message history in its local SQLite 
 
 ## What is auto-announce, and what is the default?
 
-An announce advertises your destination and public identity information so other nodes can learn a route to you. Auto-announce defaults to **30 minutes**. Change it under **Settings → Network → Auto-Announce**, or turn it off and announce manually. Offline Inbox retrieval is a separate operation: your app asks the inbox node for waiting messages.
+An announce advertises your destination and public identity information so other nodes can learn a route to you. Auto-announce defaults to **30 minutes**. Change it under **Settings → Network → Auto-announce**, or choose **Never** and announce manually. Offline Inbox retrieval is a separate operation: your app asks the inbox node for waiting messages.
 
 ## Can I run Ratspeak on a server or headless?
 
@@ -58,15 +58,15 @@ The public Ratspeak app is a graphical client. For an always-on headless transpo
 
 ## Can I run my own Offline Inbox node?
 
-Yes. An Offline Inbox is an LXMF propagation node. Ratspeak can host one through **Settings → Offline Inbox → Hosted Offline Inbox**, except with hardware-key identities. For an always-on server, use `lxmd-rs` with propagation enabled. Keep the device powered and reachable; mobile background restrictions can interrupt hosting. See [Offline Inbox](../using-ratspeak/network-and-peers.md#offline-inbox) and [Infrastructure and operations](../deployment/infrastructure-and-ops.md).
+Yes. An Offline Inbox is an LXMF propagation node. Ratspeak can host one through **Settings → Offline Inbox → Host an Offline Inbox**, except with hardware-key identities. For an always-on server, use `lxmd-rs` with propagation enabled. Keep the device powered and reachable; mobile background restrictions can interrupt hosting. See [Offline Inbox](../using-ratspeak/network-and-peers.md#offline-inbox) and [Infrastructure and operations](../deployment/infrastructure-and-ops.md).
 
 ## What happens if the recipient is offline when I send a message?
 
-Auto delivery first tries to reach the recipient live. If that fails and a usable Offline Inbox is enabled, Ratspeak can store the encrypted message there for later pickup. **Stored in Offline Inbox** confirms the inbox node accepted it; it does not confirm the recipient received it. Without a usable live path or inbox, delivery fails. See [Delivery states](../using-ratspeak/messaging-and-contacts.md#delivery-states).
+Automatic delivery first tries to reach the recipient live. If that fails and a usable Offline Inbox is enabled, Ratspeak can store the encrypted message there for later pickup. **In the Offline Inbox** confirms the inbox node accepted it; it does not confirm the recipient received it. Without a usable live path or inbox, the message waits and Ratspeak keeps trying for up to 24 hours, unless you turned off **Keep trying to send** in **Settings → General**. See [Delivery states](../using-ratspeak/messaging-and-contacts.md#delivery-states).
 
 ## Why are the public Ratspeak servers TCP addresses?
 
-They provide an entry into Reticulum over an IP network. They are transport connections, not accounts you sign into. You can select one in **Network → Connections → Internet/TCP**, use another operator's server, or run your own. In the app, **Official** identifies a Ratspeak-operated server; it is not a guarantee of uptime or anonymity. A transport server cannot decrypt private LXMF message content, but it can observe its own connections.
+They provide an entry into Reticulum over an IP network. They are transport connections, not accounts you sign into. You can join one under **Internet** in **Network**, use another operator's server, or run your own. In the app, Ruby, Emerald, and Diamond are Ratspeak-operated servers, and community servers are listed under **Unofficial**. Neither is a guarantee of uptime or anonymity. A transport server cannot decrypt private LXMF message content, but it can observe its own connections.
 
 ## Why does my first launch warn about an unidentified developer?
 

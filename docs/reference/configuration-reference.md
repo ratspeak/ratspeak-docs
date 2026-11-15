@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Configuration reference
 
-This reference covers standalone **rsReticulum 1.3.0** and **rsLXMF 1.3.0**, plus app settings in **Ratspeak 1.0.40**. The app bundles newer protocol source than the standalone 1.3.0 downloads; their defaults are not interchangeable.
+This reference covers standalone **rsReticulum 1.3.0** and **rsLXMF 1.3.0**, plus app settings in **Ratspeak 1.1.0**. The app bundles newer protocol source (rsReticulum 1.5.0 and rsLXMF 1.5.0) than the standalone 1.3.0 downloads; their defaults are not interchangeable.
 
 ## Reticulum config (`~/.rsReticulum/config` or `~/.reticulum/config`)
 
@@ -74,7 +74,7 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
 
 ### RNode keys (`RNodeInterface`, LoRa radios)
 
-Ratspeak writes `mode = roaming` for a newly added RNode, matching the usual mobile-radio role. Developer Mode exposes the interface-mode selector for fixed infrastructure and other deliberate topologies. Existing or imported RNode configurations keep their configured mode; if an older configuration omits `mode`, Reticulum's ordinary `full` default still applies.
+Ratspeak writes `mode = roaming` for a newly added RNode, matching the usual mobile-radio role. **Settings → Developer → Developer mode** shows the **Interface mode** selector in radio setup, for fixed infrastructure and other deliberate topologies. Existing or imported RNode configurations keep their configured mode; if an older configuration omits `mode`, Reticulum's ordinary `full` default still applies.
 
 | Key | Description |
 |---|---|
@@ -172,9 +172,10 @@ configuration directory. That override applies across identities and bypasses
 the normal separate network directories; switching app identities does not
 select a new override directory.
 
-Transport Mode is stored as `transport_mode`: **OFF**, **ON** or **AUTO**.
-OFF is the fresh default. ON enables local forwarding when Ratspeak owns the
-network runtime. AUTO requires an enabled non-LoRa interface, no enabled
+**Relay for other devices** (Transport Mode) is stored as `transport_mode`:
+`off`, `on` or `auto`, shown as **Off**, **On** and **Automatic**. Off is the
+fresh default. On enables local forwarding when Ratspeak owns the
+network runtime. Automatic requires an enabled non-LoRa interface, no enabled
 LoRa/RNode interface, and Wi-Fi, Ethernet or an unknown desktop network type.
 It also stays off when more than one recognized public TCP server is enabled.
 A shared-instance client relies on its owner for forwarding.
@@ -201,8 +202,8 @@ a hardware-backed identity keeps its private key on the token.
 | Standalone `rnsd-rs` | `<config directory>/storage/transport_identity`. This is the transport identity, not an app messaging backup. |
 | Standalone `lxmd-rs` | `<config directory>/identity`; an existing legacy `<config directory>/.lxmf/identity` can be used as a fallback. |
 
-For Ratspeak, use **Settings → Identity → Export Identity** and the app's import
-or restore flow. A PIN-encrypted `.rsi` backup includes identity material and
+For Ratspeak, use **Export…** on the **Identity** page and the app's **Import or
+restore** flow. A PIN-encrypted `.rsi` backup includes identity material and
 metadata, but not message history or app settings. Raw Reticulum exports are
 unencrypted. A hardware private key cannot be exported. See
 [Settings & Identity](../using-ratspeak/settings-and-identity.md) before moving or
