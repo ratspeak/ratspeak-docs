@@ -36,6 +36,8 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Path Request.** A request for the network to find or refresh a route to a destination hash. Ratspeak exposes this as **Request Path** when a contact is known but not currently reachable.
 
+**Network Stamp.** A proof-of-work value that Reticulum 1.6 attaches to announces, path requests, and link requests, as LXMF does to messages. Nodes check the stamps they receive, but require them only when configured to; see [stamps](../reference/configuration-reference.md#stamps).
+
 **Hop.** One forwarding step through a transport node. The default maximum announce depth is 128 hops, which is far beyond normal real-world deployments.
 
 **Mesh.** The set of Reticulum nodes reachable through one or more compatible interfaces and transport nodes. A mesh can span mixed media: LoRa, LAN, TCP, I2P, BLE, serial, and other carriers.
@@ -76,7 +78,7 @@ A reference for the terms used throughout the Ratspeak and Reticulum docs. Read 
 
 **Resource.** A reliable transfer over a link for payloads larger than a single packet. Resources handle chunking, sequencing, verification, retransmission, and reassembly.
 
-**MTU / MDU.** Reticulum's default network MTU is 500 bytes. The plain packet MDU is 464 bytes, the encrypted Single packet payload limit is 383 bytes, and the default link packet MDU is 431 bytes. IFAC/interface capacity can reduce usable space, and LXMF adds its own envelope and signature overhead.
+**MTU / MDU.** Reticulum's default network MTU is 500 bytes. The plain packet MDU is 464 bytes, the encrypted Single packet payload limit is 383 bytes, and the default link packet MDU is 431 bytes. IFAC/interface capacity can reduce usable space, and LXMF adds its own envelope and signature overhead. With link MTU discovery, on by default, a Link uses the largest packets its path allows.
 
 **Forward Secrecy.** The property that compromising a long-term identity key later does not retroactively decrypt old traffic. Reticulum gets this from ephemeral link key exchange and, for link-less Single destination packets, from destination ratchets when enabled.
 
@@ -119,4 +121,4 @@ The core Reticulum tools most Ratspeak operators will encounter are:
 - **rncp-rs** - copies files over Reticulum resources.
 - **rnprobe-rs** - probes a destination, similar in spirit to `ping`.
 
-Other standalone tools include `rnsh-rs` for remote shell sessions and `rnodeconf-rs` for RNode configuration. Check the selected release’s help and prerequisites before using them.
+Other standalone tools include `rnsh-rs` and `rnx-rs` for remote shells and commands, `rnodeconf-rs` for installing and configuring RNode firmware, and `rngit-rs` for [git over Reticulum](../products/rngit.md). See [rsReticulum](../products/rsreticulum.md#for-node-operators) for the full list, and check each tool's help before using it.
