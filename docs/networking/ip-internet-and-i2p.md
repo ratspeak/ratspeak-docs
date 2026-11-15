@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # IP, LAN and I2P
 
-Use TCP for a known host, AutoInterface for local discovery, or I2P when you have an I2P router and want an overlay path. The examples below target **standalone rsReticulum 1.3.0**. Add them under `[interfaces]`; configure app-managed interfaces through Ratspeak’s Network controls instead.
+Use TCP for a known host, AutoInterface for local discovery, or I2P when you have an I2P router and want an overlay path. The examples below target **rsReticulum 1.5.0**, which follows Reticulum 1.6.0. Add them under `[interfaces]`; configure app-managed interfaces through Ratspeak’s Network controls instead.
 
 A listener alone does not forward for other nodes. Enable transport deliberately when building infrastructure, and check [Configuration reference](../reference/configuration-reference.md) for paths and defaults. The [Reticulum manual](https://reticulum.network/manual/interfaces.html) describes the Python implementation; version-specific Rust behavior can differ.
 
@@ -22,7 +22,7 @@ A simple outbound TCP socket — what you use to dial a public Ratspeak server, 
 
 `target_host` and `target_port` are required. Both ends must agree on framing: ordinary Reticulum TCP uses HDLC-style frames; set `kiss_framing = yes` only when the remote endpoint expects KISS. The client retries a lost connection, subject to its reconnect settings.
 
-Do not rely on `i2p_tunneled` in a standalone 1.3.0 `TCPClientInterface`: that release’s ordinary TCP config factory does not apply it. The app’s bundled 1.4.0 source does. Use `I2PInterface` for the standalone I2P setup below.
+Set `i2p_tunneled = yes` on a `TCPClientInterface` whose connection runs through an I2P tunnel: it gets I2P's longer socket timeouts, as in Python Reticulum. For a direct I2P setup, use `I2PInterface` below.
 
 ## TCPServerInterface
 
@@ -118,7 +118,7 @@ IFAC can restrict an interface to peers with matching credentials. Set `network_
   passphrase = REPLACE_WITH_YOUR_SHARED_SECRET
 ```
 
-Replace the example passphrase on every participating node; do not use the published placeholder as a secret. Leave `ifac_size` unset unless you need an explicit value. In standalone rsReticulum 1.3.0 it is **bytes** (1–64); the Python manual and the app’s bundled 1.4.0 configuration use bits, with explicit migration handling in the app. Do not copy a numeric size between these versions without converting it.
+Replace the example passphrase on every participating node; do not use the published placeholder as a secret. Leave `ifac_size` unset unless you need an explicit value. It is in **bits**, as in the Python manual. rsReticulum 1.3.0 read it as bytes, so convert an older file before reusing its size; see [Configuration reference](../reference/configuration-reference.md#common-interface-keys).
 
 IFAC authenticates interface packets. It is not end-to-end encryption, and it does not hide a TCP listener or protect every service on the host. Private LXMF payloads remain encrypted above it.
 

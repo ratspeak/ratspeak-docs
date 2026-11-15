@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Serial and packet radio
 
-Serial interfaces carry Reticulum over a cable or a compatible modem/TNC. Match the framing and serial settings to both endpoints. These configuration details target **standalone rsReticulum 1.3.0**; Ratspeak 1.0.40 exposes a smaller set of radio setup controls, described below.
+Serial interfaces carry Reticulum over a cable or a compatible modem/TNC. Match the framing and serial settings to both endpoints. These configuration details target **standalone rsReticulum 1.5.0**; Ratspeak 1.1.0 exposes a smaller set of radio setup controls, described below.
 
 ## Why serial interfaces matter
 
@@ -41,7 +41,7 @@ In addition to serial settings, the interface accepts:
 
 Match these to the TNC and the shared channel. Defaults cannot establish that a particular radio or local channel plan is suitable.
 
-Automatic callsign beacons have a limitation in rsReticulum 1.3.0: when both `id_interval` and `id_callsign` are configured and the callsign is shorter than 15 bytes, traffic can arm a timer that keeps triggering beacons on later idle checks after the interval expires. Omit either key to disable this automatic feature.
+Automatic callsign beacons need both `id_interval` and `id_callsign`. Sending data arms the timer. As in Python Reticulum, a callsign shorter than 15 bytes is padded, and the padded beacon arms the timer again, so beacons then repeat every `id_interval` even without traffic. Omit either key to turn beacons off.
 
 ## AX.25 KISS (amateur radio)
 
@@ -61,7 +61,7 @@ Use `type = SerialInterface` for this framing over a serial cable. A custom brid
 
 The required key is `command`; `respawn_delay` defaults to **5 seconds**. The interface attempts to restart a process that exits. Keep diagnostic output off the child's stdout, which carries protocol frames.
 
-In rsReticulum 1.3.0, the command is split on whitespace and executed directly. Shell quoting, pipes, redirection and shell variable expansion are not interpreted. For complex setup, call a dedicated executable script that sets up its own arguments and environment. The command runs with the daemon's privileges, so protect its configuration as executable code.
+The command is split like a shell's words, so quoted arguments stay together, and executed directly, as in Python Reticulum. Pipes, redirection, and shell variable expansion are not interpreted. For complex setup, call a dedicated executable script that sets up its own arguments and environment. The command runs with the daemon's privileges, so protect its configuration as executable code.
 
 ## Platform support
 

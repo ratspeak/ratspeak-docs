@@ -143,7 +143,7 @@ Slower presets consume more airtime for a given payload. Choose a preset that pr
 
 ## Multi-radio boards
 
-Standalone rsReticulum supports `RNodeMultiInterface` for compatible multi-interface RNode firmware. Each configured sub-interface has its own virtual port and radio settings while sharing the physical serial endpoint.
+Standalone rsReticulum supports `RNodeMultiInterface` for compatible multi-interface RNode firmware. Each configured sub-interface has its own virtual port and radio settings while sharing the physical serial endpoint. As in Python Reticulum, the interface mode is read from the device section and applies to every sub-interface, while `flow_control` is read from each sub-interface.
 
 The app’s **Set up a radio** flow configures an `RNodeInterface`; do not assume it automatically creates a multi-radio configuration. For a multi-interface installation, verify the firmware’s virtual-port layout and the selected daemon release’s configuration support. Use a single-radio setup until that mapping is established.
 
