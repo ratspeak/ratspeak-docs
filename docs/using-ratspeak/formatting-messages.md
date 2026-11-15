@@ -86,17 +86,17 @@ Only `http://` and `https://` links are clickable.
 
 ### Opening links
 
-Opening a link shows **Leaving Ratspeak**, with the site name in bold and the start of the address. Choose **Open Link** to continue or **Cancel** to stay.
+Opening a link shows **Leaving Ratspeak**, with the site name in bold and the start of the address. Choose **Open link** to continue or **Cancel** to stay.
 
-The prompt shows a warning, and you choose **Open Anyway** to continue, when:
+The prompt shows a warning, and you choose **Open anyway** to continue, when:
 
 - the link text names a different site than the one it opens
 - the address hides its real destination, like `bank.example@another.example`
 - the address uses international characters, which can resemble characters in another site's name
 
-To skip the prompt for a site you trust, tick **Don't ask again for** that site. `www.example.org` and `example.org` count as the same site. Manage the list under **Settings → Privacy → Trusted websites**. Links with a warning always ask.
+To skip the prompt for a site you trust, tick **Don't ask again for** that site. `www.example.org` and `example.org` count as the same site. Manage the list under **Settings → Privacy and blocking → Trusted websites**. Links with a warning always ask.
 
-On desktop, right-click a link to open the message menu, which has **Copy Link**.
+On desktop, right-click a link to open the message menu, which has **Copy link**.
 
 ## Escaping symbols
 
