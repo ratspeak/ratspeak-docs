@@ -67,6 +67,6 @@ In rsReticulum 1.3.0, the command is split on whitespace and executed directly. 
 
 Standalone desktop Serial, KISS, AX.25 KISS and serial RNode support require the `serial` build feature. A custom build without it cannot open those serial interfaces. RNode over TCP uses its own socket path and feature support.
 
-Ratspeak desktop's **Add LoRa Device** flow configures an RNode; it is not a generic setup wizard for every serial framer. For a standalone daemon configuration, use [Configuration reference](../reference/configuration-reference.md).
+Ratspeak desktop's **Set up a radio** flow configures an RNode; it is not a generic setup wizard for every serial framer. For a standalone daemon configuration, use [Configuration reference](../reference/configuration-reference.md).
 
 Ratspeak on Android uses the USB host path for supported **USB RNodes**, with a per-device permission grant. That does not expose every desktop serial/TNC driver on Android. iOS Ratspeak has no general USB serial path. Android and iOS can also reach compatible RNodes through BLE or a protected TCP bridge; see [LoRa Radio Interfaces](lora-and-rnode.md).

@@ -134,7 +134,7 @@ A reachable public TCP server can supply a path to other destinations it knows; 
 
 The app also recognizes the legacy endpoint `rns.ratspeak.org:4242` as Emerald.
 
-In the app, "Official" means the server is managed by Ratspeak; "Unofficial" means it is operated by a third party.
+In the app's **Internet** card, these three come first. Community servers, run by third parties, are listed under **Unofficial**: Apollo RNS, Beleth, MichMesh, One-Big-Network, RMAP, Swiss RNS, UTN Oregon, and Washmesh. Their operators can see your IP address. **Add your own server** connects to any other address and port.
 
 Other public Reticulum hubs are independent of Ratspeak:
 

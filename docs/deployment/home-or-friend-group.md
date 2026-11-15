@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Home or friend group
 
-For people on the same Wi-Fi or LAN, start by enabling **Local Network** on each Ratspeak device and test a message. An always-on node becomes useful when people connect at different times, use separate networks, or need a stable shared connection.
+For people on the same Wi-Fi or LAN, start by turning on **Local Network** on each Ratspeak device and test a message. An always-on node becomes useful when people connect at different times, use separate networks, or need a stable shared connection.
 
 This guide sets up a TCP transport for a group. An Offline Inbox and a channel hub are optional, separate services.
 
@@ -60,14 +60,14 @@ The `networkname` and `passphrase` fields above enable IFAC for this TCP interfa
 
 IFAC authenticates interface traffic. It does not make the server's IP address, open port or traffic volume invisible. Anyone holding the shared secret can participate, and a group member's other interfaces may connect the segment to a wider network. Decide together which bridges are intended.
 
-Avoid leaving an unintended open AutoInterface or second TCP listener on a node intended to serve only this group. A Local Network **Group ID** separates discovery groups; it is not a secret or an IFAC passphrase.
+Avoid leaving an unintended open AutoInterface or second TCP listener on a node intended to serve only this group. A Local Network **Network name** (under **Advanced** in its settings) separates discovery groups; it is not a secret or an IFAC passphrase.
 
 ## Step 3 - add it to each Ratspeak client
 
-1. Open **Network**, select **+** next to **Internet/TCP**, and choose **Custom**.
-2. Enter the server's reachable host and port.
-3. Enable **Use IFAC**. Enter the matching **IFAC Network Name** and **IFAC Passphrase**.
-4. Connect, then check the interface status.
+1. Open **Network**, turn on **Internet**, and choose **Add your own server**. If you already have a server, choose **Join another server** first.
+2. Enter the server's reachable **Address** and **Port**.
+3. Turn on **Network name and passphrase**. Enter the matching **Network name** and **Passphrase**.
+4. Choose **Connect**, then check the connection's status.
 5. Have another member announce from **Network**. Find them in **Peers**, send a message and confirm a reply. Add them to **Contacts** explicitly if you want to save them.
 
 For a standalone Reticulum client, the corresponding interface is:

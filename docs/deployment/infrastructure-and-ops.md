@@ -103,7 +103,7 @@ Keep the state directory outside the container and back it up. Record the image,
 5. Configure a client to use that node, send a test message while the recipient is offline, then reconnect the recipient and fetch it. Check the final recipient delivery separately from acceptance by the node.
 6. Once the test works, give `lxmd-rs` its own service unit with the same explicit directories and appropriate permissions. Keep `rnsd-rs` available for its network connection.
 
-In Ratspeak, **Auto** selects from discovered propagation nodes; it does not ensure your intended node is chosen. Use the manual node setting when your test or group requires a particular address.
+In Ratspeak, **Automatic** selects from discovered propagation nodes; it does not ensure your intended node is chosen. Use the manual node setting when your test or group requires a particular address.
 
 Review storage limits, accepted message size, authentication, stamp costs and peering policy in the [rsLXMF configuration](https://github.com/ratspeak/rsLXMF#configuration). Propagation peering depends on discovery, configured policy and capacity; it is not an assurance that every message has redundant copies.
 
@@ -113,9 +113,9 @@ The LXMF directory holds its own identity and message store. Backing up only the
 
 Channel hosting is available in the desktop Ratspeak app. Keep the host awake and connected through an interface that participants can reach. A working TCP or radio connection still needs a usable Reticulum path to the hub.
 
-1. In **Settings → Channels**, set **Channel hosting** to **ON**. This reveals the hosting controls; it does not by itself start a hub.
-2. Open **Channels**, then **Manage Hub → Host a hub**. If you already have one, open **Manage your hub** or its manage control.
-3. In the hub manager's **Settings**, choose the **Hub name**, **Welcome & guidance**, announce schedule and **Recent activity** setting.
+1. In **Settings → General → Channels**, turn on **Channel hosting**. This reveals the hosting controls; it does not by itself start a hub.
+2. Open **Channels**. Under **Your hub**, select the hub or its manage button to open **Hub administration**.
+3. In its **Settings** tab, choose the **Hub name**, **Welcome & guidance**, announce schedule and **Recent activity** setting.
 4. Select **Start hosting**. Check for **Hosting**. **Waiting for network** means hosting was requested but the network is not ready.
 5. Copy the **Hub address** and share it with intended participants. Have someone on the intended connection join and exchange a short message; see the [client instructions](../using-ratspeak/messaging-and-contacts.md).
 
@@ -123,7 +123,7 @@ The hub terminates participants' links and can read the channel messages it rela
 
 ### Create and manage channels
 
-In the manager's **Channels** tab, select **Create channel**. Choose a name and topic and set the policies that fit the group:
+In the **Channels** tab of **Hub administration**, select **Create channel**. Choose a name and topic and set the policies that fit the group:
 
 | Control | Effect |
 |---|---|
@@ -146,7 +146,7 @@ The hub keeps its configuration and registered channel/access policy. It does no
 
 **Recent activity** is optional moderation context held in memory. It is off by default; the available retention choices are 1, 6, 12 or 24 hours, with count/size limits as well. It can include message excerpts and identities. It is cleared by a hub restart and is not a durable audit log or a promise about what another client or modified hub can retain.
 
-Saving hub settings while it is running briefly restarts it and interrupts live connections. Use **Stop hosting** to stop the service. Turning **Channel hosting** off in Settings also disables the hosting capability. Keep backups of the app profile if you need to preserve the hub identity and saved policy; quit the app completely before copying that profile.
+Saving hub settings while it is running briefly restarts it and interrupts live connections. Use **Stop hosting** to stop the service. Turning **Channel hosting** off in **Settings → General** also disables the hosting capability. Keep backups of the app profile if you need to preserve the hub identity and saved policy; quit the app completely before copying that profile.
 
 ### When hosting fails
 

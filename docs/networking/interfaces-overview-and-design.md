@@ -6,7 +6,7 @@ sidebar_position: 1
 
 An interface connects Reticulum to a carrier such as TCP, Bluetooth or LoRa. A node can use several interfaces, subject to platform support and hardware limits. The routing layer can then reach destinations through different media.
 
-This overview distinguishes Ratspeak 1.0.40 controls from standalone rsReticulum 1.3.0 configuration. A protocol driver existing in the library does not mean every app/platform exposes a setup form for it.
+This overview distinguishes Ratspeak 1.1.0 controls from standalone rsReticulum 1.3.0 configuration. A protocol driver existing in the library does not mean every app/platform exposes a setup form for it.
 
 ## What an interface is
 
@@ -52,7 +52,7 @@ For concrete setup details, use the interface-family pages:
 
 ## Interface modes
 
-An interface mode changes announce and path policy; it does not independently enable forwarding or provide access control. A standalone node also needs `enable_transport = yes` to forward for others. In the app, use Transport Mode deliberately.
+An interface mode changes announce and path policy; it does not independently enable forwarding or provide access control. A standalone node also needs `enable_transport = yes` to forward for others. In the app, use **Relay for other devices** (Transport Mode) deliberately.
 
 | Mode | Purpose |
 |---|---|
@@ -68,7 +68,7 @@ Mode selection can affect reachability, not just efficiency. Start with the docu
 
 **IFAC (Interface Access Codes)** authenticates packets at an interface using matching network-name/passphrase settings. Use a secret passphrase for restricted access. It does not make radio energy or TCP connections invisible, replace a firewall, or replace recipient encryption.
 
-Leave the IFAC size at its class default unless you need an explicit interoperable value. Standalone rsReticulum 1.3.0 interprets `ifac_size` in **bytes**; the app’s bundled 1.4.0 source uses explicit **bits** and asks for a choice when an old value is ambiguous. See [Configuration reference](../reference/configuration-reference.md) before moving a config between implementations or versions.
+Leave the IFAC size at its class default unless you need an explicit interoperable value. Standalone rsReticulum 1.3.0 interprets `ifac_size` in **bytes**. The app's **IFAC size** field is in bytes, while its bundled rsReticulum 1.5.0 reads a plain `ifac_size` in a configuration file as **bits**, as Python Reticulum does. See [Configuration reference](../reference/configuration-reference.md) before moving a config between implementations or versions.
 
 **Announce caps** budget announce traffic. In a config, `announce_cap = 2` means **2 percent**, not a fraction of `0.02`. The cap helps constrain routing traffic on slow links; it does not prevent interference, collisions or application congestion.
 
