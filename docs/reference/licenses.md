@@ -17,11 +17,15 @@ sidebar_position: 6
 | [lrgp-rs](https://github.com/ratspeak/lrgp-rs), [lrgp-py](https://github.com/ratspeak/lrgp-py), [lxmface](https://github.com/ratspeak/lxmface) | MIT | Ratspeak |
 | RNode firmware bundled in ratspeak-handheld | GPL-3.0-or-later | Mark Qvist and contributors |
 | microReticulum, used by the legacy handheld firmware | Apache-2.0 | its author |
+| [jsQR](https://github.com/cozmo/jsQR) 1.4.0, which reads contact-card QR codes in the Ratspeak app | Apache-2.0 | its authors |
+| [Outfit](https://github.com/Outfitio/Outfit-Fonts), the Ratspeak app's interface typeface | SIL Open Font License 1.1 | The Outfit Project Authors |
+| [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono), the Ratspeak app's typeface for addresses and codes | SIL Open Font License 1.1 | The JetBrains Mono Project Authors |
 | Other third-party components | Their own licenses, listed in each repository's third-party notices | |
 
 Each repository's `LICENSE` file is the binding text. Repositories that bundle other
-components list them in `NOTICE`. The Ratspeak app shows the same notices under
-About → Licenses.
+components list them in `NOTICE` or `third_party/`. The Ratspeak app ships the jsQR
+and font license texts next to those files, and shows its notices under
+**Settings → About → Licenses**.
 
 ## Reticulum License
 
@@ -56,4 +60,12 @@ For commercial licensing inquiries, contact license@unsigned.io
 ```
 
 Builds that include rsLXST (voice calls in the app, voice memos on the handhelds)
-are non-commercial and not for use outside Ratspeak.
+are non-commercial. The Ratspeak app's `NOTICE` adds:
+
+```
+Because of those terms, any build of Ratspeak that includes rsLXST is
+non-commercial, and no derivative of rsLXST or use of it outside Ratspeak is
+permitted. The Reticulum License's permission to sell covers the rest of the
+software; no builds or software outside of Ratspeak-owned projects are allowed
+to utilize rsLXST in any form.
+```
