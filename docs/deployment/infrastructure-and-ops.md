@@ -131,7 +131,23 @@ To check it:
 
    Use the identity file actually selected by the service if you migrated an older profile. Share the full 32-character propagation destination hash as the Offline Inbox address. It differs from the raw identity hash and the `lxmf.delivery` address.
 5. Configure a client to use that node, send a test message while the recipient is offline, then reconnect the recipient and fetch it. Check the final recipient delivery separately from acceptance by the node.
-6. Once the test works, give `lxmd-rs` its own service unit with the same explicit directories, `--service`, and appropriate permissions. It then logs to `logfile` in its config directory. Keep `rnsd-rs` available for its network connection.
+6. Once the test works, give `lxmd-rs` its own service unit with the same explicit directories, `--service`, and the same user as `rnsd-rs`. It then logs to `logfile` in its config directory. Start it only once `rnsd-rs` answers, for example:
+
+   ```ini
+   [Unit]
+   Requires=rnsd-rs.service
+   After=rnsd-rs.service
+
+   [Service]
+   User=operator
+   ExecStartPre=/bin/sh -c 'until /usr/local/bin/rnstatus-rs --config /home/operator/.rsReticulum >/dev/null 2>&1; do sleep 2; done'
+   ExecStart=/usr/local/bin/lxmd-rs --config /home/operator/.rsLXMF --rnsconfig /home/operator/.rsReticulum --service
+   Restart=on-failure
+   ```
+
+   If `rnsd-rs` isn't running, `lxmd-rs` becomes the shared instance itself and opens the interfaces in the Reticulum config, and so does `lxmd-rs --status`. An `rnsd-rs` started later only attaches to it, and logs that it is connected to another shared instance. Use `rnstatus-rs` for health checks: it never starts an instance, and exits with an error when none is running.
+
+   In Docker, containers that share a network namespace, for example with `network_mode: service:rnsd`, share the instance; give them the same Reticulum directory. Containers in separate namespaces can't reach each other's shared instance. If the `rnsd-rs` container is recreated, restart the `lxmd-rs` one too, so it joins the new namespace.
 
 In Ratspeak, **Automatic** selects from discovered propagation nodes; it does not ensure your intended node is chosen. Use the manual node setting when your test or group requires a particular address.
 
