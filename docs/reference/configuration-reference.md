@@ -98,7 +98,7 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
 | `type` | Driver name, such as `TCPClientInterface`, `TCPServerInterface`, `UDPInterface`, `AutoInterface`, or `RNodeInterface`. Serial, Bluetooth, and other drivers also depend on the binary's build features. |
 | `enabled` / `interface_enabled` | `yes` / `no` or `True` / `False`. One of them must say yes for the interface to start. |
 | `mode` or `interface_mode` | `full` (default), `access_point`, `roaming`, `boundary`, `gateway`. Controls how announces are rebroadcast. |
-| `network_name` | IFAC network name used to derive link access credentials. Peers on that link need matching IFAC settings. |
+| `network_name` | IFAC network name used to derive link access credentials. Peers on that link need matching IFAC settings. `networkname` is accepted too; when both are set, `network_name` is used. |
 | `passphrase` | IFAC passphrase, combined with the network name to derive link access credentials. This is separate from end-to-end message encryption. |
 | `ifac_size` | IFAC tag length in **bits**, as in Python Reticulum. Leave unset unless you need a specific value. rsReticulum 1.3.0 read it as bytes; convert an old file with `rnsd-rs config ifac-units --interface NAME --source-units bytes`, adding `--write` once the preview is right. |
 | `destination_cost`, `pr_cost` | Stamp costs for this interface, overriding `[stamps]`. |

@@ -60,7 +60,7 @@ Place the antenna where the intended participants have usable paths, and test th
 
 IFAC can restrict participation on an interface when all devices support and use matching settings. Decide whether the deployment needs that restriction or needs to interoperate with an open local network. Make that decision before an incident.
 
-On a standalone host, add the chosen `networkname` and `passphrase` to the already working RNode interface. Do not replace its frequency, bandwidth, spreading factor or other required settings with an incomplete IFAC-only block. Use the appropriate controls for each handheld's firmware and mode.
+On a standalone host, add the chosen `network_name` and `passphrase` to the already working RNode interface. Do not replace its frequency, bandwidth, spreading factor or other required settings with an incomplete IFAC-only block. Use the appropriate controls for each handheld's firmware and mode.
 
 Distribute the secret privately and keep a recovery plan for a forgotten or mistyped value. IFAC does not hide transmissions, prevent jamming or guarantee availability. A lost device may expose the shared secret; rotating it requires updating all affected interfaces.
 

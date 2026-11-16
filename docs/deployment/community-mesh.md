@@ -40,7 +40,6 @@ Install `rnsd-rs` and configure one working RNode interface plus an IP connectio
 [reticulum]
   enable_transport = yes
   share_instance = yes
-  instance_control_socket = yes
 
 [interfaces]
   [[Local LoRa]]

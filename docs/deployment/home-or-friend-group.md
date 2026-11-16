@@ -24,7 +24,6 @@ Create `~/.rsReticulum/config` and use that directory explicitly when starting t
 [reticulum]
   enable_transport = yes
   share_instance = yes
-  instance_control_socket = yes
 
 [interfaces]
   [[Friend group]]
@@ -32,7 +31,7 @@ Create `~/.rsReticulum/config` and use that directory explicitly when starting t
     enabled = yes
     listen_ip = 0.0.0.0
     listen_port = 4242
-    networkname = our-friends
+    network_name = our-friends
     passphrase = replace-with-your-shared-secret
 ```
 
@@ -56,7 +55,7 @@ Once the foreground test works, use [Infrastructure and ops](infrastructure-and-
 
 ## Step 2 - lock the interface with IFAC
 
-The `networkname` and `passphrase` fields above enable IFAC for this TCP interface. Clients must match them. A TCP socket may connect even when the IFAC values differ, so check an announce and message as well as the connection indicator.
+The `network_name` and `passphrase` fields above enable IFAC for this TCP interface. Clients must match them. A TCP socket may connect even when the IFAC values differ, so check an announce and message as well as the connection indicator.
 
 IFAC authenticates interface traffic. It does not make the server's IP address, open port or traffic volume invisible. Anyone holding the shared secret can participate, and a group member's other interfaces may connect the segment to a wider network. Decide together which bridges are intended.
 
@@ -79,7 +78,7 @@ For a standalone Reticulum client, the corresponding interface is:
     enabled = yes
     target_host = group.example.org
     target_port = 4242
-    networkname = our-friends
+    network_name = our-friends
     passphrase = replace-with-your-shared-secret
 ```
 
