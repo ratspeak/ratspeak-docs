@@ -100,11 +100,19 @@ Each interface is declared as a sub-block. The block name is a label; `type` sel
 | `mode` or `interface_mode` | `full` (default), `access_point`, `roaming`, `boundary`, `gateway`. Controls how announces are rebroadcast. |
 | `network_name` | IFAC network name used to derive link access credentials. Peers on that link need matching IFAC settings. `networkname` is accepted too; when both are set, `network_name` is used. |
 | `passphrase` | IFAC passphrase, combined with the network name to derive link access credentials. This is separate from end-to-end message encryption. |
-| `ifac_size` | IFAC tag length in **bits**, as in Python Reticulum. Leave unset unless you need a specific value. rsReticulum 1.3.0 read it as bytes; convert an old file with `rnsd-rs config ifac-units --interface NAME --source-units bytes`, adding `--write` once the preview is right. |
+| `ifac_size` | IFAC tag length in **bits**, as in Python Reticulum; `128` is 16 bytes. Leave unset unless you need a specific value. See the upgrade note below. |
 | `destination_cost`, `pr_cost` | Stamp costs for this interface, overriding `[stamps]`. |
 | `announce_cap` | Max share of bandwidth used for announces. Default `2` (percent). |
 | `announce_rate_target` | Target interval between announces from a destination, in seconds, used by announce rate limiting. |
 | `bitrate` | Link bitrate in bps. Used for airtime accounting on lossy or rate-limited links. |
+
+**Upgrading with an explicit `ifac_size`.** A bare `ifac_size = 16` meant 16 bytes in rsReticulum 1.3, was rejected by 1.4, and means 16 bits (2 bytes) from 1.5 on, as in Python Reticulum. If you upgrade straight from 1.3 and set a size, multiply it by 8 (16 becomes 128), or stop the daemon and let `rnsd-rs` convert it:
+
+```bash
+rnsd-rs --config ~/.rsReticulum config ifac-units --interface "Friend group" --source-units bytes
+```
+
+Name each interface section with `--interface`, repeating it for more than one. The command shows the change; run it again with `--write` to save it. It writes the size in bits, marked with `ifac_size_unit = bits`, and keeps a private backup of the old file. A 1.4 file that already marks its size with `ifac_size_unit = bits` or `ifac_size_bytes` works unchanged.
 
 ### TCP keys (`TCPClientInterface`, `TCPServerInterface`)
 

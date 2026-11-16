@@ -41,7 +41,7 @@ To inspect the starter configuration without changing a file:
 rnsd-rs --exampleconfig
 ```
 
-Default path selection, the `[stamps]` and `[filter]` sections, and app-private versus standalone shared-instance endpoints are documented in [Configuration reference](../reference/configuration-reference.md). Existing configurations need a version check. An interface starts only with `enabled = yes`, and `ifac_size` is in **bits**, as in Python Reticulum. A configuration written for rsReticulum 1.3.0 gave `ifac_size` in bytes; with the daemon stopped, convert it with `rnsd-rs config ifac-units --interface NAME --source-units bytes`, then add `--write` once the preview is right.
+Default path selection, the `[stamps]` and `[filter]` sections, and app-private versus standalone shared-instance endpoints are documented in [Configuration reference](../reference/configuration-reference.md). Existing configurations need a version check. An interface starts only with `enabled = yes`, and `ifac_size` is in **bits**, as in Python Reticulum. A configuration written for rsReticulum 1.3.0 gave `ifac_size` in bytes, so multiply an explicit size by 8 (16 becomes 128), or convert it with `rnsd-rs config ifac-units`; see the [upgrade note](../reference/configuration-reference.md#common-interface-keys).
 
 ## Identity tools
 
