@@ -226,7 +226,7 @@ INI format, read by `lxmd-rs`, the LXMF daemon, from `<config directory>/config`
 | `auth_required` | Require propagation clients to identify and appear in the `allowed` file in the LXMF config directory. This is separate from `control_allowed`. |
 | `control_allowed` | Comma-separated identity hashes authorized for node control. Treat this list as administrative access. |
 
-The `allowed` file contains one 32-character identity hash per line. With `auth_required = yes`, an empty client allowlist does not authorize retrieval. `control_allowed` grants administration and does not add clients to that file. rsLXMF also reads a few keys of its own, among them `outbound_node`; see its [configuration notes](https://github.com/ratspeak/rsLXMF/blob/v1.5.0/README.md#configuration).
+The `allowed` file contains one 32-character identity hash per line. With `auth_required = yes`, an empty client allowlist does not authorize retrieval. `control_allowed` grants administration and does not add clients to that file. `lxmd-rs` also reads a few keys of its own; see [Keys only lxmd-rs reads](#keys-only-lxmd-rs-reads).
 
 ### `[lxmf]`
 
@@ -235,7 +235,7 @@ The `allowed` file contains one 32-character identity hash per line. With `auth_
 | `display_name` | Display name for this LXMF peer. |
 | `announce_at_start` | Announce the local LXMF destination when the daemon starts. |
 | `announce_interval` | Minutes between local LXMF peer announces; off unless set. |
-| `stamp_cost` | Stamp cost required for incoming messages. Costs can be fractional. |
+| `stamp_cost` | Stamp cost this LXMF address announces, so senders stamp the messages they send it; `12` when unset, and at least `1`. Costs can be fractional. Messages below it are still delivered unless `[propagation] enforce_stamps = yes`. |
 | `delivery_transfer_max_accepted_size` | Largest direct delivery accepted, in kilobytes; `1` by default. |
 | `on_inbound` | Optional command run with the path of each received message. Treat this as security-sensitive. |
 
@@ -244,6 +244,19 @@ The `allowed` file contains one 32-character identity hash per line. With `auth_
 | Key | Description |
 |---|---|
 | `loglevel` | Log verbosity; the default file sets `4`. With no `loglevel`, `lxmd-rs` logs at `3`, Notice. |
+
+### Keys only lxmd-rs reads
+
+Python's `lxmd` doesn't read these extensions.
+
+| Key | Description |
+|---|---|
+| `[propagation] outbound_node` | Propagation node hash this daemon sends its own propagated messages through and downloads its messages from. That node also becomes a static peer. |
+| `[propagation] propagation_stamp_cost` | Same as `propagation_stamp_cost_target`, which wins when both are set. |
+| `[propagation] propagation_limit` | Same as `propagation_message_max_accepted_size`, in kilobytes, which wins when both are set. |
+| `[propagation] enforce_stamps` | Reject inbound messages to this daemon whose stamp doesn't meet `[lxmf] stamp_cost`. Off by default. This is separate from `enforce_stamps` in the Reticulum `[stamps]` section. |
+| `[control] auth_required` | Same as `[propagation] auth_required`: clients must be in the `allowed` file to retrieve messages. Either one turns it on. Despite the section name, it has nothing to do with administration. |
+| `[control] allowed` | Same as `[propagation] control_allowed`, which wins when both are set: identities allowed to administer the node. It is not the `allowed` file of clients that may retrieve messages. |
 
 ### Network stamps and storage
 
