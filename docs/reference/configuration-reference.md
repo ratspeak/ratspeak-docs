@@ -44,6 +44,8 @@ The daemon creates a starter file when none exists; `rnsd-rs --exampleconfig` pr
 | `autoconnect_unverified_implementations` | `No` | Auto-connect discovered Backbone interfaces from any implementation. Without it, `rnsd-rs` auto-connects only to Python Reticulum 1.5.7 or later and rsReticulum 1.5.0 or later. |
 | `panic_on_interface_error` | `No` | Shut the daemon down when a running interface fails, for example when its radio disappears. |
 
+`storage/transport_identity` holds the node's private key and is written readable only by its owner (mode `0600`). Tools attached to a shared instance, such as `rnstatus-rs`, `rnpath-rs`, and `lxmd-rs`, read it to derive the RPC key, so run them as the same user as `rnsd-rs`, or set an explicit `rpc_key`, in hex, in the config they use.
+
 ## `[stamps]`
 
 Reticulum 1.6.0 adds proof-of-work stamps to announces, path requests, and link requests. This release checks every stamp it receives, but neither makes nor requires destination and path request stamps unless you turn them on. A link request is stamped already when its destination announced a link cost. Upstream plans to turn on stamping by default in 1.6.1 and to require stamps in 1.6.2.
