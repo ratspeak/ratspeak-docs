@@ -77,6 +77,8 @@ The image must have `rnsd-rs` on `PATH` and allow that command to run. Create th
 
 For AutoInterface discovery on a physical LAN, Docker Engine on Linux can use `--network host` instead of `-p`. Check IPv6 multicast and firewall behavior on the host. Docker Desktop's opt-in host networking has different limitations; do not assume it provides the same LAN discovery behavior. See Docker's [host networking documentation](https://docs.docker.com/engine/network/drivers/host/).
 
+For I2P, run the I2P router, for example i2pd, in its own container on a private network shared with `rnsd-rs`. Enable SAM there and set the interface's `i2p_sam_host` to the router container's name. Never publish the SAM port. Start order doesn't matter: the interface keeps retrying SAM until it answers.
+
 For a USB radio, pass the specific device and arrange permissions. For an RNode TCP bridge, configure its actual `tcp://host:port` endpoint and test reachability from the container. Do not expose the radio-control socket publicly without considering who can control that radio.
 
 With `--service`, normal daemon logs are in `/data/reticulum/logfile`, also visible through the host mount.

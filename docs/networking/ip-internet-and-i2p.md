@@ -100,7 +100,9 @@ Do not turn this into a multicast recipe by changing both addresses: multicast g
   # peers = PEER_ADDRESS.b32.i2p
 ```
 
-`connectable = yes` accepts inbound — the interface prints its own `.b32.i2p` address on first run, which is what you share with peers. `peers` is a comma-separated list of `.b32.i2p` addresses to dial. `i2p_sam_host` and `i2p_sam_port` select a different SAM endpoint. Keep that control API protected; it is not a public Reticulum listener.
+`connectable = yes` accepts inbound. Share the interface's `.b32.i2p` address with peers: `rnstatus-rs` shows it as I2P B32 once the SAM session is up, and the log prints it at `loglevel = 5` or higher. `peers` is a comma-separated list of `.b32.i2p` addresses to dial. `i2p_sam_host` and `i2p_sam_port` select a different SAM endpoint. Keep that control API protected; it is not a public Reticulum listener.
+
+The address comes from a key Reticulum creates on first start in `storage/i2p/` under the config directory. Its file name depends on the interface's name and the transport identity, so renaming the interface or replacing the transport identity gives the node a new address that peers must be told. Back the file up with the identities.
 
 Tunnel startup and performance depend on the I2P router and its peers. Confirm that SAM is reachable and the tunnel establishes before debugging Reticulum path discovery. Offline Inbox can help with asynchronous messaging, but cannot remove the underlying latency or guarantee availability.
 
