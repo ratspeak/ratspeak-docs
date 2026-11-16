@@ -38,6 +38,9 @@ The daemon creates a starter file when none exists; `rnsd-rs --exampleconfig` pr
 | `static_transport_identity` | `No` | Keep the same transport identity across restarts when transport is off. Set it on a leaf node you manage remotely; a transport node always keeps its identity. |
 | `enable_interface_management` | `Yes` | Allow `rnstatus-rs --attach`, `--detach`, and `--reload` through the control service. |
 | `respond_to_probes` | `No` | On a transport node, answer `rnprobe-rs` probes on a destination built from the transport identity. The node logs that destination at start-up. |
+| `discover_interfaces` | `No` | Collect the interfaces other nodes announce for discovery. `rnstatus-rs --discovered` lists them. |
+| `required_discovery_value` | `16` | Lowest stamp value a received discovery announce must carry. |
+| `autoconnect_discovered_interfaces` | `0` | Most discovered interfaces to connect to automatically; `0` connects none. |
 | `autoconnect_unverified_implementations` | `No` | Auto-connect discovered Backbone interfaces from any implementation. Without it, `rnsd-rs` auto-connects only to Python Reticulum 1.5.7 or later and rsReticulum 1.5.0 or later. |
 | `panic_on_interface_error` | `No` | Shut the daemon down when a running interface fails, for example when its radio disappears. |
 
@@ -159,6 +162,21 @@ This is different from `TCPClientInterface`. A TCP client connects to another Re
 ### AutoInterface keys
 
 `AutoInterface` discovers peers on the local LAN over IPv6 multicast. Useful keys: `group_id` (separate logical groups on the same LAN), `discovery_scope` (`link`, `admin`, `site`, `organisation`, `global`), `devices` (whitelist of OS interface names), `ignored_devices` (blacklist).
+
+### Discovery keys
+
+A TCP or Backbone listener, an I2P interface, or a radio interface can announce itself so other nodes discover it. [Infrastructure and ops](../deployment/infrastructure-and-ops.md#public-backbone-with-discovery) has a full example.
+
+| Key | Description |
+|---|---|
+| `discoverable` | `yes` announces this interface for discovery. |
+| `mode` | `gateway` on a listener, `access_point` on a radio. A discoverable interface in another mode is switched to one of these, with a notice at every start. |
+| `discovery_name` | Name shown to people who discover the interface. |
+| `reachable_on` | Public IP address or hostname that clients connect to, without the port; the port comes from the interface. A TCP or Backbone listener without a valid `reachable_on` runs but isn't announced, and the log says so. |
+| `announce_interval` | Minutes between discovery announces; `360` by default and at least `5`. The first goes out soon after start. |
+| `discovery_stamp_value` | Stamp value of each announce; `16` by default. Higher values take more CPU to make. Other nodes accept `16` or more unless their `required_discovery_value` says otherwise. |
+
+The [Reticulum manual](https://reticulum.network/manual/interfaces.html#discoverable-interfaces) describes the optional keys, such as `discovery_lxmf_address`, `latitude`, `longitude`, `height`, `publish_ifac`, and `discovery_encrypt`.
 
 ## Reticulum storage
 

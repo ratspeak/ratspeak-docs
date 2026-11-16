@@ -83,6 +83,36 @@ With `--service`, normal daemon logs are in `/data/reticulum/logfile`, also visi
 
 Keep the state directory outside the container and back it up. Record the image, config and mount before an update; preserve the mount when replacing the container.
 
+## Public backbone with discovery
+
+A transport node with a public listener can announce that listener, so other nodes find it among their discovered interfaces and, if they allow it, connect on their own. Start from a listener that already works from outside your network, then add the discovery keys:
+
+```ini
+[reticulum]
+  enable_transport = yes
+
+[interfaces]
+  [[Public Backbone]]
+    type = BackboneInterface
+    enabled = yes
+    mode = gateway
+    listen_on = 0.0.0.0
+    port = 4242
+
+    discoverable = yes
+    discovery_name = Region A Public Entrypoint
+    reachable_on = backbone.example.org
+    announce_interval = 720
+    discovery_stamp_value = 24
+```
+
+Replace `backbone.example.org` with the address or hostname clients should use; the port comes from `port`. A `TCPServerInterface` works the same way, with `listen_ip` and `listen_port`. Keep `mode = gateway`: without it, `rnsd-rs` switches the interface to Gateway mode and logs a notice at every start. The node announces the listener soon after start, then every `announce_interval` minutes. A higher `discovery_stamp_value` takes more CPU to make, and other nodes accept 16 or more by default. Each key is described in the [configuration reference](../reference/configuration-reference.md#discovery-keys).
+
+To check it:
+
+- On this node, `rnstatus-rs --config ~/.rsReticulum` should show the interface up in Gateway mode. It doesn't list the node's own discovery announces, but the log warns when `reachable_on` is missing or isn't a valid address, and the interface is then not announced.
+- On another node connected to the same network, set `discover_interfaces = yes` in `[reticulum]` and restart it. It hears only later announces, so restart this node afterwards or wait for the next one. `rnstatus-rs --discovered` then lists the interfaces it has found, and `rnstatus-rs -D` adds each one's details and the config entry for connecting to it.
+
 ## Offline Inbox node walkthrough
 
 1. Start `rnsd-rs` with a working network configuration and shared-instance support.
