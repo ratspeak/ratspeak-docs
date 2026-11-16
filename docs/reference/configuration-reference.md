@@ -70,7 +70,14 @@ Costs and values can be fractional and are capped at `100`. The four switches on
 | `allowed_types` | *(none)* | Destination names kept when `required_only` is on. |
 | `hop_limiter` | `128` | Drop packets that arrive having travelled this many hops or more, from `0` to `128`. |
 
-The starter file shows `hop_limiter` in `[reticulum]`, as Python's does, but both implementations read it only in `[filter]`.
+`hop_limiter` is read only from `[filter]`:
+
+```ini
+[filter]
+  hop_limiter = 16
+```
+
+The file `rnsd-rs` writes on first run has no `hop_limiter`. The `rnsd-rs --exampleconfig` output shows a commented `# hop_limiter = 16` under `[reticulum]`; uncommented there, it has no effect, and nothing is logged.
 
 ## `[interfaces]` block
 
