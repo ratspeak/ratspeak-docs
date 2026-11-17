@@ -266,9 +266,11 @@ flash backups and Wi-Fi passwords out of reports.
 
 ## Closing the Linux window quits Ratspeak
 
-In 1.0.40, Ratspeak can run even when a tray cannot be installed. In that case,
-closing the window quits instead of hiding it. Keep the window open if you need
-Ratspeak running, and check your desktop's tray support if you expected a tray icon.
+Closing the window hides Ratspeak in the tray only while its tray icon shows. With
+**Settings → General → Window → Tray icon** off, or on a desktop without a tray,
+closing the window quits. GNOME shows tray icons only with an AppIndicator extension;
+once one is on, turn **Tray icon** on again. If the desktop still has no tray,
+Ratspeak says so and the switch stays off.
 
 ## Still stuck
 

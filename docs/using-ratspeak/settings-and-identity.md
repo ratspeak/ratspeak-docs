@@ -12,7 +12,7 @@ Settings has nine sections:
 
 | Section | What it holds |
 | --- | --- |
-| **General** | **Identity**; under **Messages**, **Keep trying to send**, **Limit incoming messages to 1 MB**, **Paper messages**, and **Message titles**; **Channel hosting**; **Vibration** on a phone; and **Window** on Linux and Windows desktops |
+| **General** | **Identity**; under **Messages**, **Keep trying to send**, **Limit incoming messages to 1 MB**, **Paper messages**, and **Message titles**; **Channel hosting**; **Vibration** on a phone; and **Window** on Linux and Windows desktops (**Tray icon** and **Window decorations** on Linux, **Close button** on Windows) |
 | **Appearance** | **Theme**, **Color mode**, and **Text size** |
 | **Notifications** | **Notifications**, **Previews**, and, on Android, **Background battery access** |
 | **Privacy and blocking** | **Blocked people**, **Hide known spam peers**, **Protect Activity identities**, **Announce Ratspeak features**, and **Trusted websites** |
