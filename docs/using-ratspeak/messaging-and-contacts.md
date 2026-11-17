@@ -24,6 +24,8 @@ To delete messages, choose **Select** from a message's menu, tap any others you 
 
 You can hide a conversation you're done with: choose **Delete conversation** from its **Conversation options** menu, then **Remove from List**. It disappears from the list but the messages aren't deleted. Sending or receiving a message in that conversation brings it back to the top of the list. **Delete All Messages** removes them from this device instead.
 
+Hold a conversation in the list (or right-click it on a computer) for **Mute** and **Delete…**. A muted conversation still receives its messages, but sends no notifications and doesn't count toward the unread number on the Messages tab or the app icon. It shows a crossed-out bell. **Unmute**, from the same menu or from **Conversation options**, turns it back on. **Delete…** offers the same choices as **Delete conversation**.
+
 ### More than one conversation
 
 **New conversation** in **Conversation options** starts another conversation with the same person, under a name only you see. Each one is a chip under the conversation's header; **Main** is the conversation every client shares. Select a chip to switch to it, or the selected chip again to rename or delete it. When the other person starts one, Ratspeak says so and offers **Rename it**. A person with only Main shows no chips.
