@@ -12,7 +12,7 @@ Settings has nine sections:
 
 | Section | What it holds |
 | --- | --- |
-| **General** | **Identity**; under **Messages**, **Keep trying to send**, **Limit incoming messages to 1 MB**, and **Paper messages**; **Channel hosting**; **Vibration** on a phone; and **Window** on Linux and Windows desktops |
+| **General** | **Identity**; under **Messages**, **Keep trying to send**, **Limit incoming messages to 1 MB**, **Paper messages**, and **Message titles**; **Channel hosting**; **Vibration** on a phone; and **Window** on Linux and Windows desktops |
 | **Appearance** | **Theme**, **Color mode**, and **Text size** |
 | **Notifications** | **Notifications**, **Previews**, and, on Android, **Background battery access** |
 | **Privacy and blocking** | **Blocked people**, **Hide known spam peers**, **Protect Activity identities**, **Announce Ratspeak features**, and **Trusted websites** |
@@ -121,6 +121,8 @@ The public Windows `.exe` and `.msi` installers do not provide Bluetooth Peer ad
 **Settings → General → Limit incoming messages to 1 MB** is on by default. It refuses larger incoming messages and attachments. This is a receiver setting, so a file that your app can send may still exceed the recipient's limit. Agree on a suitable size before sending a large file, especially over radio.
 
 **Settings → General → Paper messages** is off by default. With it on, the new-message button also offers **Open a paper message**, for messages shared as a QR code or link. Sending a paper message and opening a paper link work either way; see [Paper messages](messaging-and-contacts.md#paper-messages).
+
+**Settings → General → Message titles** is off by default. With it on, the message box has a **Title** line above **Message…**, and the title goes out with the message as its LXMF title. A message with a title shows it in bold above the text, whether this setting is on or not.
 
 ## Notifications and background connection
 
