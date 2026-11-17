@@ -169,6 +169,7 @@ active profile or delete the database to attempt a restore.
 
 Ruby (`1.ratspeak.org:4141`), Emerald (`2.ratspeak.org:4242`), and Diamond (`3.ratspeak.org:4343`) are best-effort public Ratspeak infrastructure with no uptime guarantee. The legacy endpoint `rns.ratspeak.org:4242` is an alias for Emerald. In the app, these three are listed first under **Internet**; community servers operated by third parties are listed under **Unofficial**. If one is unreachable:
 
+- If only Diamond turns you away, you may have hit one of [its limits](../networking/ip-internet-and-i2p.md#public-ratspeak-tcp-servers). Ruby and Emerald don't have them.
 - Try another public Ratspeak server, or a different community hub from [Reticulum's current connect/backbone information](https://reticulum.network/connect.html) or from a community directory you trust.
 - Run your own TCPServer on a small VPS — it's a single interface block in the config.
 - Connect peer-to-peer over a different transport (LoRa, BLE, AutoInterface on a shared LAN).

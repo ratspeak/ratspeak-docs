@@ -71,7 +71,7 @@ While relaying is on, Ratspeak connects to only one public server; a public serv
 
 In **Network → Connectivity**, turn on the card for the connection type:
 
-- **Internet** lists the Ratspeak servers **Ruby**, **Emerald**, and **Diamond**, with community servers under **Unofficial**. Choose **Join** beside one. **Add your own server** connects to an address and port someone gave you, with an optional network name and passphrase. Once you have a server, **Join another server** shows the list again, and the Internet switch turns all of them off or on.
+- **Internet** lists the Ratspeak servers **Ruby**, **Emerald**, and **Diamond**, with community servers under **Unofficial**. Choose **Join** beside one; Diamond shows its stricter limits first. **Add your own server** connects to an address and port someone gave you, with an optional network name and passphrase. Once you have a server, **Join another server** shows the list again, and the Internet switch turns all of them off or on.
 - **Local Network** opens its settings; choose **Turn on**. It enables AutoInterface discovery on compatible local networks and needs IPv6 multicast to work; being on the same Wi-Fi network is not enough if the access point isolates clients or blocks multicast. **Options** changes its settings later, and **Turn off** stops it.
 - **Radio** opens **Set up a radio** for an RNode over **Bluetooth**, **USB**, or **Wi-Fi**. Choose the connection your radio exposes and check its radio settings.
 - **Bluetooth Peer** connects compatible nearby devices directly, without an RNode. It stays on for 30 minutes; **Stay on for** changes that to **10 min**, **30 min**, **1 hour**, or **Always**. Availability and permissions depend on the platform.

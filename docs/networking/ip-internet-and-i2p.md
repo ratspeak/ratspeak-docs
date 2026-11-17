@@ -136,6 +136,8 @@ A reachable public TCP server can supply a path to other destinations it knows; 
 
 The app also recognizes the legacy endpoint `rns.ratspeak.org:4242` as Emerald.
 
+Diamond has stricter protection than Ruby and Emerald. Having 50 remote peers connected through you, or more than 20 connections from the same IP address, gets you banned: 24 hours the first time, 7 days the next, and 30 days each time after that. Staying within these limits brings it back down. The app shows this before you join Diamond.
+
 In the app's **Internet** card, these three come first. Community servers, run by third parties, are listed under **Unofficial**: Apollo RNS, Beleth, MichMesh, One-Big-Network, RMAP, Swiss RNS, UTN Oregon, and Washmesh. Their operators can see your IP address. **Add your own server** connects to any other address and port.
 
 Other public Reticulum hubs are independent of Ratspeak:
