@@ -47,7 +47,7 @@ Each connection has a row with its status. Select it for its details: traffic, i
 
 ## Activity
 
-The **Activity** tab shows what Ratspeak is doing: network, messages, channels, and calls. It is kept on this device only. Activity is on by default. **Pause** stops recording until you choose **Resume**, and **Turn off Activity** in its **More** menu turns it off until you choose **Start Activity**. Filter by area, search, or choose **High** detail for more events for 10 minutes. Select an event for its details.
+The **Activity** tab shows what Ratspeak is doing: network, messages, channels, and calls. It is kept on this device only. Activity is on by default. **Pause** stops recording until you choose **Resume**, and **Turn off Activity** in its **More** menu turns it off until you choose **Start Activity**. Filter by area, search, or choose **High** detail for more events for 10 minutes. Select an event for its details. The newest event is at the top. While you read further down, or have an event open, the list stays put, and the top of the list shows how many new events have arrived; select it to go back to the newest.
 
 Use the event details when investigating a failed connection or transfer. A delivered or received message names the kind of connection it used. **Settings → Privacy and blocking → Protect Activity identities** hides names and addresses until you reveal them.
 
