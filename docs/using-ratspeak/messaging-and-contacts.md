@@ -86,7 +86,7 @@ There are three ways to add a contact:
 
 - **From the Peers tab** — open any peer's details and choose **Add to contacts**. Their address fills in automatically; just give them a name.
 - **From a conversation** — open a conversation with someone unsaved and choose **Add contact** from **Conversation options**.
-- **Manually** — choose **Add contact** (**+**) in the Contacts tab. **By address** takes an address they shared with you. **From QR code** scans their contact card, reads it from an image, or uses **Paste** for a copied QR image or contact link.
+- **Manually** — choose **Add contact** (**+**) in the Contacts tab. **By address** takes the LXMF address they shared with you. If you enter their identity hash instead and Ratspeak has heard them, it uses their LXMF address and tells you. **From QR code** scans their contact card, reads it from an image, or uses **Paste** for a copied QR image or contact link.
 
 Names are local to your device. The other side has no idea what you've named them, and they can name you whatever they like on their end.
 
