@@ -22,6 +22,8 @@ Settings has nine sections:
 | **Developer** | **Developer mode** and **Reticulum on this device** |
 | **About** | The version, **Check for updates**, the policies, and **Licenses** |
 
+**Shut down**, below the sections (not on iPhone or iPad), stops all network and Ratspeak services and closes the app. On Android this also ends its background service, so nothing keeps running until you open Ratspeak again.
+
 ## Your identity
 
 Your identity lets you keep the same address when you restore it on another device. It is based on cryptographic keys: the public keys identify you on Reticulum, and the private key lets you act as that identity. Applications derive their own destination addresses from it; give contacts your **LXMF address** for messaging. Keep the private-key material secret. See [Security and privacy](../concepts/cryptography-and-protection.md) for the cryptographic details.
