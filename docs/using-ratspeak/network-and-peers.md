@@ -49,7 +49,7 @@ Each connection has a row with its status. Select it for its details: traffic, i
 
 The **Activity** tab shows what Ratspeak is doing: network, messages, channels, and calls. It is kept on this device only. Activity is on by default. **Pause** stops recording until you choose **Resume**, and **Turn off Activity** in its **More** menu turns it off until you choose **Start Activity**. Filter by area, search, or choose **High** detail for more events for 10 minutes. Select an event for its details.
 
-Use the event details when investigating a failed connection or transfer. **Settings → Privacy and blocking → Protect Activity identities** hides names and addresses until you reveal them.
+Use the event details when investigating a failed connection or transfer. A delivered or received message names the kind of connection it used. **Settings → Privacy and blocking → Protect Activity identities** hides names and addresses until you reveal them.
 
 When the network filter drops peers on its own, Activity shows how many, with **Review**. The list there offers **Clear network drops**, which lets them reach you again. Blocks you made aren't affected.
 
@@ -89,7 +89,7 @@ To return to Ratspeak's own network, choose **Ratspeak** under **Run by** and ap
 
 ## Discovered servers and radios
 
-Servers and radios can publish themselves on the network. Turn on **Discover servers** under **Find more** in Network, or in **Settings → Network → Discovery**, to list them. The change restarts the network for a moment.
+Servers and radios can publish themselves on the network. Turn on **Discover servers** under **Find more** in Network to list them. The change restarts the network for a moment.
 
 The card shows how many were found; **See all** opens the list, with **All**, **Servers**, and **Radios** filters. Entries not heard for over three days move under **Show … not heard lately**. Select one for its details: its address or radio settings, distance in hops, when it was heard, and who published it.
 
