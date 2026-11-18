@@ -39,7 +39,7 @@ The **Connectivity** panel beside the map, or below it on a phone, has one card 
 - **Host** lets other devices connect to this computer. It shows on desktop, and on a phone only once a host is set up.
 - **Find more → Discover servers** lists the servers and radios that others share. See [Discovered servers and radios](#discovered-servers-and-radios).
 
-Each connection has a row with its status. Select it for its details: traffic, its address or radio settings, and actions such as **Pause**, **Resume**, **Edit**, and **Disconnect**. A connected radio that measures its battery shows the percent on its row, with a bolt while it charges, and **Battery** in its details; it turns red at 20% or less. **Open in Activity** shows its events. A card that is on folds shut with its own arrow. Turning a card's switch off turns off every connection of that kind.
+Each connection has a row with its status. Select it for its details: traffic, its address or radio settings, and actions such as **Pause**, **Resume**, **Edit**, and **Disconnect**. A connected radio that measures its battery shows its percent and a battery on its row and beside its name in its details: one bar above 20%, two from 70%, and a bolt while it charges. It's red at 20% or less, orange to 49%, and green above. **Open in Activity** shows its events. A card that is on folds shut with its own arrow. Turning a card's switch off turns off every connection of that kind.
 
 **Pause all** stops every connection at once, and **Resume all** brings back the same ones. While they are paused, a notice shows how many.
 
